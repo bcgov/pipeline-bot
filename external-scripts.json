@@ -3,12 +3,7 @@
   "hubot-help",
   "hubot-health",
   "hubot-group",
-  "hubot-jira-links",
-  "hubot-pugme",
-  "hubot-maps",
   "hubot-redis-brain",
   "hubot-rules",
-  "hubot-timezone",
-  "hubot-search",
-  "hubot-weather"
+  "hubot-timezone"
 ]
