@@ -1,9 +1,28 @@
 {
   "name": "pipeline-bot",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "private": true,
-  "author": "crigdon(noreply@gov.bc.ca)",
-  "description": "CI/CD Pipeline Bot",
+  "author": "craig.rigdon@gov.bc.ca",
+  "contributors": [],
+  "keywords": [
+    "hubot",
+    "mattermost",
+    "chat"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/craigrigdon/pipeline-bot.git"
+  },
+  "bugs": {
+    "url": "https://github.com/craigrigdon/pipeline-bot/issues",
+    "email": "noreply@gov.bc.ca"
+  },
+  "main": "./src/matteruser.js",
+  "scripts": {
+    "start": "bin/hubot -a matteruser"
+  },
+  "description": "pipeline-bot",
   "dependencies": {
     "hubot": "^3.3.2",
     "hubot-conversation": "^1.1.1",
@@ -16,6 +35,6 @@
     "hubot-timezone": "^1.0.1"
   },
   "engines": {
-    "node": "0.10.x"
+    "node": ">=8.x"
   }
 }
