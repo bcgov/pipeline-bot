@@ -2,6 +2,12 @@
 
 A Hubot CI/CD Pipeline Bot 
 
+# Requirements
+  1. matteruser adapter for hubot requires the below env var to be defined at the deployment stage
+  * MATTERMOST_HOST=<url-to-mattermost> 
+  * MATTERMOST_GROUP=<mattermost-group>
+  * MATTERMOST_USER=<mattermost-username>
+  * MATTERMOST_PASSWORD=<mattermost-password>
 
 # Step by Step build guide for Hubot and deployment to Openshift
 
@@ -43,10 +49,16 @@ oc tag pipeline-bot pipeline-bot:latest
 oc new-build nodejs:10~https://github.com/craigrigdon/pipeline-bot.git -l app=bot
 ```
 
+
 ## 10. first time deploy in OCP
 ```
 oc new-app pipeline-bot:latest
 ```
+#### define matteruser adapter env var at deployment stage for container via secretes and config maps within OCP
+  * MATTERMOST_HOST=<url-to-mattermost> 
+  * MATTERMOST_GROUP=<mattermost-group>
+  * MATTERMOST_USER=<mattermost-username>
+  * MATTERMOST_PASSWORD=<mattermost-password>
 
 ## 11. future incremental builds, will trigger new deployment after successful build.
 ```
