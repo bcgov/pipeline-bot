@@ -12,13 +12,13 @@
 #   It can automatically serve static files by setting EXPRESS_STATIC.
 
 module.exports = (robot) ->
-#  # example:
-#  # the expected value of :room is going to vary by adapter, it might be a numeric id, name, token, or some other value
-#  robot.router.post '/hubot/chatsecrets/:room', (req, res) ->
-#    room   = req.params.room
-#    data   = if req.body.payload? then JSON.parse req.body.payload else req.body
-#    secret = data.secret
-#
-#    robot.messageRoom room, "I have a secret: #{secret}"
-#
-#    res.send 'OK'
+  # example:
+  # the expected value of :room is going to vary by adapter, it might be a numeric id, name, token, or some other value
+  robot.router.post '/hubot/chatsecrets/:room', (req, res) ->
+    room   = req.params.room
+    data   = if req.body.payload? then JSON.parse req.body.payload else req.body
+    secret = data.secret
+
+    robot.messageRoom room, "I have a secret: #{secret}"
+
+    res.send 'OK'
