@@ -16,4 +16,5 @@ RUN npm install -g
 RUN chmod 755 "./bin/hubot"
 RUN ls -l
 
+EXPOSE 8081
 ENTRYPOINT ["/app/bin/hubot"]
