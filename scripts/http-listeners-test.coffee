@@ -21,4 +21,4 @@ module.exports = (robot) ->
     stage = data.stage
 #    robot.messageRoom room, "I have a secret: #{secret}"
 
-    res.send '/hubot/test endpoint UP'
+    res.send '/hubot/test endpoint UP' status stage
