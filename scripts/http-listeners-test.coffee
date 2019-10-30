@@ -15,10 +15,10 @@ module.exports = (robot) ->
   # example:
   # the expected value of :room is going to vary by adapter, it might be a numeric id, name, token, or some other value
   robot.router.post '/hubot/test', (req, res) ->
-    room   = req.params.room
+#    room   = req.params.room
     data   = if req.body.payload? then JSON.parse req.body.payload else req.body
-    secret = data.secret
-
+    status = data.status
+    stage = data.stage
 #    robot.messageRoom room, "I have a secret: #{secret}"
 
     res.send '/hubot/test endpoint UP'
