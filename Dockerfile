@@ -1,5 +1,5 @@
 FROM node:10-alpine
-# docker file for local build development work
+# docker file for local build development work only
 
 RUN apk update && apk upgrade \
   && apk add redis \
@@ -7,14 +7,18 @@ RUN apk update && apk upgrade \
   && rm -rf /var/cache/apk/*
 
 RUN mkdir /app
-WORKDIR /app
 
-RUN git clone https://github.com/craigrigdon/pipeline-bot.git /app
+# use this option if you would like to copy from repo
+#RUN git clone https://github.com/craigrigdon/pipeline-bot.git /app
+
+#use this option to copy from local
+COPY . /app
+
+WORKDIR /app
 
 RUN npm install -g
 
 RUN chmod 755 "./bin/hubot"
-RUN ls -l
 
-EXPOSE 8081
 ENTRYPOINT ["/app/bin/hubot"]
+
