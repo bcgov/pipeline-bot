@@ -11,14 +11,22 @@
 #   It can be protected with username and password by specifying EXPRESS_USER and EXPRESS_PASSWORD.
 #   It can automatically serve static files by setting EXPRESS_STATIC.
 
+# get mattermost channel from env var passed to container on deployment
+mat_room = process.env.HUBOT_CHANNEL
+route = '/hubot/build'
+
 module.exports = (robot) ->
-#  # example:
-#  # the expected value of :room is going to vary by adapter, it might be a numeric id, name, token, or some other value
-  robot.router.post '/hubot/build', (req, res) ->
-    room   = req.params.room
+  # example how to use params
+  # example with param: robot.router.post '/hubot/test/:channeName', (req, res) ->
+  # example call: http://127.0.0.1:8080/hubot/test/channeName
+  # examble to retrive in function: channeName  = req.params.channeName
+
+  robot.router.post route, (req, res) ->
+    console.log route
+#    room   = req.params.room
     data   = if req.body.payload? then JSON.parse req.body.payload else req.body
-    secret = data.secret
-
-#    robot.messageRoom room, "I have a secret: #{secret}"
-
-    res.send '/hubot/build endpoint UP'
+    status = data.status
+    stage = data.stage
+    console.log "#{stage} #{status}"
+#    robot.messageRoom mat_room, "#{stage} #{status}"
+    res.send "#{route} UP"
