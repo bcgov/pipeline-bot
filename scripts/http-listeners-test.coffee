@@ -21,4 +21,4 @@ module.exports = (robot) ->
 
 #    robot.messageRoom room, "I have a secret: #{secret}"
 
-    res.send 'OK'
+    res.send '/hubot/test endpoint UP'
