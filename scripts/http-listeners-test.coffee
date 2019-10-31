@@ -12,7 +12,7 @@
 #   It can automatically serve static files by setting EXPRESS_STATIC.
 
 # get mattermost channel from env var passed to container on deployment
-mat_room = process.env.HUBOT_CHANNEL
+mat_room = process.env.HUBOT_MATTERMOST_CHANNEL
 route = '/hubot/test'
 
 module.exports = (robot) ->
@@ -24,10 +24,12 @@ module.exports = (robot) ->
   robot.router.post route, (req, res) ->
     console.log route
     data   = if req.body.payload? then JSON.parse req.body.payload else req.body
-    status = data.status
-    stage = data.stage
-    env =  data.env
+    status = data.status #pass fail
+    stage = data.stage #build deploy test
+    env =  data.env #cadi cati prod
     console.log "#{env} #{stage} #{status}"
+
+
 
     robot.messageRoom mat_room, "#{env} #{stage} #{status}"
     res.send "#{route} UP"
