@@ -23,10 +23,11 @@ module.exports = (robot) ->
 
   robot.router.post route, (req, res) ->
     console.log route
-#    room   = req.params.room
     data   = if req.body.payload? then JSON.parse req.body.payload else req.body
     status = data.status
     stage = data.stage
-    console.log "#{stage} #{status}"
-#    robot.messageRoom mat_room, "#{stage} #{status}"
+    env =  data.env
+    console.log "#{env} #{stage} #{status}"
+
+    robot.messageRoom mat_room, "#{env} #{stage} #{status}"
     res.send "#{route} UP"
