@@ -76,11 +76,6 @@ class OCAPI
                json = err
 
 
-
-
-
-
-        
         
 # call the function that was created
 #getAPIEndPoints()
@@ -98,4 +93,3 @@ project = 'databcdc'
 buildConfig = 'bcdc-test-dev'
 retVal = api.startBuild(project, buildConfig)
 console.log "retVal: " + retVal
-
