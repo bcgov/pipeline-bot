@@ -1,5 +1,6 @@
 
 request = require('request-promise')
+rq = require('request')
 
 
 class OCAPI
@@ -38,8 +39,8 @@ class OCAPI
 
         urldomain = this.baseUrl()
         initBuildPath = "/apis/build.openshift.io/v1/namespaces/#{ocProject}/buildconfigs/#{ocBuildConfigName}/instantiate"
-
         urlString = "#{urldomain}#{initBuildPath}"
+
         reqObj = {
             uri:urlString, 
             json : true, method: 'POST',
@@ -62,11 +63,12 @@ class OCAPI
                 Accept: 'application/json, */*'
             },
         }
+
         if this.apikey?
             reqObj.headers.Authorization =  "Bearer #{this.apikey}"
             console.log 'authorization is: ' + reqObj.headers.Authorization
         
-        return request reqObj
+        request reqObj
            .then (response) -> 
                console.log response
                json = response
@@ -91,12 +93,37 @@ class OCAPI
             reqObj.headers.Authorization =  "Bearer #{this.apikey}"
             console.log 'authorization is: ' + reqObj.headers.Authorization
         urldomain = this.baseUrl()
+
+        new Promise((resolve, reject) => {
+            request.head(url, function(){
+            request(url).pipe(fs.createWriteStream(pathName))
+                .on('close', () => resolve(pathName))
+                .on('error', error =>  reject(error))
+            });
+        })
+
+
+
         buildPromise.then (response) ->
             watchBuildUrl = "#{urldomain}/apis/build.openshift.io/v1/watch/namespaces/#{ocProject}/builds/#{response.metadata.name}"
             console.log "watch url is: " + watchBuildUrl
             reqObj.uri = watchBuildUrl
+            
+
             # now call another request to watch
             return request reqObj
+
+    monitorBuild : () ->
+        # pipe example
+        # https://stackoverflow.com/questions/51090164/wrapping-node-js-request-into-promise-and-piping/51090372
+        reqObj = {
+            json : true,
+            method: 'GET',
+            headers: {
+                Accept: 'application/json, */*'
+            }
+        }
+
 
 
         
@@ -114,8 +141,9 @@ api = new OCAPI(domain, apikey)
 
 project = 'databcdc'
 buildConfig = 'bcdc-test-dev'
-retVal = api.startBuild(project, buildConfig)
+buildInitPromise = api.startBuild(project, buildConfig)
 console.log "retVal: " + retVal
 
 
-watchPromise = api.watchBuild(project, retVal)
+watchPromise = api.watchBuild(project, buildInitPromise)
+api.monitorBuild(project, retVal)
