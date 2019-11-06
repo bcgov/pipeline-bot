@@ -1,4 +1,7 @@
 
+request = require('request-promise')
+
+
 class OCAPI
     domain = null
     protocol = 'https'
@@ -32,10 +35,8 @@ class OCAPI
                json = err
            
     startBuild : (ocProject, ocBuildConfigName )->
-        request = require('request-promise')
 
         urldomain = this.baseUrl()
-
         initBuildPath = "/apis/build.openshift.io/v1/namespaces/#{ocProject}/buildconfigs/#{ocBuildConfigName}/instantiate"
 
         urlString = "#{urldomain}#{initBuildPath}"
@@ -70,19 +71,41 @@ class OCAPI
                console.log response
                json = response
                console.log JSON.stringify(response, undefined, 2)
+               return response
            .catch (err) -> 
                console.log '------- error called -------'
                console.log err
                json = err
+
+    watchBuild : (ocProject, buildPromise)->
+        reqObj = {
+            json : true,
+            method: 'GET',
+            headers: {
+                Accept: 'application/json, */*'
+            },
+        }
+
+        # add the api key to the request descriptor
+        if this.apikey?
+            reqObj.headers.Authorization =  "Bearer #{this.apikey}"
+            console.log 'authorization is: ' + reqObj.headers.Authorization
+        urldomain = this.baseUrl()
+        buildPromise.then (response) ->
+            watchBuildUrl = "#{urldomain}/apis/build.openshift.io/v1/watch/namespaces/#{ocProject}/builds/#{response.metadata.name}"
+            console.log "watch url is: " + watchBuildUrl
+            reqObj.uri = watchBuildUrl
+            # now call another request to watch
+            return request reqObj
 
 
         
 # call the function that was created
 #getAPIEndPoints()
 
-apikey = process.env.API
+apikey = process.env.APIKEY
 domain = process.env.DOMAIN
-
+console.log "apikey: #{apikey}"
 
 api = new OCAPI(domain, apikey)
 #retVal = api.getAPIEndPoints() # returns promise
@@ -93,3 +116,6 @@ project = 'databcdc'
 buildConfig = 'bcdc-test-dev'
 retVal = api.startBuild(project, buildConfig)
 console.log "retVal: " + retVal
+
+
+watchPromise = api.watchBuild(project, retVal)
