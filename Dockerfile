@@ -17,6 +17,8 @@ COPY . /app
 WORKDIR /app
 
 RUN npm install -g
+RUN npm install request
+RUN npm install request-promise
 
 RUN chmod 755 "./bin/hubot"
 
