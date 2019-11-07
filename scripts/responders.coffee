@@ -36,7 +36,7 @@ module.exports = (robot) ->
        .header('Accept', 'application/json')
        .header("Authorization", "Bearer #{apikey}")
        .post(JSON.stringify({
-        kind: "BuildRequest", apiVersion: "build.openshift.io/v1", metadata: {name: "bcdc-test-dev", creationTimestamp: null}, triggeredBy: [{message: "Triggered with coffee"}], dockerStrategyOptions: {}, sourceStrategyOptions: {}
+        kind: "BuildRequest", apiVersion: "build.openshift.io/v1", metadata: {name: "pipeline-bot", creationTimestamp: null}, triggeredBy: [{message: "Triggered with coffee"}], dockerStrategyOptions: {}, sourceStrategyOptions: {}
       })) (err, res, body) ->
           # error checking code here
 
