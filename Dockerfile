@@ -9,7 +9,7 @@ RUN apk update && apk upgrade \
 RUN mkdir /app
 
 # use this option if you would like to copy from repo
-#RUN git clone https://github.com/craigrigdon/pipeline-bot.git /app
+#RUN git clone https://github.com/bcgov/pipeline-bot.git /app
 
 #use this option to copy from local
 COPY . /app

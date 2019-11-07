@@ -46,7 +46,7 @@ oc tag pipeline-bot pipeline-bot:latest
 
 ## 9. create new build using Source Build Strategy in OCP
 ```
-oc new-build nodejs:10~https://github.com/craigrigdon/pipeline-bot.git -l app=bot
+oc new-build nodejs:10~https://github.com/bcgov/pipeline-bot.git -l app=bot
 ```
 
 
