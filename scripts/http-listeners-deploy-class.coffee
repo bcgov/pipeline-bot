@@ -39,7 +39,6 @@ module.exports = (robot) ->
     api = new OCAPI(domain, apikey)
     retVal = api.startDeploy(project, buildConfig)
     console.log "retVal: " + retVal
-    resp = JSON.parse retVal.body.payload
 
 #    robot.messageRoom mat_room, "#{env} #{stage} #{status}"
     res.send "#{route} UP"
