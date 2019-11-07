@@ -28,4 +28,18 @@ module.exports = (robot) ->
         data = JSON.parse body
         console.log data
 
+   #demo ONLY to be removed
+   robot.respond /build pipeline-bot/i, (res) ->
+     res.reply 'Building myself now.'
+
+     robot.http("https://console.pathfinder.gov.bc.ca:8443/apis/build.openshift.io/v1/namespaces/#{project}/buildconfigs/#{buildConfig}/instantiate")
+       .header('Accept', 'application/json')
+       .header("Authorization", "Bearer #{apikey}")
+       .post(JSON.stringify({
+        kind: "BuildRequest", apiVersion: "build.openshift.io/v1", metadata: {name: "bcdc-test-dev", creationTimestamp: null}, triggeredBy: [{message: "Triggered with coffee"}], dockerStrategyOptions: {}, sourceStrategyOptions: {}
+      })) (err, res, body) ->
+          # error checking code here
+
+        data = JSON.parse body
+        console.log data
 
