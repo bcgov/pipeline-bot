@@ -2,6 +2,9 @@
 request = require('request-promise')
 rq = require('request')
 stream = require('stream')
+_ = require('lodash')
+oboe = require('oboe')
+
 
 class OCAPI
     domain = null
@@ -79,7 +82,6 @@ class OCAPI
 
     watchBuild : (ocProject, buildPromise)->
         reqConfig = {
-            json : true,
             method: 'GET',
             headers: {
                 Accept: 'application/json, */*'
@@ -93,21 +95,90 @@ class OCAPI
         urldomain = this.baseUrl()
 
         buildPromise.then (response) ->
-            console.log JSON.stringify(response)
             watchBuildUrl = "#{urldomain}/apis/build.openshift.io/v1/watch/namespaces/#{ocProject}/builds/#{response.metadata.name}"
-            console.log "watch url is: " + watchBuildUrl
-            reqConfig.uri = watchBuildUrl
-            reqObj = rq(reqConfig)
-            return reqObj
+            reqConfig.url = watchBuildUrl
+            oboePromise = new Promise (resolve) ->
+                recordtype = undefined
+                phase = undefined
+                oboeRequest = oboe(reqConfig)
+                    .node('*', (node, path) ->
+                        if ( path.length == 1) and path[0] == 'type'
+                            cnt = cnt + 1
+                            console.log "---------------record type: #{node}-----------------"
+                            recordtype = node
+                        else if (path.length == 3) 
+                            console.log "#{JSON.stringify(path)}"
+                            if _.isEqual(path, ["object", "status", "phase"])
+                                phase = node
+                                console.log "phase: #{phase}"
+                        if recordtype == 'ADDED' and phase == 'New'
+                            console.log "returning data: #{recordtype} #{phase}"
+                            console.log "this: #{this} #{typeof this}"
+                            this.abort()
+                            resolve [recordtype, phase]
+                            return 
+                            this.done()
+                        cnt = cnt + 1
+                    )
+                    .fail( ( errorReport ) ->
+                        console.log "error caught here"
+                        console.log "status code: #{errorReport.statusCode}")
+                    .done( () ->
+                        console.log "done")
+                resolve [recordtype, phase]
+
+
+    watchBuildNP : (ocProject, buildData)->
+        reqConfig = {
+            method: 'GET',
+            headers: {
+                Accept: 'application/json, */*'
+            },
+        }
+
+        # add the api key to the request descriptor
+        if this.apikey?
+            reqConfig.headers.Authorization =  "Bearer #{this.apikey}"
+            console.log 'authorization is: ' + reqConfig.headers.Authorization
+        urldomain = this.baseUrl()
+
+        watchBuildUrl = "#{urldomain}/apis/build.openshift.io/v1/watch/namespaces/#{ocProject}/builds/#{buildData.metadata.name}"
+        reqConfig.url = watchBuildUrl
+        oboePromise = new Promise (resolve) ->
+            recordtype = undefined
+            phase = undefined
+            oboeRequest = oboe(reqConfig)
+                .node('*', (node, path) ->
+                    if ( path.length == 1) and path[0] == 'type'
+                        cnt = cnt + 1
+                        recordtype = node
+                    else if (path.length == 3) 
+                        console.log "#{JSON.stringify(path)}"
+                        if _.isEqual(path, ["object", "status", "phase"])
+                            phase = node
+                            console.log "phase: #{phase}"
+                    #if recordtype == 'ADDED' and phase == 'New'
+                    if recordtype == 'MODIFIED' and ( phase in ['Complete', 'Cancelled']
+                        console.log "returning data: #{recordtype} #{phase}"
+                        this.abort()
+                        resolve [recordtype, phase]
+                        this.done()
+                    cnt = cnt + 1
+                )
+                .fail( ( errorReport ) ->
+                    console.log "status code: #{errorReport.statusCode}")
+                .done( () ->
+                    console.log "done")
 
     startAndWatch : (ocProject, ocBuildConfigName) ->
         # another pattern to try:
         #  https://stackoverflow.com/questions/33599688/how-to-use-es8-async-await-with-streams
-        buildPromise = this.startBuild(ocProject, ocBuildConfigName)
-        await watchBuild = this.watchBuild(ocProject, buildPromise)
-        watcher = this.monitorBuild(watchBuild)
-        console.log "watcher: #{watcher.status}"
-        return watcher.status
+        buildPromise = await this.startBuild(ocProject, ocBuildConfigName)
+        console.log("buildPromise #{buildPromise}, #{typeof buildPromise}")
+        console.log("buildPromise #{JSON.stringify(buildPromise)}, #{typeof buildPromise}")
+        watchBuildStatus = await this.watchBuildNP(ocProject, buildPromise)
+        console.log "---watchBuild---: #{watchBuildStatus} #{typeof watchBuildStatus}"
+        return watchBuildStatus
 
     monitorBuild : (watchPromise) ->
         # https://2ality.com/2018/04/async-iter-nodejs.html
@@ -127,65 +198,6 @@ class OCAPI
                     reject Error 'it broke'
             return watcher
         
-
-        # watchPromise.then(request) ->
-        #     watcher = new WatchBuildTillComplete(request)
-        #     reqObj.pipe(watcher)
-        #     return new Promise (resolve, reject) =>
-        #         watcher.on('finish', resolve)
-        #         watcher.on('abort', resolve)
-        #         watcher.on('error', reject)
-        #     .then(() => result.join(''))
-
-        
-
-class WatchBuildTillComplete extends stream.Writable
-    # strings recieved from the feed are appended here until 
-    # a complete json object can be parsed
-    # 
-    # useful links in sorting this out:
-    #  https://developer.mozilla.org/en-US/docs/Web/API/Streams_API/Using_readable_streams
-    #  http://oboejs.com/api - (see BYO Stream)
-    #  https://stackoverflow.com/questions/9829811/how-can-i-parse-the-first-json-object-on-a-stream-in-js
-    #  https://www.freecodecamp.org/news/node-js-streams-everything-you-need-to-know-c9141306be93/
-    #  https://jeroenpelgrims.com/node-streams-in-coffeescript/ - COFFEESCRIPT STREAMS
-    #  https://www.codota.com/code/javascript/functions/request/Request/pipe
-    #  
-
-    constructor : (reqObj) ->
-        super()
-        @req = reqObj
-        @status = 'PENDING'
-        console.log "reqObj #{@req}  #{typeof @req}"
-
-    jsonStr = ""
-
-    _write: (chunk, enc, next) ->
-        # dependent on json objects being concluded with \n
-        # individual objects are parsed once a \n is found
-        # otherwise the next adds to the string
-
-        jsonStr = jsonStr + chunk
-        regex = /\n/
-        result = regex.exec(chunk);
-
-        if result
-            stringList = jsonStr.split /\n/ 
-            readyJson = stringList[0]
-
-            jsonStr = stringList[1]
-
-            dataObj = JSON.parse(readyJson)
-            # now the logic
-            console.log '----- DATA -----'
-            if ( dataObj.type == "MODIFIED" and 
-                    dataObj.object.kind == 'Build' and
-                    dataObj.object.status.phase == 'Complete')
-                @status = "COMPLETE"
-                @req.abort()
-            else
-                console.log "\nGetting next chunk of data from the stream..."
-                next()
 
         
 
