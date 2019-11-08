@@ -1,0 +1,501 @@
+{
+    "type": "ADDED",
+    "object": {
+        "kind": "Build",
+        "apiVersion": "build.openshift.io/v1",
+        "metadata": {
+            "name": "bcdc-test-dev-82",
+            "namespace": "databcdc",
+            "selfLink": "/apis/build.openshift.io/v1/namespaces/databcdc/builds/bcdc-test-dev-82",
+            "uid": "9740ac16-00f1-11ea-be53-0050568348cc",
+            "resourceVersion": "1099100247",
+            "creationTimestamp": "2019-11-07T00:00:21Z",
+            "labels": {
+                "app": "",
+                "buildconfig": "bcdc-test-dev",
+                "openshift.io/build-config.name": "bcdc-test-dev",
+                "openshift.io/build.start-policy": "Serial"
+            },
+            "annotations": {
+                "openshift.io/build-config.name": "bcdc-test-dev",
+                "openshift.io/build.number": "82"
+            },
+            "ownerReferences": [
+                {
+                    "apiVersion": "build.openshift.io/v1",
+                    "kind": "BuildConfig",
+                    "name": "bcdc-test-dev",
+                    "uid": "6bb6f1f6-e9fd-11e9-8615-0050568348cc",
+                    "controller": true
+                }
+            ]
+        },
+        "spec": {
+            "serviceAccount": "builder",
+            "source": {
+                "type": "Dockerfile",
+                "dockerfile": "FROM python:3-slim\nADD . /app\nWORKDIR /app\nRUN pip install pypandoc\nRUN pip install --upgrade --force-reinstall bcdc-apitests-dev\nRUN pip install -I bcdc-apitests-dev\nRUN pip install matterhook\nENTRYPOINT [ \"pytest-run.py\" ]"
+            },
+            "strategy": {
+                "type": "Docker",
+                "dockerStrategy": {
+                    "from": {
+                        "kind": "DockerImage",
+                        "name": "python:3-slim"
+                    }
+                }
+            },
+            "output": {
+                "to": {
+                    "kind": "ImageStreamTag",
+                    "name": "bcdc-test-dev:latest"
+                }
+            },
+            "resources": {},
+            "postCommit": {},
+            "nodeSelector": null,
+            "triggeredBy": [
+                {
+                    "message": "Triggered with coffee"
+                }
+            ]
+        },
+        "status": {
+            "phase": "New",
+            "config": {
+                "kind": "BuildConfig",
+                "namespace": "databcdc",
+                "name": "bcdc-test-dev"
+            },
+            "output": {}
+        }
+    }
+}
+
+
+    
+{
+    "type": "MODIFIED",
+    "object": {
+        "kind": "Build",
+        "apiVersion": "build.openshift.io/v1",
+        "metadata": {
+            "name": "bcdc-test-dev-82",
+            "namespace": "databcdc",
+            "selfLink": "/apis/build.openshift.io/v1/namespaces/databcdc/builds/bcdc-test-dev-82",
+            "uid": "9740ac16-00f1-11ea-be53-0050568348cc",
+            "resourceVersion": "1099100258",
+            "creationTimestamp": "2019-11-07T00:00:21Z",
+            "labels": {
+                "app": "",
+                "buildconfig": "bcdc-test-dev",
+                "openshift.io/build-config.name": "bcdc-test-dev",
+                "openshift.io/build.start-policy": "Serial"
+            },
+            "annotations": {
+                "openshift.io/build-config.name": "bcdc-test-dev",
+                "openshift.io/build.number": "82",
+                "openshift.io/build.pod-name": "bcdc-test-dev-82-build"
+            },
+            "ownerReferences": [
+                {
+                    "apiVersion": "build.openshift.io/v1",
+                    "kind": "BuildConfig",
+                    "name": "bcdc-test-dev",
+                    "uid": "6bb6f1f6-e9fd-11e9-8615-0050568348cc",
+                    "controller": true
+                }
+            ]
+        },
+        "spec": {
+            "serviceAccount": "builder",
+            "source": {
+                "type": "Dockerfile",
+                "dockerfile": "FROM python:3-slim\nADD . /app\nWORKDIR /app\nRUN pip install pypandoc\nRUN pip install --upgrade --force-reinstall bcdc-apitests-dev\nRUN pip install -I bcdc-apitests-dev\nRUN pip install matterhook\nENTRYPOINT [ \"pytest-run.py\" ]"
+            },
+            "strategy": {
+                "type": "Docker",
+                "dockerStrategy": {
+                    "from": {
+                        "kind": "DockerImage",
+                        "name": "python:3-slim"
+                    }
+                }
+            },
+            "output": {
+                "to": {
+                    "kind": "ImageStreamTag",
+                    "name": "bcdc-test-dev:latest"
+                },
+                "pushSecret": {
+                    "name": "builder-dockercfg-kzv6s"
+                }
+            },
+            "resources": {},
+            "postCommit": {},
+            "nodeSelector": null,
+            "triggeredBy": [
+                {
+                    "message": "Triggered with coffee"
+                }
+            ]
+        },
+        "status": {
+            "phase": "Pending",
+            "outputDockerImageReference": "docker-registry.default.svc:5000/databcdc/bcdc-test-dev:latest",
+            "config": {
+                "kind": "BuildConfig",
+                "namespace": "databcdc",
+                "name": "bcdc-test-dev"
+            },
+            "output": {}
+        }
+    }
+}
+
+
+
+{
+    "type": "MODIFIED",
+    "object": {
+        "kind": "Build",
+        "apiVersion": "build.openshift.io/v1",
+        "metadata": {
+            "name": "bcdc-test-dev-82",
+            "namespace": "databcdc",
+            "selfLink": "/apis/build.openshift.io/v1/namespaces/databcdc/builds/bcdc-test-dev-82",
+            "uid": "9740ac16-00f1-11ea-be53-0050568348cc",
+            "resourceVersion": "1099101844",
+            "creationTimestamp": "2019-11-07T00:00:21Z",
+            "labels": {
+                "app": "",
+                "buildconfig": "bcdc-test-dev",
+                "openshift.io/build-config.name": "bcdc-test-dev",
+                "openshift.io/build.start-policy": "Serial"
+            },
+            "annotations": {
+                "openshift.io/build-config.name": "bcdc-test-dev",
+                "openshift.io/build.number": "82",
+                "openshift.io/build.pod-name": "bcdc-test-dev-82-build"
+            },
+            "ownerReferences": [
+                {
+                    "apiVersion": "build.openshift.io/v1",
+                    "kind": "BuildConfig",
+                    "name": "bcdc-test-dev",
+                    "uid": "6bb6f1f6-e9fd-11e9-8615-0050568348cc",
+                    "controller": true
+                }
+            ]
+        },
+        "spec": {
+            "serviceAccount": "builder",
+            "source": {
+                "type": "Dockerfile",
+                "dockerfile": "FROM python:3-slim\nADD . /app\nWORKDIR /app\nRUN pip install pypandoc\nRUN pip install --upgrade --force-reinstall bcdc-apitests-dev\nRUN pip install -I bcdc-apitests-dev\nRUN pip install matterhook\nENTRYPOINT [ \"pytest-run.py\" ]"
+            },
+            "strategy": {
+                "type": "Docker",
+                "dockerStrategy": {
+                    "from": {
+                        "kind": "DockerImage",
+                        "name": "python:3-slim"
+                    }
+                }
+            },
+            "output": {
+                "to": {
+                    "kind": "ImageStreamTag",
+                    "name": "bcdc-test-dev:latest"
+                },
+                "pushSecret": {
+                    "name": "builder-dockercfg-kzv6s"
+                }
+            },
+            "resources": {},
+            "postCommit": {},
+            "nodeSelector": null,
+            "triggeredBy": [
+                {
+                    "message": "Triggered with coffee"
+                }
+            ]
+        },
+        "status": {
+            "phase": "Running",
+            "startTimestamp": "2019-11-07T00:00:28Z",
+            "outputDockerImageReference": "docker-registry.default.svc:5000/databcdc/bcdc-test-dev:latest",
+            "config": {
+                "kind": "BuildConfig",
+                "namespace": "databcdc",
+                "name": "bcdc-test-dev"
+            },
+            "output": {}
+        }
+    }
+}
+
+{
+    "type": "MODIFIED",
+    "object": {
+        "kind": "Build",
+        "apiVersion": "build.openshift.io/v1",
+        "metadata": {
+            "name": "bcdc-test-dev-82",
+            "namespace": "databcdc",
+            "selfLink": "/apis/build.openshift.io/v1/namespaces/databcdc/builds/bcdc-test-dev-82",
+            "uid": "9740ac16-00f1-11ea-be53-0050568348cc",
+            "resourceVersion": "1099107067",
+            "creationTimestamp": "2019-11-07T00:00:21Z",
+            "labels": {
+                "app": "",
+                "buildconfig": "bcdc-test-dev",
+                "openshift.io/build-config.name": "bcdc-test-dev",
+                "openshift.io/build.start-policy": "Serial"
+            },
+            "annotations": {
+                "openshift.io/build-config.name": "bcdc-test-dev",
+                "openshift.io/build.number": "82",
+                "openshift.io/build.pod-name": "bcdc-test-dev-82-build"
+            },
+            "ownerReferences": [
+                {
+                    "apiVersion": "build.openshift.io/v1",
+                    "kind": "BuildConfig",
+                    "name": "bcdc-test-dev",
+                    "uid": "6bb6f1f6-e9fd-11e9-8615-0050568348cc",
+                    "controller": true
+                }
+            ]
+        },
+        "spec": {
+            "serviceAccount": "builder",
+            "source": {
+                "type": "Dockerfile",
+                "dockerfile": "FROM python:3-slim\nADD . /app\nWORKDIR /app\nRUN pip install pypandoc\nRUN pip install --upgrade --force-reinstall bcdc-apitests-dev\nRUN pip install -I bcdc-apitests-dev\nRUN pip install matterhook\nENTRYPOINT [ \"pytest-run.py\" ]"
+            },
+            "strategy": {
+                "type": "Docker",
+                "dockerStrategy": {
+                    "from": {
+                        "kind": "DockerImage",
+                        "name": "python:3-slim"
+                    }
+                }
+            },
+            "output": {
+                "to": {
+                    "kind": "ImageStreamTag",
+                    "name": "bcdc-test-dev:latest"
+                },
+                "pushSecret": {
+                    "name": "builder-dockercfg-kzv6s"
+                }
+            },
+            "resources": {},
+            "postCommit": {},
+            "nodeSelector": null,
+            "triggeredBy": [
+                {
+                    "message": "Triggered with coffee"
+                }
+            ]
+        },
+        "status": {
+            "phase": "Complete",
+            "startTimestamp": "2019-11-07T00:00:28Z",
+            "completionTimestamp": "2019-11-07T00:02:35Z",
+            "duration": 127000000000,
+            "outputDockerImageReference": "docker-registry.default.svc:5000/databcdc/bcdc-test-dev:latest",
+            "config": {
+                "kind": "BuildConfig",
+                "namespace": "databcdc",
+                "name": "bcdc-test-dev"
+            },
+            "output": {
+                "to": {
+                    "imageDigest": "sha256:71f1f6d88e5c837b910ea3f1f5c82ede1b73ad8d2f08104b392bfd47e3614201"
+                }
+            },
+            "stages": [
+                {
+                    "name": "PullImages",
+                    "startTime": "2019-11-07T00:00:47Z",
+                    "durationMilliseconds": 11463,
+                    "steps": [
+                        {
+                            "name": "PullBaseImage",
+                            "startTime": "2019-11-07T00:00:47Z",
+                            "durationMilliseconds": 11463
+                        }
+                    ]
+                },
+                {
+                    "name": "Build",
+                    "startTime": "2019-11-07T00:00:58Z",
+                    "durationMilliseconds": 89378,
+                    "steps": [
+                        {
+                            "name": "DockerBuild",
+                            "startTime": "2019-11-07T00:00:58Z",
+                            "durationMilliseconds": 89378
+                        }
+                    ]
+                },
+                {
+                    "name": "PushImage",
+                    "startTime": "2019-11-07T00:02:28Z",
+                    "durationMilliseconds": 6309,
+                    "steps": [
+                        {
+                            "name": "PushDockerImage",
+                            "startTime": "2019-11-07T00:02:28Z",
+                            "durationMilliseconds": 6309
+                        }
+                    ]
+                }
+            ]
+        }
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+{
+    "type": "ADDED",
+    "object": {
+        "kind": "Build",
+        "apiVersion": "build.openshift.io/v1",
+        "metadata": {
+            "name": "bcdc-test-1",
+            "namespace": "databcdc",
+            "selfLink": "/apis/build.openshift.io/v1/namespaces/databcdc/builds/bcdc-test-1",
+            "uid": "cb594797-e9fe-11e9-8615-0050568348cc",
+            "resourceVersion": "1002209431",
+            "creationTimestamp": "2019-10-08T19:06:55Z",
+            "labels": {
+                "app": "",
+                "buildconfig": "bcdc-test",
+                "openshift.io/build-config.name": "bcdc-test",
+                "openshift.io/build.start-policy": "Serial"
+            },
+            "annotations": {
+                "openshift.io/build-config.name": "bcdc-test",
+                "openshift.io/build.number": "1",
+                "openshift.io/build.pod-name": "bcdc-test-1-build"
+            },
+            "ownerReferences": [
+                {
+                    "apiVersion": "build.openshift.io/v1",
+                    "kind": "BuildConfig",
+                    "name": "bcdc-test",
+                    "uid": "64e46184-e9fe-11e9-8615-0050568348cc",
+                    "controller": true
+                }
+            ]
+        },
+        "spec": {
+            "serviceAccount": "builder",
+            "source": {
+                "type": "Dockerfile",
+                "dockerfile": "FROM python:3-slim\nADD . /app\nWORKDIR /app\nRUN pip install bcdc-apitests-dev\nRUN pip install bcdc-apitests-dev -U\nRUN pip install matterhook\nADD https://raw.githubusercontent.com/bcgov/bcdc-test/dev/pytest-run.py ./pytest-run.py\nRUN [\"chmod\", \"755\", \"/app/pytest-run.py\"]\nRUN [\"ls\",\"-la\"]\nENTRYPOINT [ \"python\", \"/app/pytest-run.py\" ]"
+            },
+            "strategy": {
+                "type": "Docker",
+                "dockerStrategy": {
+                    "from": {
+                        "kind": "DockerImage",
+                        "name": "python:3-slim"
+                    }
+                }
+            },
+            "output": {
+                "to": {
+                    "kind": "ImageStreamTag",
+                    "name": "bcdc-test:latest"
+                },
+                "pushSecret": {
+                    "name": "builder-dockercfg-kzv6s"
+                }
+            },
+            "resources": {},
+            "postCommit": {},
+            "nodeSelector": null,
+            "triggeredBy": [
+                {
+                    "message": "Manually triggered"
+                }
+            ]
+        },
+        "status": {
+            "phase": "Complete",
+            "startTimestamp": "2019-10-08T19:06:55Z",
+            "completionTimestamp": "2019-10-08T19:08:52Z",
+            "duration": 117000000000,
+            "outputDockerImageReference": "docker-registry.default.svc:5000/databcdc/bcdc-test:latest",
+            "config": {
+                "kind": "BuildConfig",
+                "namespace": "databcdc",
+                "name": "bcdc-test"
+            },
+            "output": {
+                "to": {
+                    "imageDigest": "sha256:7b65d13dc5c26a1c37333587612c456e68ac9b8ee160c6774a13877cab4cda1a"
+                }
+            },
+            "stages": [
+                {
+                    "name": "PullImages",
+                    "startTime": "2019-10-08T19:07:10Z",
+                    "durationMilliseconds": 3568,
+                    "steps": [
+                        {
+                            "name": "PullBaseImage",
+                            "startTime": "2019-10-08T19:07:10Z",
+                            "durationMilliseconds": 3568
+                        }
+                    ]
+                },
+                {
+                    "name": "Build",
+                    "startTime": "2019-10-08T19:07:14Z",
+                    "durationMilliseconds": 91779,
+                    "steps": [
+                        {
+                            "name": "DockerBuild",
+                            "startTime": "2019-10-08T19:07:14Z",
+                            "durationMilliseconds": 91779
+                        }
+                    ]
+                },
+                {
+                    "name": "PushImage",
+                    "startTime": "2019-10-08T19:08:46Z",
+                    "durationMilliseconds": 4969,
+                    "steps": [
+                        {
+                            "name": "PushDockerImage",
+                            "startTime": "2019-10-08T19:08:46Z",
+                            "durationMilliseconds": 4969
+                        }
+                    ]
+                }
+            ]
+        }
+    }
+}

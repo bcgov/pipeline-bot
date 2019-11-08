@@ -1,6 +1,5 @@
 request = require('request')
 stream = require('stream')
-oboe = require('oboe-promise')
 oboe = require('oboe')
 _ = require('lodash')
 
@@ -13,7 +12,7 @@ project = 'databcdc'
 getDataOboe = (project) ->
     new Promise (resolve) ->
 
-        monitorUrl = "https://#{domain}/apis/build.openshift.io/v1/watch/namespaces/#{project}/builds/"
+        monitorUrl = "https://#{domain}/apis/build.openshift.io/v1/watch/namespaces/#{project}/builds/bcdc-test-dev-1/"
         oboeReqestDef = {   
             url: monitorUrl,
             method: "GET",
@@ -22,7 +21,6 @@ getDataOboe = (project) ->
                 Authorization : "Bearer #{apikey}"
             }
         }
-        cnt = 0
         recordtype = undefined
         phase = undefined
 
@@ -34,14 +32,15 @@ getDataOboe = (project) ->
                     console.log "---------------record type: #{node}-----------------"
                     recordtype = node
                 else if (path.length == 3) 
-                    console.log "#{JSON.stringify(path)}"
-                    if _.isEqual(path, ["object", "status", "phase"])
+                    console.log "path--- #{JSON.stringify(path)}"
+                    if _.isEqual(_.sortBy(path), _.sortBy(["object", "status", "phase"]))
                         phase = node
-                if recordtype == 'ADDED' and phase == 'Complete'
-                    this.done()
-                    this.abort()
+                        console.log "    phase: #{phase}"
+                if recordtype == 'ADDED' and phase == 'New'
+                    #if recordtype == 'MODIFIED' and phase == 'Complete'
                     console.log "returning data: #{recordtype} #{phase}"
                     resolve [recordtype, phase]
+                    this.abort()
                 cnt = cnt + 1
             )
             .fail( ( errorReport ) ->

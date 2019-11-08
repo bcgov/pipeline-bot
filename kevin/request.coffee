@@ -1,4 +1,9 @@
 
+
+# experiment in how to watch the oc build request.
+
+
+
 request = require('request-promise')
 rq = require('request')
 stream = require('stream')
@@ -11,6 +16,8 @@ class OCAPI
     protocol = 'https'
     buildStatus = 'NOT STARTED'
     deployStatus = 'NOT STARTED'
+
+    requestTimeoutSeconds = 300
 
     constructor : (domain, apikey=null) ->
         @domain = domain
@@ -80,54 +87,6 @@ class OCAPI
                console.log err
                json = err
 
-    watchBuild : (ocProject, buildPromise)->
-        reqConfig = {
-            method: 'GET',
-            headers: {
-                Accept: 'application/json, */*'
-            },
-        }
-
-        # add the api key to the request descriptor
-        if this.apikey?
-            reqConfig.headers.Authorization =  "Bearer #{this.apikey}"
-            console.log 'authorization is: ' + reqConfig.headers.Authorization
-        urldomain = this.baseUrl()
-
-        buildPromise.then (response) ->
-            watchBuildUrl = "#{urldomain}/apis/build.openshift.io/v1/watch/namespaces/#{ocProject}/builds/#{response.metadata.name}"
-            reqConfig.url = watchBuildUrl
-            oboePromise = new Promise (resolve) ->
-                recordtype = undefined
-                phase = undefined
-                oboeRequest = oboe(reqConfig)
-                    .node('*', (node, path) ->
-                        if ( path.length == 1) and path[0] == 'type'
-                            cnt = cnt + 1
-                            console.log "---------------record type: #{node}-----------------"
-                            recordtype = node
-                        else if (path.length == 3) 
-                            console.log "#{JSON.stringify(path)}"
-                            if _.isEqual(path, ["object", "status", "phase"])
-                                phase = node
-                                console.log "phase: #{phase}"
-                        if recordtype == 'ADDED' and phase == 'New'
-                            console.log "returning data: #{recordtype} #{phase}"
-                            console.log "this: #{this} #{typeof this}"
-                            this.abort()
-                            resolve [recordtype, phase]
-                            return 
-                            this.done()
-                        cnt = cnt + 1
-                    )
-                    .fail( ( errorReport ) ->
-                        console.log "error caught here"
-                        console.log "status code: #{errorReport.statusCode}")
-                    .done( () ->
-                        console.log "done")
-                resolve [recordtype, phase]
-
-
     watchBuildNP : (ocProject, buildData)->
         reqConfig = {
             method: 'GET',
@@ -143,6 +102,7 @@ class OCAPI
         urldomain = this.baseUrl()
 
         watchBuildUrl = "#{urldomain}/apis/build.openshift.io/v1/watch/namespaces/#{ocProject}/builds/#{buildData.metadata.name}"
+        watchBuildUrl = watchBuildUrl + "?timeoutSeconds=#{requestTimeoutSeconds}"
         reqConfig.url = watchBuildUrl
         oboePromise = new Promise (resolve) ->
             recordtype = undefined
@@ -158,12 +118,11 @@ class OCAPI
                             phase = node
                             console.log "phase: #{phase}"
                     #if recordtype == 'ADDED' and phase == 'New'
-                    if recordtype == 'MODIFIED' and ( phase in ['Complete', 'Cancelled']
+                    if recordtype == 'MODIFIED' and ( phase in ['Complete', 'Cancelled'])
                         console.log "returning data: #{recordtype} #{phase}"
                         this.abort()
                         resolve [recordtype, phase]
                         this.done()
-                    cnt = cnt + 1
                 )
                 .fail( ( errorReport ) ->
                     console.log "status code: #{errorReport.statusCode}")
@@ -180,27 +139,6 @@ class OCAPI
         console.log "---watchBuild---: #{watchBuildStatus} #{typeof watchBuildStatus}"
         return watchBuildStatus
 
-    monitorBuild : (watchPromise) ->
-        # https://2ality.com/2018/04/async-iter-nodejs.html
-        watcher = undefined
-        await watchPromise.then (request) ->
-            watcher = new WatchBuildTillComplete(request)
-            await myCoolPromise = new Promise (resolve, reject) ->
-                # do a thing
-                request.pipe(watcher).on('abort', () ->
-                    console.log "end is found")
-                success = true
-                if success
-                    console.log("success on thepipe")
-                    resolve watcher
-                else
-                    console.log("trapped error")
-                    reject Error 'it broke'
-            return watcher
-        
-
-        
-
 # call the function that was created
 #getAPIEndPoints()
 
@@ -214,15 +152,5 @@ api = new OCAPI(domain, apikey)
 project = 'databcdc'
 buildConfig = 'bcdc-test-dev'
 
-#buildInitPromise = api.startBuild(project, buildConfig)
-# watchPromise = api.watchBuild(project, buildInitPromise)
-# monitorPromise = api.monitorBuild(watchPromise)
-# monitorPromise.then (results)->
-#     console.log("Build results: #{results}")
-
 status = api.startAndWatch(project, buildConfig)
 console.log("status: #{status}")
-
-
-
-
