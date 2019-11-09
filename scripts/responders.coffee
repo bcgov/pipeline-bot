@@ -1,8 +1,6 @@
 mat_room = process.env.HUBOT_MATTERMOST_CHANNEL
 apikey = process.env.HUBOT_OCPAPIKEY
 domain = process.env.HUBOT_OCPDOMAIN
-project = 'databcdc'
-buildConfig = 'pipeline-bot'
 
 module.exports = (robot) ->
 
@@ -13,33 +11,84 @@ module.exports = (robot) ->
      res.reply 'Nothing to report. Currently under development at this time.'
 
 
-   #demo ONLY to be removed
-   robot.respond /deploy pipeline-bot/i, (res) ->
-     res.reply 'Deploying myself now.'
+   # Deploy example
+   robot.respond /deploy (.*) (.*)/i, (res) ->
+     # pipeline-bot deploy <configName> <project>
+     config = res.match[1]
+     project = res.match[2]
+     console.log "#{config} #{project}"
 
-     robot.http("https://console.pathfinder.gov.bc.ca:8443/apis/apps.openshift.io/v1/namespaces/#{project}/deploymentconfigs/#{buildConfig}/instantiate")
+     robot.http("https://#{domain}/apis/apps.openshift.io/v1/namespaces/#{project}/deploymentconfigs/#{config}/instantiate")
        .header('Accept', 'application/json')
        .header("Authorization", "Bearer #{apikey}")
        .post(JSON.stringify({
-        kind :"DeploymentRequest", apiVersion:"apps.openshift.io/v1", name:"pipeline-bot", latest :true, force :true
-      })) (err, res, body) ->
-          # error checking code here
+        kind :"DeploymentRequest", apiVersion:"apps.openshift.io/v1", name:"#{config}", latest :true, force :true
+      })) (err, httpres, body) ->
+        # check for errs
+        if err
+          res.reply "Encountered an error :( #{err}"
+          return
 
         data = JSON.parse body
         console.log data
 
-   #demo ONLY to be removed
-   robot.respond /build pipeline-bot/i, (res) ->
-     res.reply 'Building myself now.'
+        # check for ocp returned status responses.
+        if data.kind == "Status"
+          status = data.status
+          reason = data.message
+          res.reply "#{status} #{reason} "
+          return
 
-     robot.http("https://console.pathfinder.gov.bc.ca:8443/apis/build.openshift.io/v1/namespaces/#{project}/buildconfigs/#{buildConfig}/instantiate")
+        #continue and message back succesful resp details
+        kind = data.kind
+        deployName = data.metadata.name
+        namespace = data.metadata.namespace
+        time = data.metadata.creationTimestamp
+        version = data.status.latestVersion
+
+        mesg = "Starting  #{kind} #{deployName} #{version} in #{namespace} at #{time}"
+        console.log mesg
+        res.reply mesg
+
+
+   # Build example
+   robot.respond /build (.*) (.*)/i, (res) ->
+     # pipeline-bot build <configName> <project>
+     config = res.match[1]
+     project = res.match[2]
+     console.log "#{config} #{project}"
+
+     robot.http("https://#{domain}/apis/build.openshift.io/v1/namespaces/#{project}/buildconfigs/#{config}/instantiate")
        .header('Accept', 'application/json')
        .header("Authorization", "Bearer #{apikey}")
        .post(JSON.stringify({
-        kind: "BuildRequest", apiVersion: "build.openshift.io/v1", metadata: {name: "pipeline-bot", creationTimestamp: null}, triggeredBy: [{message: "Triggered with coffee"}], dockerStrategyOptions: {}, sourceStrategyOptions: {}
-      })) (err, res, body) ->
-          # error checking code here
+        kind: "BuildRequest", apiVersion: "build.openshift.io/v1", metadata: {name:"#{config}", creationTimestamp: null}, triggeredBy: [{message: "Triggered by Bot"}], dockerStrategyOptions: {}, sourceStrategyOptions: {}
+      })) (err, httpRes, body) ->
+        # check for errs
+        if err
+          res.reply "Encountered an error :( #{err}"
+          return
 
         data = JSON.parse body
         console.log data
+
+        # check for ocp returned status responses.
+        if data.kind == "Status"
+          status = data.status
+          reason = data.message
+          res.reply "#{status} #{reason} "
+          return
+
+        #continue and message back succesful resp details
+        kind = data.kind
+        buildName = data.metadata.name
+        namespace = data.metadata.namespace
+        time = data.metadata.creationTimestamp
+        phase = data.status.phase
+
+        mesg = "Starting #{phase} #{kind} #{buildName} in #{namespace} at #{time}"
+        console.log mesg
+        res.reply mesg
+
+
 
