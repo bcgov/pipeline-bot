@@ -1,3 +1,21 @@
+# Description:
+#   respnders script file
+#
+# Created by:
+#   craigrigdon
+#
+# Commands:
+#   pipeline-bot deploy <configName> <project> - start deployment config in OCP project space
+#   pipeline-bot build <configName> <project> - start buildconfig in OCP project space
+#   pipeline-bot mission - get pipeline-bots mission in life
+#   pipeline-bot status - get status of pipeline
+# Notes:
+#   Hubot includes support for the express web framework to serve up HTTP requests.
+#   It listens on the port specified by the EXPRESS_PORT or PORT environment variables (preferred in that order)
+#   and defaults to 8080. An instance of an express application is available at robot.router.
+#   It can be protected with username and password by specifying EXPRESS_USER and EXPRESS_PASSWORD.
+#   It can automatically serve static files by setting EXPRESS_STATIC.
+
 mat_room = process.env.HUBOT_MATTERMOST_CHANNEL
 apikey = process.env.HUBOT_OCPAPIKEY
 domain = process.env.HUBOT_OCPDOMAIN
