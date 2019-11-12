@@ -1,3 +1,24 @@
+# Description:
+#   responders script file
+#
+# Dependencies:
+#
+#
+# Configuration:
+#
+#
+# Commands:
+#   pipeline-bot deploy <configName> <project> - start deployment config in OCP project space
+#   pipeline-bot build <configName> <project> - start buildconfig in OCP project space
+#   pipeline-bot mission - get pipeline-bots mission in life
+#   pipeline-bot status - get status of pipeline
+#
+# Notes:
+#
+#
+# Author:
+#   craigrigdon
+
 mat_room = process.env.HUBOT_MATTERMOST_CHANNEL
 apikey = process.env.HUBOT_OCPAPIKEY
 domain = process.env.HUBOT_OCPDOMAIN
