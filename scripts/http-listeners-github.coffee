@@ -18,18 +18,22 @@ route = '/hubot/github'
 module.exports = (robot) ->
 
   robot.router.post route, (req, res) ->
+
     console.log route
+
     data = if req.body.payload? then JSON.parse req.body.payload else req.body
     console.log data
-
-    commits = data.commits
-    pusher = data.pusher.name
+    commitID = data.head_commit.id
+    committer = data.committer.username
+    timestamp = data.head_commit.timestamp
     ref = data.ref
 
-#    console.log data.commits
-    console.log "Recieved #{commits} by #{pusher} for #{ref}"
+    # build message
+    mesg = "Commit #{commitID} by #{committer} for #{ref} at #{timestamp}"
+    console.log mesg
 
-#   robot.messageRoom mat_room, "#{env} #{stage} #{status}"
+    # send message
+    robot.messageRoom mat_room, "#{mesg}"
+
     status = "Success"
     res.send status
-
