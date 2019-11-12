@@ -1,15 +1,21 @@
 # Description:
-#   http listener srcipt to create endpoint to be used by exteral services to notify hubot of status
+#   http listener for github action payload
 #
-# Created by:
-#   craigrigdon
+# Dependencies:
+#
+#
+# Configuration:
+#
+#
+# Commands:
 #
 # Notes:
-#   Hubot includes support for the express web framework to serve up HTTP requests.
-#   It listens on the port specified by the EXPRESS_PORT or PORT environment variables (preferred in that order)
-#   and defaults to 8080. An instance of an express application is available at robot.router.
-#   It can be protected with username and password by specifying EXPRESS_USER and EXPRESS_PASSWORD.
-#   It can automatically serve static files by setting EXPRESS_STATIC.
+#   expects GITHUB_EVENT_PATH payload from github actions
+#   example: curl -X POST -H "Content-Type: application/json" -H "apikey: <key-if-required>" -d GITHUB_EVENT_PATH https://<bot-url/hubot/github
+#
+#
+# Author:
+#   craigrigdon
 
 # get mattermost channel from env var passed to container on deployment
 mat_room = process.env.HUBOT_MATTERMOST_CHANNEL
@@ -21,6 +27,7 @@ module.exports = (robot) ->
 
     console.log route
 
+    # TODO: error check payload
     data = if req.body.payload? then JSON.parse req.body.payload else req.body
     console.log data
     commitID = data.head_commit.id
@@ -38,5 +45,6 @@ module.exports = (robot) ->
     # send message
     robot.messageRoom mat_room, "#{mesg}"
 
+    # TODO: error check and return status
     status = "Success"
     res.send status
