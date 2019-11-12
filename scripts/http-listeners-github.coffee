@@ -23,13 +23,14 @@ module.exports = (robot) ->
 
     data = if req.body.payload? then JSON.parse req.body.payload else req.body
     console.log data
-    commitID = data.head_commit.id
+    commitID = data.head_commit.id.slice 7
     committer = data.head_commit.committer.username
     timestamp = data.head_commit.timestamp
+    commitURL = data.head_commit.url
     ref = data.ref
 
     # build message
-    mesg = "Commit #{commitID} by #{committer} for #{ref} at #{timestamp}"
+    mesg = "Commit [#{commitID}](#{commitURL}) by #{committer} for #{ref} at #{timestamp}"
     console.log mesg
 
     # send message
