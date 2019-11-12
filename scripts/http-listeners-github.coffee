@@ -24,7 +24,7 @@ module.exports = (robot) ->
     data = if req.body.payload? then JSON.parse req.body.payload else req.body
     console.log data
     commitID = data.head_commit.id
-    committer = data.committer.username
+    committer = data.head_commit.committer.username
     timestamp = data.head_commit.timestamp
     ref = data.ref
 
