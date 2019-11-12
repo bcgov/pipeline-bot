@@ -20,7 +20,7 @@ module.exports = (robot) ->
   robot.router.post route, (req, res) ->
     console.log route
     data = if req.body.payload? then JSON.parse req.body.payload else req.body
-#    console.log data
+    console.log data
 
     commits = data.commits
     pusher = data.pusher.name
