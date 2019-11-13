@@ -42,6 +42,9 @@ module.exports = (robot) ->
     mesg = "Commit [#{commitID}](#{commitURL}) by #{committer} for #{ref} at #{timestamp} on [#{repoName}](#{repoURL})"
     console.log mesg
 
+    # add to brain
+    robot.brain.set(repoName, {mesg: mesg, timestamp: timestamp})
+
     # send message
     robot.messageRoom mat_room, "#{mesg}"
 

@@ -45,6 +45,7 @@ module.exports = (robot) ->
     data = robot.brain.data
     console.log data
 
+    # get all keys in brain
     keys = Object.keys(robot.brain.data._private)
     console.log keys
 

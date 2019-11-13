@@ -11,7 +11,9 @@
 #   pipeline-bot deploy <configName> <project> - start deployment config in OCP project space
 #   pipeline-bot build <configName> <project> - start buildconfig in OCP project space
 #   pipeline-bot mission - get pipeline-bots mission in life
-#   pipeline-bot status - get status of pipeline
+#   pipeline-bot status <repo/name> - get status of pipeline
+#   pipeline-bot list - get list of repos in pipeline
+#
 #
 # Notes:
 #
@@ -28,9 +30,26 @@ module.exports = (robot) ->
    robot.respond /mission/i, (res) ->
      res.reply 'I am a CI/CD Pipeline Tool.  I will monitor and orchestrate deployments. Feel free to check-in on me anytime by using "pipeline-bot status"'
 
-   robot.respond /status/i, (res) ->
-     res.reply 'Nothing to report. Currently under development at this time.'
+   # list all
+   robot.respond /list/i, (res) ->
+     # get all keys in brain
+     keys = Object.keys(robot.brain.data._private)
+     console.log keys
 
+     mesg = "pipelines in progress: #{JSON.stringify(keys)}"
+
+     res.reply mesg
+
+   robot.respond /status (.*)/i, (res) ->
+     repo = res.match[1]
+     console.log "#{rep}"
+
+     # get
+     event = robot.brain.get(repo)
+
+     if event?
+        mesg = "#{JSON.stringify(event)}"
+     res.reply mesg
 
    # Deploy example
    robot.respond /deploy (.*) (.*)/i, (res) ->
