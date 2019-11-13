@@ -36,7 +36,10 @@ module.exports = (robot) ->
      keys = Object.keys(robot.brain.data._private)
      console.log keys
 
-     mesg = "pipelines in progress: #{JSON.stringify(keys)}"
+     if keys?
+        mesg = "pipelines in progress: #{JSON.stringify(keys)}"
+     else
+        mesg = "no pipelines in progress"
 
      res.reply mesg
 
@@ -49,6 +52,9 @@ module.exports = (robot) ->
 
      if event?
         mesg = "#{JSON.stringify(event)}"
+     else
+        mesg = "sorry nothing here by that name, try 'pipeline-bot list' to show all repos in pipeline"
+
      res.reply mesg
 
    # Deploy example
