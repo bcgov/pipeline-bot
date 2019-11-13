@@ -4,384 +4,6 @@
         "kind": "Build",
         "apiVersion": "build.openshift.io/v1",
         "metadata": {
-            "name": "bcdc-test-dev-82",
-            "namespace": "databcdc",
-            "selfLink": "/apis/build.openshift.io/v1/namespaces/databcdc/builds/bcdc-test-dev-82",
-            "uid": "9740ac16-00f1-11ea-be53-0050568348cc",
-            "resourceVersion": "1099100247",
-            "creationTimestamp": "2019-11-07T00:00:21Z",
-            "labels": {
-                "app": "",
-                "buildconfig": "bcdc-test-dev",
-                "openshift.io/build-config.name": "bcdc-test-dev",
-                "openshift.io/build.start-policy": "Serial"
-            },
-            "annotations": {
-                "openshift.io/build-config.name": "bcdc-test-dev",
-                "openshift.io/build.number": "82"
-            },
-            "ownerReferences": [
-                {
-                    "apiVersion": "build.openshift.io/v1",
-                    "kind": "BuildConfig",
-                    "name": "bcdc-test-dev",
-                    "uid": "6bb6f1f6-e9fd-11e9-8615-0050568348cc",
-                    "controller": true
-                }
-            ]
-        },
-        "spec": {
-            "serviceAccount": "builder",
-            "source": {
-                "type": "Dockerfile",
-                "dockerfile": "FROM python:3-slim\nADD . /app\nWORKDIR /app\nRUN pip install pypandoc\nRUN pip install --upgrade --force-reinstall bcdc-apitests-dev\nRUN pip install -I bcdc-apitests-dev\nRUN pip install matterhook\nENTRYPOINT [ \"pytest-run.py\" ]"
-            },
-            "strategy": {
-                "type": "Docker",
-                "dockerStrategy": {
-                    "from": {
-                        "kind": "DockerImage",
-                        "name": "python:3-slim"
-                    }
-                }
-            },
-            "output": {
-                "to": {
-                    "kind": "ImageStreamTag",
-                    "name": "bcdc-test-dev:latest"
-                }
-            },
-            "resources": {},
-            "postCommit": {},
-            "nodeSelector": null,
-            "triggeredBy": [
-                {
-                    "message": "Triggered with coffee"
-                }
-            ]
-        },
-        "status": {
-            "phase": "New",
-            "config": {
-                "kind": "BuildConfig",
-                "namespace": "databcdc",
-                "name": "bcdc-test-dev"
-            },
-            "output": {}
-        }
-    }
-}
-
-
-    
-{
-    "type": "MODIFIED",
-    "object": {
-        "kind": "Build",
-        "apiVersion": "build.openshift.io/v1",
-        "metadata": {
-            "name": "bcdc-test-dev-82",
-            "namespace": "databcdc",
-            "selfLink": "/apis/build.openshift.io/v1/namespaces/databcdc/builds/bcdc-test-dev-82",
-            "uid": "9740ac16-00f1-11ea-be53-0050568348cc",
-            "resourceVersion": "1099100258",
-            "creationTimestamp": "2019-11-07T00:00:21Z",
-            "labels": {
-                "app": "",
-                "buildconfig": "bcdc-test-dev",
-                "openshift.io/build-config.name": "bcdc-test-dev",
-                "openshift.io/build.start-policy": "Serial"
-            },
-            "annotations": {
-                "openshift.io/build-config.name": "bcdc-test-dev",
-                "openshift.io/build.number": "82",
-                "openshift.io/build.pod-name": "bcdc-test-dev-82-build"
-            },
-            "ownerReferences": [
-                {
-                    "apiVersion": "build.openshift.io/v1",
-                    "kind": "BuildConfig",
-                    "name": "bcdc-test-dev",
-                    "uid": "6bb6f1f6-e9fd-11e9-8615-0050568348cc",
-                    "controller": true
-                }
-            ]
-        },
-        "spec": {
-            "serviceAccount": "builder",
-            "source": {
-                "type": "Dockerfile",
-                "dockerfile": "FROM python:3-slim\nADD . /app\nWORKDIR /app\nRUN pip install pypandoc\nRUN pip install --upgrade --force-reinstall bcdc-apitests-dev\nRUN pip install -I bcdc-apitests-dev\nRUN pip install matterhook\nENTRYPOINT [ \"pytest-run.py\" ]"
-            },
-            "strategy": {
-                "type": "Docker",
-                "dockerStrategy": {
-                    "from": {
-                        "kind": "DockerImage",
-                        "name": "python:3-slim"
-                    }
-                }
-            },
-            "output": {
-                "to": {
-                    "kind": "ImageStreamTag",
-                    "name": "bcdc-test-dev:latest"
-                },
-                "pushSecret": {
-                    "name": "builder-dockercfg-kzv6s"
-                }
-            },
-            "resources": {},
-            "postCommit": {},
-            "nodeSelector": null,
-            "triggeredBy": [
-                {
-                    "message": "Triggered with coffee"
-                }
-            ]
-        },
-        "status": {
-            "phase": "Pending",
-            "outputDockerImageReference": "docker-registry.default.svc:5000/databcdc/bcdc-test-dev:latest",
-            "config": {
-                "kind": "BuildConfig",
-                "namespace": "databcdc",
-                "name": "bcdc-test-dev"
-            },
-            "output": {}
-        }
-    }
-}
-
-
-
-{
-    "type": "MODIFIED",
-    "object": {
-        "kind": "Build",
-        "apiVersion": "build.openshift.io/v1",
-        "metadata": {
-            "name": "bcdc-test-dev-82",
-            "namespace": "databcdc",
-            "selfLink": "/apis/build.openshift.io/v1/namespaces/databcdc/builds/bcdc-test-dev-82",
-            "uid": "9740ac16-00f1-11ea-be53-0050568348cc",
-            "resourceVersion": "1099101844",
-            "creationTimestamp": "2019-11-07T00:00:21Z",
-            "labels": {
-                "app": "",
-                "buildconfig": "bcdc-test-dev",
-                "openshift.io/build-config.name": "bcdc-test-dev",
-                "openshift.io/build.start-policy": "Serial"
-            },
-            "annotations": {
-                "openshift.io/build-config.name": "bcdc-test-dev",
-                "openshift.io/build.number": "82",
-                "openshift.io/build.pod-name": "bcdc-test-dev-82-build"
-            },
-            "ownerReferences": [
-                {
-                    "apiVersion": "build.openshift.io/v1",
-                    "kind": "BuildConfig",
-                    "name": "bcdc-test-dev",
-                    "uid": "6bb6f1f6-e9fd-11e9-8615-0050568348cc",
-                    "controller": true
-                }
-            ]
-        },
-        "spec": {
-            "serviceAccount": "builder",
-            "source": {
-                "type": "Dockerfile",
-                "dockerfile": "FROM python:3-slim\nADD . /app\nWORKDIR /app\nRUN pip install pypandoc\nRUN pip install --upgrade --force-reinstall bcdc-apitests-dev\nRUN pip install -I bcdc-apitests-dev\nRUN pip install matterhook\nENTRYPOINT [ \"pytest-run.py\" ]"
-            },
-            "strategy": {
-                "type": "Docker",
-                "dockerStrategy": {
-                    "from": {
-                        "kind": "DockerImage",
-                        "name": "python:3-slim"
-                    }
-                }
-            },
-            "output": {
-                "to": {
-                    "kind": "ImageStreamTag",
-                    "name": "bcdc-test-dev:latest"
-                },
-                "pushSecret": {
-                    "name": "builder-dockercfg-kzv6s"
-                }
-            },
-            "resources": {},
-            "postCommit": {},
-            "nodeSelector": null,
-            "triggeredBy": [
-                {
-                    "message": "Triggered with coffee"
-                }
-            ]
-        },
-        "status": {
-            "phase": "Running",
-            "startTimestamp": "2019-11-07T00:00:28Z",
-            "outputDockerImageReference": "docker-registry.default.svc:5000/databcdc/bcdc-test-dev:latest",
-            "config": {
-                "kind": "BuildConfig",
-                "namespace": "databcdc",
-                "name": "bcdc-test-dev"
-            },
-            "output": {}
-        }
-    }
-}
-
-{
-    "type": "MODIFIED",
-    "object": {
-        "kind": "Build",
-        "apiVersion": "build.openshift.io/v1",
-        "metadata": {
-            "name": "bcdc-test-dev-82",
-            "namespace": "databcdc",
-            "selfLink": "/apis/build.openshift.io/v1/namespaces/databcdc/builds/bcdc-test-dev-82",
-            "uid": "9740ac16-00f1-11ea-be53-0050568348cc",
-            "resourceVersion": "1099107067",
-            "creationTimestamp": "2019-11-07T00:00:21Z",
-            "labels": {
-                "app": "",
-                "buildconfig": "bcdc-test-dev",
-                "openshift.io/build-config.name": "bcdc-test-dev",
-                "openshift.io/build.start-policy": "Serial"
-            },
-            "annotations": {
-                "openshift.io/build-config.name": "bcdc-test-dev",
-                "openshift.io/build.number": "82",
-                "openshift.io/build.pod-name": "bcdc-test-dev-82-build"
-            },
-            "ownerReferences": [
-                {
-                    "apiVersion": "build.openshift.io/v1",
-                    "kind": "BuildConfig",
-                    "name": "bcdc-test-dev",
-                    "uid": "6bb6f1f6-e9fd-11e9-8615-0050568348cc",
-                    "controller": true
-                }
-            ]
-        },
-        "spec": {
-            "serviceAccount": "builder",
-            "source": {
-                "type": "Dockerfile",
-                "dockerfile": "FROM python:3-slim\nADD . /app\nWORKDIR /app\nRUN pip install pypandoc\nRUN pip install --upgrade --force-reinstall bcdc-apitests-dev\nRUN pip install -I bcdc-apitests-dev\nRUN pip install matterhook\nENTRYPOINT [ \"pytest-run.py\" ]"
-            },
-            "strategy": {
-                "type": "Docker",
-                "dockerStrategy": {
-                    "from": {
-                        "kind": "DockerImage",
-                        "name": "python:3-slim"
-                    }
-                }
-            },
-            "output": {
-                "to": {
-                    "kind": "ImageStreamTag",
-                    "name": "bcdc-test-dev:latest"
-                },
-                "pushSecret": {
-                    "name": "builder-dockercfg-kzv6s"
-                }
-            },
-            "resources": {},
-            "postCommit": {},
-            "nodeSelector": null,
-            "triggeredBy": [
-                {
-                    "message": "Triggered with coffee"
-                }
-            ]
-        },
-        "status": {
-            "phase": "Complete",
-            "startTimestamp": "2019-11-07T00:00:28Z",
-            "completionTimestamp": "2019-11-07T00:02:35Z",
-            "duration": 127000000000,
-            "outputDockerImageReference": "docker-registry.default.svc:5000/databcdc/bcdc-test-dev:latest",
-            "config": {
-                "kind": "BuildConfig",
-                "namespace": "databcdc",
-                "name": "bcdc-test-dev"
-            },
-            "output": {
-                "to": {
-                    "imageDigest": "sha256:71f1f6d88e5c837b910ea3f1f5c82ede1b73ad8d2f08104b392bfd47e3614201"
-                }
-            },
-            "stages": [
-                {
-                    "name": "PullImages",
-                    "startTime": "2019-11-07T00:00:47Z",
-                    "durationMilliseconds": 11463,
-                    "steps": [
-                        {
-                            "name": "PullBaseImage",
-                            "startTime": "2019-11-07T00:00:47Z",
-                            "durationMilliseconds": 11463
-                        }
-                    ]
-                },
-                {
-                    "name": "Build",
-                    "startTime": "2019-11-07T00:00:58Z",
-                    "durationMilliseconds": 89378,
-                    "steps": [
-                        {
-                            "name": "DockerBuild",
-                            "startTime": "2019-11-07T00:00:58Z",
-                            "durationMilliseconds": 89378
-                        }
-                    ]
-                },
-                {
-                    "name": "PushImage",
-                    "startTime": "2019-11-07T00:02:28Z",
-                    "durationMilliseconds": 6309,
-                    "steps": [
-                        {
-                            "name": "PushDockerImage",
-                            "startTime": "2019-11-07T00:02:28Z",
-                            "durationMilliseconds": 6309
-                        }
-                    ]
-                }
-            ]
-        }
-    }
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-{
-    "type": "ADDED",
-    "object": {
-        "kind": "Build",
-        "apiVersion": "build.openshift.io/v1",
-        "metadata": {
             "name": "bcdc-test-1",
             "namespace": "databcdc",
             "selfLink": "/apis/build.openshift.io/v1/namespaces/databcdc/builds/bcdc-test-1",
@@ -499,3 +121,4159 @@
         }
     }
 }
+{
+    "type": "ADDED",
+    "object": {
+        "kind": "Build",
+        "apiVersion": "build.openshift.io/v1",
+        "metadata": {
+            "name": "bcdc-test-2",
+            "namespace": "databcdc",
+            "selfLink": "/apis/build.openshift.io/v1/namespaces/databcdc/builds/bcdc-test-2",
+            "uid": "2058d168-f5ac-11e9-84ed-005056832285",
+            "resourceVersion": "1042660104",
+            "creationTimestamp": "2019-10-23T15:45:23Z",
+            "labels": {
+                "app": "",
+                "buildconfig": "bcdc-test",
+                "openshift.io/build-config.name": "bcdc-test",
+                "openshift.io/build.start-policy": "Serial"
+            },
+            "annotations": {
+                "openshift.io/build-config.name": "bcdc-test",
+                "openshift.io/build.number": "2",
+                "openshift.io/build.pod-name": "bcdc-test-2-build"
+            },
+            "ownerReferences": [
+                {
+                    "apiVersion": "build.openshift.io/v1",
+                    "kind": "BuildConfig",
+                    "name": "bcdc-test",
+                    "uid": "64e46184-e9fe-11e9-8615-0050568348cc",
+                    "controller": true
+                }
+            ]
+        },
+        "spec": {
+            "serviceAccount": "builder",
+            "source": {
+                "type": "Dockerfile",
+                "dockerfile": "FROM python:3-slim\nADD . /app\nWORKDIR /app\nRUN pip install pypandoc\nRUN pip install --upgrade --force-reinstall bcdc-apitests\nRUN pip install -I bcdc-apitests\nRUN pip install matterhook\nENTRYPOINT [ \"pytest-run.py\" ]"
+            },
+            "strategy": {
+                "type": "Docker",
+                "dockerStrategy": {
+                    "from": {
+                        "kind": "DockerImage",
+                        "name": "python:3-slim"
+                    }
+                }
+            },
+            "output": {
+                "to": {
+                    "kind": "ImageStreamTag",
+                    "name": "bcdc-test:latest"
+                },
+                "pushSecret": {
+                    "name": "builder-dockercfg-kzv6s"
+                }
+            },
+            "resources": {},
+            "postCommit": {},
+            "nodeSelector": null,
+            "triggeredBy": [
+                {
+                    "message": "Generic WebHook",
+                    "genericWebHook": {
+                        "secret": "\u003csecret\u003e"
+                    }
+                }
+            ]
+        },
+        "status": {
+            "phase": "Complete",
+            "startTimestamp": "2019-10-23T15:45:24Z",
+            "completionTimestamp": "2019-10-23T15:47:33Z",
+            "duration": 129000000000,
+            "outputDockerImageReference": "docker-registry.default.svc:5000/databcdc/bcdc-test:latest",
+            "config": {
+                "kind": "BuildConfig",
+                "namespace": "databcdc",
+                "name": "bcdc-test"
+            },
+            "output": {
+                "to": {
+                    "imageDigest": "sha256:9d0bb841e717d475554b2731439b6cdcaef3719aa303bcea069e594d873ca47c"
+                }
+            },
+            "stages": [
+                {
+                    "name": "PullImages",
+                    "startTime": "2019-10-23T15:45:35Z",
+                    "durationMilliseconds": 13582,
+                    "steps": [
+                        {
+                            "name": "PullBaseImage",
+                            "startTime": "2019-10-23T15:45:35Z",
+                            "durationMilliseconds": 13582
+                        }
+                    ]
+                },
+                {
+                    "name": "Build",
+                    "startTime": "2019-10-23T15:45:49Z",
+                    "durationMilliseconds": 86126,
+                    "steps": [
+                        {
+                            "name": "DockerBuild",
+                            "startTime": "2019-10-23T15:45:49Z",
+                            "durationMilliseconds": 86126
+                        }
+                    ]
+                },
+                {
+                    "name": "PushImage",
+                    "startTime": "2019-10-23T15:47:15Z",
+                    "durationMilliseconds": 15865,
+                    "steps": [
+                        {
+                            "name": "PushDockerImage",
+                            "startTime": "2019-10-23T15:47:15Z",
+                            "durationMilliseconds": 15865
+                        }
+                    ]
+                }
+            ]
+        }
+    }
+}
+{
+    "type": "ADDED",
+    "object": {
+        "kind": "Build",
+        "apiVersion": "build.openshift.io/v1",
+        "metadata": {
+            "name": "bcdc-test-3",
+            "namespace": "databcdc",
+            "selfLink": "/apis/build.openshift.io/v1/namespaces/databcdc/builds/bcdc-test-3",
+            "uid": "b2130ab7-f67f-11e9-b007-0050568348cc",
+            "resourceVersion": "1047423473",
+            "creationTimestamp": "2019-10-24T16:59:52Z",
+            "labels": {
+                "app": "",
+                "buildconfig": "bcdc-test",
+                "openshift.io/build-config.name": "bcdc-test",
+                "openshift.io/build.start-policy": "Serial"
+            },
+            "annotations": {
+                "openshift.io/build-config.name": "bcdc-test",
+                "openshift.io/build.number": "3",
+                "openshift.io/build.pod-name": "bcdc-test-3-build"
+            },
+            "ownerReferences": [
+                {
+                    "apiVersion": "build.openshift.io/v1",
+                    "kind": "BuildConfig",
+                    "name": "bcdc-test",
+                    "uid": "64e46184-e9fe-11e9-8615-0050568348cc",
+                    "controller": true
+                }
+            ]
+        },
+        "spec": {
+            "serviceAccount": "builder",
+            "source": {
+                "type": "Dockerfile",
+                "dockerfile": "FROM python:3-slim\nADD . /app\nWORKDIR /app\nRUN pip install pypandoc\nRUN pip install --upgrade --force-reinstall bcdc-apitests\nRUN pip install -I bcdc-apitests\nRUN pip install matterhook\nENTRYPOINT [ \"pytest-run.py\" ]"
+            },
+            "strategy": {
+                "type": "Docker",
+                "dockerStrategy": {
+                    "from": {
+                        "kind": "DockerImage",
+                        "name": "python:3-slim"
+                    }
+                }
+            },
+            "output": {
+                "to": {
+                    "kind": "ImageStreamTag",
+                    "name": "bcdc-test:latest"
+                },
+                "pushSecret": {
+                    "name": "builder-dockercfg-kzv6s"
+                }
+            },
+            "resources": {},
+            "postCommit": {},
+            "nodeSelector": null,
+            "triggeredBy": [
+                {
+                    "message": "Generic WebHook",
+                    "genericWebHook": {
+                        "secret": "\u003csecret\u003e"
+                    }
+                }
+            ]
+        },
+        "status": {
+            "phase": "Complete",
+            "startTimestamp": "2019-10-24T16:59:52Z",
+            "completionTimestamp": "2019-10-24T17:02:17Z",
+            "duration": 145000000000,
+            "outputDockerImageReference": "docker-registry.default.svc:5000/databcdc/bcdc-test:latest",
+            "config": {
+                "kind": "BuildConfig",
+                "namespace": "databcdc",
+                "name": "bcdc-test"
+            },
+            "output": {
+                "to": {
+                    "imageDigest": "sha256:2fca3438f658b04337ed15e2a1b965032831125b364ba51d96a04723741b1c56"
+                }
+            },
+            "stages": [
+                {
+                    "name": "PullImages",
+                    "startTime": "2019-10-24T17:00:10Z",
+                    "durationMilliseconds": 4427,
+                    "steps": [
+                        {
+                            "name": "PullBaseImage",
+                            "startTime": "2019-10-24T17:00:10Z",
+                            "durationMilliseconds": 4427
+                        }
+                    ]
+                },
+                {
+                    "name": "Build",
+                    "startTime": "2019-10-24T17:00:14Z",
+                    "durationMilliseconds": 114234,
+                    "steps": [
+                        {
+                            "name": "DockerBuild",
+                            "startTime": "2019-10-24T17:00:14Z",
+                            "durationMilliseconds": 114234
+                        }
+                    ]
+                },
+                {
+                    "name": "PushImage",
+                    "startTime": "2019-10-24T17:02:09Z",
+                    "durationMilliseconds": 6064,
+                    "steps": [
+                        {
+                            "name": "PushDockerImage",
+                            "startTime": "2019-10-24T17:02:09Z",
+                            "durationMilliseconds": 6064
+                        }
+                    ]
+                }
+            ]
+        }
+    }
+}
+{
+    "type": "ADDED",
+    "object": {
+        "kind": "Build",
+        "apiVersion": "build.openshift.io/v1",
+        "metadata": {
+            "name": "bcdc-test-4",
+            "namespace": "databcdc",
+            "selfLink": "/apis/build.openshift.io/v1/namespaces/databcdc/builds/bcdc-test-4",
+            "uid": "ecfd14a0-fcfd-11e9-b012-005056832285",
+            "resourceVersion": "1081244199",
+            "creationTimestamp": "2019-11-01T23:18:34Z",
+            "labels": {
+                "app": "",
+                "buildconfig": "bcdc-test",
+                "openshift.io/build-config.name": "bcdc-test",
+                "openshift.io/build.start-policy": "Serial"
+            },
+            "annotations": {
+                "openshift.io/build-config.name": "bcdc-test",
+                "openshift.io/build.number": "4",
+                "openshift.io/build.pod-name": "bcdc-test-4-build"
+            },
+            "ownerReferences": [
+                {
+                    "apiVersion": "build.openshift.io/v1",
+                    "kind": "BuildConfig",
+                    "name": "bcdc-test",
+                    "uid": "64e46184-e9fe-11e9-8615-0050568348cc",
+                    "controller": true
+                }
+            ]
+        },
+        "spec": {
+            "serviceAccount": "builder",
+            "source": {
+                "type": "Dockerfile",
+                "dockerfile": "FROM python:3-slim\nADD . /app\nWORKDIR /app\nRUN pip install pypandoc\nRUN pip install --upgrade --force-reinstall bcdc-apitests\nRUN pip install -I bcdc-apitests\nRUN pip install matterhook\nENTRYPOINT [ \"pytest-run.py\" ]"
+            },
+            "strategy": {
+                "type": "Docker",
+                "dockerStrategy": {
+                    "from": {
+                        "kind": "DockerImage",
+                        "name": "python:3-slim"
+                    }
+                }
+            },
+            "output": {
+                "to": {
+                    "kind": "ImageStreamTag",
+                    "name": "bcdc-test:latest"
+                },
+                "pushSecret": {
+                    "name": "builder-dockercfg-kzv6s"
+                }
+            },
+            "resources": {},
+            "postCommit": {},
+            "nodeSelector": null,
+            "triggeredBy": [
+                {
+                    "message": "Generic WebHook",
+                    "genericWebHook": {
+                        "secret": "\u003csecret\u003e"
+                    }
+                }
+            ]
+        },
+        "status": {
+            "phase": "Complete",
+            "startTimestamp": "2019-11-01T23:18:34Z",
+            "completionTimestamp": "2019-11-01T23:19:58Z",
+            "duration": 84000000000,
+            "outputDockerImageReference": "docker-registry.default.svc:5000/databcdc/bcdc-test:latest",
+            "config": {
+                "kind": "BuildConfig",
+                "namespace": "databcdc",
+                "name": "bcdc-test"
+            },
+            "output": {
+                "to": {
+                    "imageDigest": "sha256:c05556a1d3efc703b5323b3b683ce9ae77c616ce888e9ccc5831e6b16876688e"
+                }
+            },
+            "stages": [
+                {
+                    "name": "PullImages",
+                    "startTime": "2019-11-01T23:18:46Z",
+                    "durationMilliseconds": 7782,
+                    "steps": [
+                        {
+                            "name": "PullBaseImage",
+                            "startTime": "2019-11-01T23:18:46Z",
+                            "durationMilliseconds": 7782
+                        }
+                    ]
+                },
+                {
+                    "name": "Build",
+                    "startTime": "2019-11-01T23:18:54Z",
+                    "durationMilliseconds": 58487,
+                    "steps": [
+                        {
+                            "name": "DockerBuild",
+                            "startTime": "2019-11-01T23:18:54Z",
+                            "durationMilliseconds": 58487
+                        }
+                    ]
+                },
+                {
+                    "name": "PushImage",
+                    "startTime": "2019-11-01T23:19:53Z",
+                    "durationMilliseconds": 4006,
+                    "steps": [
+                        {
+                            "name": "PushDockerImage",
+                            "startTime": "2019-11-01T23:19:53Z",
+                            "durationMilliseconds": 4006
+                        }
+                    ]
+                }
+            ]
+        }
+    }
+}
+{
+    "type": "ADDED",
+    "object": {
+        "kind": "Build",
+        "apiVersion": "build.openshift.io/v1",
+        "metadata": {
+            "name": "bcdc-test-dev-174",
+            "namespace": "databcdc",
+            "selfLink": "/apis/build.openshift.io/v1/namespaces/databcdc/builds/bcdc-test-dev-174",
+            "uid": "61ff8339-0266-11ea-be53-0050568348cc",
+            "resourceVersion": "1106066227",
+            "creationTimestamp": "2019-11-08T20:28:54Z",
+            "labels": {
+                "app": "",
+                "buildconfig": "bcdc-test-dev",
+                "openshift.io/build-config.name": "bcdc-test-dev",
+                "openshift.io/build.start-policy": "Serial"
+            },
+            "annotations": {
+                "openshift.io/build-config.name": "bcdc-test-dev",
+                "openshift.io/build.number": "174",
+                "openshift.io/build.pod-name": "bcdc-test-dev-174-build"
+            },
+            "ownerReferences": [
+                {
+                    "apiVersion": "build.openshift.io/v1",
+                    "kind": "BuildConfig",
+                    "name": "bcdc-test-dev",
+                    "uid": "6bb6f1f6-e9fd-11e9-8615-0050568348cc",
+                    "controller": true
+                }
+            ]
+        },
+        "spec": {
+            "serviceAccount": "builder",
+            "source": {
+                "type": "Dockerfile",
+                "dockerfile": "FROM python:3-slim\nADD . /app\nWORKDIR /app\nRUN pip install pypandoc\nRUN pip install --upgrade --force-reinstall bcdc-apitests-dev\nRUN pip install -I bcdc-apitests-dev\nRUN pip install matterhook\nENTRYPOINT [ \"pytest-run.py\" ]"
+            },
+            "strategy": {
+                "type": "Docker",
+                "dockerStrategy": {
+                    "from": {
+                        "kind": "DockerImage",
+                        "name": "python:3-slim"
+                    }
+                }
+            },
+            "output": {
+                "to": {
+                    "kind": "ImageStreamTag",
+                    "name": "bcdc-test-dev:latest"
+                },
+                "pushSecret": {
+                    "name": "builder-dockercfg-kzv6s"
+                }
+            },
+            "resources": {},
+            "postCommit": {},
+            "nodeSelector": null,
+            "triggeredBy": [
+                {
+                    "message": "Triggered with coffee"
+                }
+            ]
+        },
+        "status": {
+            "phase": "Complete",
+            "startTimestamp": "2019-11-08T20:33:18Z",
+            "completionTimestamp": "2019-11-08T20:34:54Z",
+            "duration": 96000000000,
+            "outputDockerImageReference": "docker-registry.default.svc:5000/databcdc/bcdc-test-dev:latest",
+            "config": {
+                "kind": "BuildConfig",
+                "namespace": "databcdc",
+                "name": "bcdc-test-dev"
+            },
+            "output": {
+                "to": {
+                    "imageDigest": "sha256:e8c5f19ddf7e754d1335cd8da749b9a35fe51668bbb0c06fde836e2900fab6b4"
+                }
+            },
+            "stages": [
+                {
+                    "name": "Build",
+                    "startTime": "2019-11-08T20:33:30Z",
+                    "durationMilliseconds": 75064,
+                    "steps": [
+                        {
+                            "name": "DockerBuild",
+                            "startTime": "2019-11-08T20:33:30Z",
+                            "durationMilliseconds": 75064
+                        }
+                    ]
+                },
+                {
+                    "name": "PushImage",
+                    "startTime": "2019-11-08T20:34:46Z",
+                    "durationMilliseconds": 6545,
+                    "steps": [
+                        {
+                            "name": "PushDockerImage",
+                            "startTime": "2019-11-08T20:34:46Z",
+                            "durationMilliseconds": 6545
+                        }
+                    ]
+                }
+            ]
+        }
+    }
+}
+{
+    "type": "ADDED",
+    "object": {
+        "kind": "Build",
+        "apiVersion": "build.openshift.io/v1",
+        "metadata": {
+            "name": "bcdc-test-dev-175",
+            "namespace": "databcdc",
+            "selfLink": "/apis/build.openshift.io/v1/namespaces/databcdc/builds/bcdc-test-dev-175",
+            "uid": "c9cae88e-0266-11ea-be53-0050568348cc",
+            "resourceVersion": "1106070296",
+            "creationTimestamp": "2019-11-08T20:31:48Z",
+            "labels": {
+                "app": "",
+                "buildconfig": "bcdc-test-dev",
+                "openshift.io/build-config.name": "bcdc-test-dev",
+                "openshift.io/build.start-policy": "Serial"
+            },
+            "annotations": {
+                "openshift.io/build-config.name": "bcdc-test-dev",
+                "openshift.io/build.number": "175",
+                "openshift.io/build.pod-name": "bcdc-test-dev-175-build"
+            },
+            "ownerReferences": [
+                {
+                    "apiVersion": "build.openshift.io/v1",
+                    "kind": "BuildConfig",
+                    "name": "bcdc-test-dev",
+                    "uid": "6bb6f1f6-e9fd-11e9-8615-0050568348cc",
+                    "controller": true
+                }
+            ]
+        },
+        "spec": {
+            "serviceAccount": "builder",
+            "source": {
+                "type": "Dockerfile",
+                "dockerfile": "FROM python:3-slim\nADD . /app\nWORKDIR /app\nRUN pip install pypandoc\nRUN pip install --upgrade --force-reinstall bcdc-apitests-dev\nRUN pip install -I bcdc-apitests-dev\nRUN pip install matterhook\nENTRYPOINT [ \"pytest-run.py\" ]"
+            },
+            "strategy": {
+                "type": "Docker",
+                "dockerStrategy": {
+                    "from": {
+                        "kind": "DockerImage",
+                        "name": "python:3-slim"
+                    }
+                }
+            },
+            "output": {
+                "to": {
+                    "kind": "ImageStreamTag",
+                    "name": "bcdc-test-dev:latest"
+                },
+                "pushSecret": {
+                    "name": "builder-dockercfg-kzv6s"
+                }
+            },
+            "resources": {},
+            "postCommit": {},
+            "nodeSelector": null,
+            "triggeredBy": [
+                {
+                    "message": "Triggered with coffee"
+                }
+            ]
+        },
+        "status": {
+            "phase": "Complete",
+            "startTimestamp": "2019-11-08T20:34:54Z",
+            "completionTimestamp": "2019-11-08T20:36:24Z",
+            "duration": 90000000000,
+            "outputDockerImageReference": "docker-registry.default.svc:5000/databcdc/bcdc-test-dev:latest",
+            "config": {
+                "kind": "BuildConfig",
+                "namespace": "databcdc",
+                "name": "bcdc-test-dev"
+            },
+            "output": {
+                "to": {
+                    "imageDigest": "sha256:a975aaf8618fc5fcd823b6a94d2e36bfb7749986b021fa1a85bce63d25d570f4"
+                }
+            },
+            "stages": [
+                {
+                    "name": "Build",
+                    "startTime": "2019-11-08T20:35:06Z",
+                    "durationMilliseconds": 72077,
+                    "steps": [
+                        {
+                            "name": "DockerBuild",
+                            "startTime": "2019-11-08T20:35:06Z",
+                            "durationMilliseconds": 72077
+                        }
+                    ]
+                },
+                {
+                    "name": "PushImage",
+                    "startTime": "2019-11-08T20:36:18Z",
+                    "durationMilliseconds": 4611,
+                    "steps": [
+                        {
+                            "name": "PushDockerImage",
+                            "startTime": "2019-11-08T20:36:18Z",
+                            "durationMilliseconds": 4611
+                        }
+                    ]
+                }
+            ]
+        }
+    }
+}
+{
+    "type": "ADDED",
+    "object": {
+        "kind": "Build",
+        "apiVersion": "build.openshift.io/v1",
+        "metadata": {
+            "name": "bcdc-test-dev-176",
+            "namespace": "databcdc",
+            "selfLink": "/apis/build.openshift.io/v1/namespaces/databcdc/builds/bcdc-test-dev-176",
+            "uid": "ffd02ae5-0266-11ea-be53-0050568348cc",
+            "resourceVersion": "1106074378",
+            "creationTimestamp": "2019-11-08T20:33:18Z",
+            "labels": {
+                "app": "",
+                "buildconfig": "bcdc-test-dev",
+                "openshift.io/build-config.name": "bcdc-test-dev",
+                "openshift.io/build.start-policy": "Serial"
+            },
+            "annotations": {
+                "openshift.io/build-config.name": "bcdc-test-dev",
+                "openshift.io/build.number": "176",
+                "openshift.io/build.pod-name": "bcdc-test-dev-176-build"
+            },
+            "ownerReferences": [
+                {
+                    "apiVersion": "build.openshift.io/v1",
+                    "kind": "BuildConfig",
+                    "name": "bcdc-test-dev",
+                    "uid": "6bb6f1f6-e9fd-11e9-8615-0050568348cc",
+                    "controller": true
+                }
+            ]
+        },
+        "spec": {
+            "serviceAccount": "builder",
+            "source": {
+                "type": "Dockerfile",
+                "dockerfile": "FROM python:3-slim\nADD . /app\nWORKDIR /app\nRUN pip install pypandoc\nRUN pip install --upgrade --force-reinstall bcdc-apitests-dev\nRUN pip install -I bcdc-apitests-dev\nRUN pip install matterhook\nENTRYPOINT [ \"pytest-run.py\" ]"
+            },
+            "strategy": {
+                "type": "Docker",
+                "dockerStrategy": {
+                    "from": {
+                        "kind": "DockerImage",
+                        "name": "python:3-slim"
+                    }
+                }
+            },
+            "output": {
+                "to": {
+                    "kind": "ImageStreamTag",
+                    "name": "bcdc-test-dev:latest"
+                },
+                "pushSecret": {
+                    "name": "builder-dockercfg-kzv6s"
+                }
+            },
+            "resources": {},
+            "postCommit": {},
+            "nodeSelector": null,
+            "triggeredBy": [
+                {
+                    "message": "Triggered with coffee"
+                }
+            ]
+        },
+        "status": {
+            "phase": "Complete",
+            "startTimestamp": "2019-11-08T20:36:25Z",
+            "completionTimestamp": "2019-11-08T20:37:54Z",
+            "duration": 89000000000,
+            "outputDockerImageReference": "docker-registry.default.svc:5000/databcdc/bcdc-test-dev:latest",
+            "config": {
+                "kind": "BuildConfig",
+                "namespace": "databcdc",
+                "name": "bcdc-test-dev"
+            },
+            "output": {
+                "to": {
+                    "imageDigest": "sha256:cd4c2c199002bbe3d94691fd4232aaf52879f33cb4fd58f8b4f4a43aed4302c7"
+                }
+            },
+            "stages": [
+                {
+                    "name": "Build",
+                    "startTime": "2019-11-08T20:36:35Z",
+                    "durationMilliseconds": 72516,
+                    "steps": [
+                        {
+                            "name": "DockerBuild",
+                            "startTime": "2019-11-08T20:36:35Z",
+                            "durationMilliseconds": 72516
+                        }
+                    ]
+                },
+                {
+                    "name": "PushImage",
+                    "startTime": "2019-11-08T20:37:48Z",
+                    "durationMilliseconds": 5019,
+                    "steps": [
+                        {
+                            "name": "PushDockerImage",
+                            "startTime": "2019-11-08T20:37:48Z",
+                            "durationMilliseconds": 5019
+                        }
+                    ]
+                }
+            ]
+        }
+    }
+}
+{
+    "type": "ADDED",
+    "object": {
+        "kind": "Build",
+        "apiVersion": "build.openshift.io/v1",
+        "metadata": {
+            "name": "bcdc-test-dev-181",
+            "namespace": "databcdc",
+            "selfLink": "/apis/build.openshift.io/v1/namespaces/databcdc/builds/bcdc-test-dev-181",
+            "uid": "ad8940e5-0267-11ea-be53-0050568348cc",
+            "resourceVersion": "1106076867",
+            "creationTimestamp": "2019-11-08T20:38:10Z",
+            "labels": {
+                "app": "",
+                "buildconfig": "bcdc-test-dev",
+                "openshift.io/build-config.name": "bcdc-test-dev",
+                "openshift.io/build.start-policy": "Serial"
+            },
+            "annotations": {
+                "openshift.io/build-config.name": "bcdc-test-dev",
+                "openshift.io/build.number": "181"
+            },
+            "ownerReferences": [
+                {
+                    "apiVersion": "build.openshift.io/v1",
+                    "kind": "BuildConfig",
+                    "name": "bcdc-test-dev",
+                    "uid": "6bb6f1f6-e9fd-11e9-8615-0050568348cc",
+                    "controller": true
+                }
+            ]
+        },
+        "spec": {
+            "serviceAccount": "builder",
+            "source": {
+                "type": "Dockerfile",
+                "dockerfile": "FROM python:3-slim\nADD . /app\nWORKDIR /app\nRUN pip install pypandoc\nRUN pip install --upgrade --force-reinstall bcdc-apitests-dev\nRUN pip install -I bcdc-apitests-dev\nRUN pip install matterhook\nENTRYPOINT [ \"pytest-run.py\" ]"
+            },
+            "strategy": {
+                "type": "Docker",
+                "dockerStrategy": {
+                    "from": {
+                        "kind": "DockerImage",
+                        "name": "python:3-slim"
+                    }
+                }
+            },
+            "output": {
+                "to": {
+                    "kind": "ImageStreamTag",
+                    "name": "bcdc-test-dev:latest"
+                }
+            },
+            "resources": {},
+            "postCommit": {},
+            "nodeSelector": null,
+            "triggeredBy": [
+                {
+                    "message": "Triggered with coffee"
+                }
+            ]
+        },
+        "status": {
+            "phase": "Cancelled",
+            "cancelled": true,
+            "reason": "CancelledBuild",
+            "message": "The build was cancelled by the user.",
+            "startTimestamp": "2019-11-08T20:38:44Z",
+            "completionTimestamp": "2019-11-08T20:38:44Z",
+            "config": {
+                "kind": "BuildConfig",
+                "namespace": "databcdc",
+                "name": "bcdc-test-dev"
+            },
+            "output": {}
+        }
+    }
+}
+{
+    "type": "ADDED",
+    "object": {
+        "kind": "Build",
+        "apiVersion": "build.openshift.io/v1",
+        "metadata": {
+            "name": "bcdc-test-dev-182",
+            "namespace": "databcdc",
+            "selfLink": "/apis/build.openshift.io/v1/namespaces/databcdc/builds/bcdc-test-dev-182",
+            "uid": "f898a3d7-0267-11ea-be53-0050568348cc",
+            "resourceVersion": "1106085035",
+            "creationTimestamp": "2019-11-08T20:40:16Z",
+            "labels": {
+                "app": "",
+                "buildconfig": "bcdc-test-dev",
+                "openshift.io/build-config.name": "bcdc-test-dev",
+                "openshift.io/build.start-policy": "Serial"
+            },
+            "annotations": {
+                "openshift.io/build-config.name": "bcdc-test-dev",
+                "openshift.io/build.number": "182",
+                "openshift.io/build.pod-name": "bcdc-test-dev-182-build"
+            },
+            "ownerReferences": [
+                {
+                    "apiVersion": "build.openshift.io/v1",
+                    "kind": "BuildConfig",
+                    "name": "bcdc-test-dev",
+                    "uid": "6bb6f1f6-e9fd-11e9-8615-0050568348cc",
+                    "controller": true
+                }
+            ]
+        },
+        "spec": {
+            "serviceAccount": "builder",
+            "source": {
+                "type": "Dockerfile",
+                "dockerfile": "FROM python:3-slim\nADD . /app\nWORKDIR /app\nRUN pip install pypandoc\nRUN pip install --upgrade --force-reinstall bcdc-apitests-dev\nRUN pip install -I bcdc-apitests-dev\nRUN pip install matterhook\nENTRYPOINT [ \"pytest-run.py\" ]"
+            },
+            "strategy": {
+                "type": "Docker",
+                "dockerStrategy": {
+                    "from": {
+                        "kind": "DockerImage",
+                        "name": "python:3-slim"
+                    }
+                }
+            },
+            "output": {
+                "to": {
+                    "kind": "ImageStreamTag",
+                    "name": "bcdc-test-dev:latest"
+                },
+                "pushSecret": {
+                    "name": "builder-dockercfg-kzv6s"
+                }
+            },
+            "resources": {},
+            "postCommit": {},
+            "nodeSelector": null,
+            "triggeredBy": [
+                {
+                    "message": "Triggered with coffee"
+                }
+            ]
+        },
+        "status": {
+            "phase": "Complete",
+            "startTimestamp": "2019-11-08T20:40:16Z",
+            "completionTimestamp": "2019-11-08T20:41:38Z",
+            "duration": 82000000000,
+            "outputDockerImageReference": "docker-registry.default.svc:5000/databcdc/bcdc-test-dev:latest",
+            "config": {
+                "kind": "BuildConfig",
+                "namespace": "databcdc",
+                "name": "bcdc-test-dev"
+            },
+            "output": {
+                "to": {
+                    "imageDigest": "sha256:bad395052cb7d937a1f95ea3f7eb60e854d7165ba72a92c806eaeca315a68e65"
+                }
+            },
+            "stages": [
+                {
+                    "name": "Build",
+                    "startTime": "2019-11-08T20:40:28Z",
+                    "durationMilliseconds": 64148,
+                    "steps": [
+                        {
+                            "name": "DockerBuild",
+                            "startTime": "2019-11-08T20:40:28Z",
+                            "durationMilliseconds": 64148
+                        }
+                    ]
+                },
+                {
+                    "name": "PushImage",
+                    "startTime": "2019-11-08T20:41:32Z",
+                    "durationMilliseconds": 5328,
+                    "steps": [
+                        {
+                            "name": "PushDockerImage",
+                            "startTime": "2019-11-08T20:41:32Z",
+                            "durationMilliseconds": 5328
+                        }
+                    ]
+                }
+            ]
+        }
+    }
+}
+{
+    "type": "ADDED",
+    "object": {
+        "kind": "Build",
+        "apiVersion": "build.openshift.io/v1",
+        "metadata": {
+            "name": "bcdc-test-dev-183",
+            "namespace": "databcdc",
+            "selfLink": "/apis/build.openshift.io/v1/namespaces/databcdc/builds/bcdc-test-dev-183",
+            "uid": "1977d8bc-0276-11ea-be53-0050568348cc",
+            "resourceVersion": "1106367382",
+            "creationTimestamp": "2019-11-08T22:21:24Z",
+            "labels": {
+                "app": "",
+                "buildconfig": "bcdc-test-dev",
+                "openshift.io/build-config.name": "bcdc-test-dev",
+                "openshift.io/build.start-policy": "Serial"
+            },
+            "annotations": {
+                "openshift.io/build-config.name": "bcdc-test-dev",
+                "openshift.io/build.number": "183",
+                "openshift.io/build.pod-name": "bcdc-test-dev-183-build"
+            },
+            "ownerReferences": [
+                {
+                    "apiVersion": "build.openshift.io/v1",
+                    "kind": "BuildConfig",
+                    "name": "bcdc-test-dev",
+                    "uid": "6bb6f1f6-e9fd-11e9-8615-0050568348cc",
+                    "controller": true
+                }
+            ]
+        },
+        "spec": {
+            "serviceAccount": "builder",
+            "source": {
+                "type": "Dockerfile",
+                "dockerfile": "FROM python:3-slim\nADD . /app\nWORKDIR /app\nRUN pip install pypandoc\nRUN pip install --upgrade --force-reinstall bcdc-apitests-dev\nRUN pip install -I bcdc-apitests-dev\nRUN pip install matterhook\nENTRYPOINT [ \"pytest-run.py\" ]"
+            },
+            "strategy": {
+                "type": "Docker",
+                "dockerStrategy": {
+                    "from": {
+                        "kind": "DockerImage",
+                        "name": "python:3-slim"
+                    }
+                }
+            },
+            "output": {
+                "to": {
+                    "kind": "ImageStreamTag",
+                    "name": "bcdc-test-dev:latest"
+                },
+                "pushSecret": {
+                    "name": "builder-dockercfg-kzv6s"
+                }
+            },
+            "resources": {},
+            "postCommit": {},
+            "nodeSelector": null,
+            "triggeredBy": [
+                {
+                    "message": "Triggered with coffee"
+                }
+            ]
+        },
+        "status": {
+            "phase": "Complete",
+            "startTimestamp": "2019-11-08T22:21:24Z",
+            "completionTimestamp": "2019-11-08T22:22:59Z",
+            "duration": 95000000000,
+            "outputDockerImageReference": "docker-registry.default.svc:5000/databcdc/bcdc-test-dev:latest",
+            "config": {
+                "kind": "BuildConfig",
+                "namespace": "databcdc",
+                "name": "bcdc-test-dev"
+            },
+            "output": {
+                "to": {
+                    "imageDigest": "sha256:825c9c87d8dcf2c48ec51973cc1bd7ed2b2d1140683927116a861066a861b832"
+                }
+            },
+            "stages": [
+                {
+                    "name": "Build",
+                    "startTime": "2019-11-08T22:21:36Z",
+                    "durationMilliseconds": 76075,
+                    "steps": [
+                        {
+                            "name": "DockerBuild",
+                            "startTime": "2019-11-08T22:21:36Z",
+                            "durationMilliseconds": 76075
+                        }
+                    ]
+                },
+                {
+                    "name": "PushImage",
+                    "startTime": "2019-11-08T22:22:52Z",
+                    "durationMilliseconds": 5320,
+                    "steps": [
+                        {
+                            "name": "PushDockerImage",
+                            "startTime": "2019-11-08T22:22:52Z",
+                            "durationMilliseconds": 5320
+                        }
+                    ]
+                }
+            ]
+        }
+    }
+}
+{
+    "type": "ADDED",
+    "object": {
+        "kind": "Build",
+        "apiVersion": "build.openshift.io/v1",
+        "metadata": {
+            "name": "cad-130",
+            "namespace": "databcdc",
+            "selfLink": "/apis/build.openshift.io/v1/namespaces/databcdc/builds/cad-130",
+            "uid": "59505952-b15d-11e8-862b-005056832285",
+            "resourceVersion": "567943825",
+            "creationTimestamp": "2018-09-05T22:45:12Z",
+            "labels": {
+                "appenv": "cad",
+                "buildconfig": "cad",
+                "openshift.io/build-config.name": "cad",
+                "openshift.io/build.start-policy": "Serial"
+            },
+            "annotations": {
+                "openshift.io/build-config.name": "cad",
+                "openshift.io/build.number": "130",
+                "openshift.io/build.pod-name": "cad-130-build"
+            },
+            "ownerReferences": [
+                {
+                    "apiVersion": "build.openshift.io/v1",
+                    "kind": "BuildConfig",
+                    "name": "cad",
+                    "uid": "7a536252-e04b-11e7-9f70-005056832285",
+                    "controller": true
+                }
+            ]
+        },
+        "spec": {
+            "serviceAccount": "builder",
+            "source": {
+                "type": "Git",
+                "git": {
+                    "uri": "https://gogs.data.gov.bc.ca/bcdc/cad"
+                },
+                "sourceSecret": {
+                    "name": "ocp-gogs"
+                }
+            },
+            "revision": {
+                "type": "Git",
+                "git": {
+                    "commit": "b1cd926c511820e6398ed5fd414d94a2700ac95e",
+                    "author": {
+                        "name": "Leo Lou",
+                        "email": "leo.lou@gov.bc.ca"
+                    },
+                    "committer": {
+                        "name": "Leo Lou",
+                        "email": "leo.lou@gov.bc.ca"
+                    },
+                    "message": "Update 'Dockerfile'"
+                }
+            },
+            "strategy": {
+                "type": "Docker",
+                "dockerStrategy": {
+                    "from": {
+                        "kind": "DockerImage",
+                        "name": "172.50.0.2:5000/databcdc/ckan-ocp-base@sha256:1ccb5ead0ab135e521ec3cdcb6a1a228d30fa90056a87721da1d745a5240ca9a"
+                    },
+                    "pullSecret": {
+                        "name": "builder-dockercfg-kzv6s"
+                    },
+                    "noCache": true,
+                    "env": [
+                        {
+                            "name": "gToken",
+                            "value": "8262169f6c9921fb0cc4eca5d21fd61f98691bb1"
+                        }
+                    ]
+                }
+            },
+            "output": {
+                "to": {
+                    "kind": "ImageStreamTag",
+                    "name": "cad:latest"
+                },
+                "pushSecret": {
+                    "name": "builder-dockercfg-kzv6s"
+                }
+            },
+            "resources": {},
+            "postCommit": {},
+            "nodeSelector": null,
+            "triggeredBy": [
+                {
+                    "message": "Generic WebHook",
+                    "genericWebHook": {
+                        "secret": "\u003csecret\u003e"
+                    }
+                }
+            ]
+        },
+        "status": {
+            "phase": "Cancelled",
+            "cancelled": true,
+            "reason": "CancelledBuild",
+            "message": "The build was cancelled by the user.",
+            "startTimestamp": "2018-09-05T22:45:12Z",
+            "completionTimestamp": "2018-09-05T22:47:55Z",
+            "duration": 163000000000,
+            "outputDockerImageReference": "docker-registry.default.svc:5000/databcdc/cad:latest",
+            "config": {
+                "kind": "BuildConfig",
+                "namespace": "databcdc",
+                "name": "cad"
+            },
+            "output": {},
+            "stages": [
+                {
+                    "name": "FetchInputs",
+                    "startTime": "2018-09-05T22:45:23Z",
+                    "durationMilliseconds": 753,
+                    "steps": [
+                        {
+                            "name": "FetchGitSource",
+                            "startTime": "2018-09-05T22:45:23Z",
+                            "durationMilliseconds": 753
+                        }
+                    ]
+                }
+            ]
+        }
+    }
+}
+{
+    "type": "ADDED",
+    "object": {
+        "kind": "Build",
+        "apiVersion": "build.openshift.io/v1",
+        "metadata": {
+            "name": "cad-154",
+            "namespace": "databcdc",
+            "selfLink": "/apis/build.openshift.io/v1/namespaces/databcdc/builds/cad-154",
+            "uid": "9042becc-4cf4-11e9-9c9b-0050568348cc",
+            "resourceVersion": "707846502",
+            "creationTimestamp": "2019-03-22T22:48:08Z",
+            "labels": {
+                "appenv": "cad",
+                "buildconfig": "cad",
+                "openshift.io/build-config.name": "cad",
+                "openshift.io/build.start-policy": "Serial"
+            },
+            "annotations": {
+                "openshift.io/build-config.name": "cad",
+                "openshift.io/build.number": "154",
+                "openshift.io/build.pod-name": "cad-154-build"
+            },
+            "ownerReferences": [
+                {
+                    "apiVersion": "build.openshift.io/v1",
+                    "kind": "BuildConfig",
+                    "name": "cad",
+                    "uid": "7a536252-e04b-11e7-9f70-005056832285",
+                    "controller": true
+                }
+            ]
+        },
+        "spec": {
+            "serviceAccount": "builder",
+            "source": {
+                "type": "Git",
+                "git": {
+                    "uri": "https://gogs.data.gov.bc.ca/bcdc/cad"
+                },
+                "sourceSecret": {
+                    "name": "ocp-gogs"
+                }
+            },
+            "revision": {
+                "type": "Git",
+                "git": {
+                    "commit": "4d9415a3e169d20acbd87842f603121fe1c78469",
+                    "author": {
+                        "name": "David Kelsey",
+                        "email": "david.kelsey@gov.bc.ca"
+                    },
+                    "committer": {
+                        "name": "Gogs",
+                        "email": "gogs@fake.local"
+                    },
+                    "message": "Merge branch 'master' of brandonsharratt/cad into master"
+                }
+            },
+            "strategy": {
+                "type": "Docker",
+                "dockerStrategy": {
+                    "from": {
+                        "kind": "DockerImage",
+                        "name": "172.50.0.2:5000/databcdc/ckan-ocp-base@sha256:1ccb5ead0ab135e521ec3cdcb6a1a228d30fa90056a87721da1d745a5240ca9a"
+                    },
+                    "pullSecret": {
+                        "name": "builder-dockercfg-kzv6s"
+                    },
+                    "noCache": true,
+                    "env": [
+                        {
+                            "name": "gToken",
+                            "value": "8262169f6c9921fb0cc4eca5d21fd61f98691bb1"
+                        }
+                    ]
+                }
+            },
+            "output": {
+                "to": {
+                    "kind": "ImageStreamTag",
+                    "name": "cad:latest"
+                },
+                "pushSecret": {
+                    "name": "builder-dockercfg-kzv6s"
+                }
+            },
+            "resources": {},
+            "postCommit": {},
+            "nodeSelector": null,
+            "triggeredBy": [
+                {
+                    "message": "Manually triggered"
+                }
+            ]
+        },
+        "status": {
+            "phase": "Complete",
+            "startTimestamp": "2019-03-22T22:48:09Z",
+            "completionTimestamp": "2019-03-22T22:58:00Z",
+            "duration": 591000000000,
+            "outputDockerImageReference": "docker-registry.default.svc:5000/databcdc/cad:latest",
+            "config": {
+                "kind": "BuildConfig",
+                "namespace": "databcdc",
+                "name": "cad"
+            },
+            "output": {
+                "to": {
+                    "imageDigest": "sha256:ffb37a237c82a6c3793db4107590a89b53354974fa72963126d3390b6b85a42f"
+                }
+            },
+            "stages": [
+                {
+                    "name": "FetchInputs",
+                    "startTime": "2019-03-22T22:48:26Z",
+                    "durationMilliseconds": 1077,
+                    "steps": [
+                        {
+                            "name": "FetchGitSource",
+                            "startTime": "2019-03-22T22:48:26Z",
+                            "durationMilliseconds": 1077
+                        }
+                    ]
+                },
+                {
+                    "name": "PullImages",
+                    "startTime": "2019-03-22T22:48:33Z",
+                    "durationMilliseconds": 25437,
+                    "steps": [
+                        {
+                            "name": "PullBaseImage",
+                            "startTime": "2019-03-22T22:48:33Z",
+                            "durationMilliseconds": 25437
+                        }
+                    ]
+                },
+                {
+                    "name": "Build",
+                    "startTime": "2019-03-22T22:48:59Z",
+                    "durationMilliseconds": 513739,
+                    "steps": [
+                        {
+                            "name": "DockerBuild",
+                            "startTime": "2019-03-22T22:48:59Z",
+                            "durationMilliseconds": 513739
+                        }
+                    ]
+                },
+                {
+                    "name": "PushImage",
+                    "startTime": "2019-03-22T22:57:33Z",
+                    "durationMilliseconds": 25994,
+                    "steps": [
+                        {
+                            "name": "PushDockerImage",
+                            "startTime": "2019-03-22T22:57:33Z",
+                            "durationMilliseconds": 25994
+                        }
+                    ]
+                }
+            ]
+        }
+    }
+}
+{
+    "type": "ADDED",
+    "object": {
+        "kind": "Build",
+        "apiVersion": "build.openshift.io/v1",
+        "metadata": {
+            "name": "cad-155",
+            "namespace": "databcdc",
+            "selfLink": "/apis/build.openshift.io/v1/namespaces/databcdc/builds/cad-155",
+            "uid": "6bea65a4-4cf7-11e9-9c9b-0050568348cc",
+            "resourceVersion": "707867734",
+            "creationTimestamp": "2019-03-22T23:08:36Z",
+            "labels": {
+                "appenv": "cad",
+                "buildconfig": "cad",
+                "openshift.io/build-config.name": "cad",
+                "openshift.io/build.start-policy": "Serial"
+            },
+            "annotations": {
+                "openshift.io/build-config.name": "cad",
+                "openshift.io/build.number": "155",
+                "openshift.io/build.pod-name": "cad-155-build"
+            },
+            "ownerReferences": [
+                {
+                    "apiVersion": "build.openshift.io/v1",
+                    "kind": "BuildConfig",
+                    "name": "cad",
+                    "uid": "7a536252-e04b-11e7-9f70-005056832285",
+                    "controller": true
+                }
+            ]
+        },
+        "spec": {
+            "serviceAccount": "builder",
+            "source": {
+                "type": "Git",
+                "git": {
+                    "uri": "https://gogs.data.gov.bc.ca/bcdc/cad"
+                },
+                "sourceSecret": {
+                    "name": "ocp-gogs"
+                }
+            },
+            "revision": {
+                "type": "Git",
+                "git": {
+                    "commit": "53d0f9318913712dd50b8f32cdf9b15622bc59bd",
+                    "author": {
+                        "name": "David Kelsey",
+                        "email": "david.kelsey@gov.bc.ca"
+                    },
+                    "committer": {
+                        "name": "Gogs",
+                        "email": "gogs@fake.local"
+                    },
+                    "message": "Merge branch 'master' of brandonsharratt/cad into master"
+                }
+            },
+            "strategy": {
+                "type": "Docker",
+                "dockerStrategy": {
+                    "from": {
+                        "kind": "DockerImage",
+                        "name": "172.50.0.2:5000/databcdc/ckan-ocp-base@sha256:1ccb5ead0ab135e521ec3cdcb6a1a228d30fa90056a87721da1d745a5240ca9a"
+                    },
+                    "pullSecret": {
+                        "name": "builder-dockercfg-kzv6s"
+                    },
+                    "noCache": true,
+                    "env": [
+                        {
+                            "name": "gToken",
+                            "value": "8262169f6c9921fb0cc4eca5d21fd61f98691bb1"
+                        }
+                    ]
+                }
+            },
+            "output": {
+                "to": {
+                    "kind": "ImageStreamTag",
+                    "name": "cad:latest"
+                },
+                "pushSecret": {
+                    "name": "builder-dockercfg-kzv6s"
+                }
+            },
+            "resources": {},
+            "postCommit": {},
+            "nodeSelector": null,
+            "triggeredBy": [
+                {
+                    "message": "Manually triggered"
+                }
+            ]
+        },
+        "status": {
+            "phase": "Complete",
+            "startTimestamp": "2019-03-22T23:08:36Z",
+            "completionTimestamp": "2019-03-22T23:20:06Z",
+            "duration": 690000000000,
+            "outputDockerImageReference": "docker-registry.default.svc:5000/databcdc/cad:latest",
+            "config": {
+                "kind": "BuildConfig",
+                "namespace": "databcdc",
+                "name": "cad"
+            },
+            "output": {
+                "to": {
+                    "imageDigest": "sha256:e48a705a9e724ecd45ea7d2226f392ecd541c3312b1484156b61a250babfc575"
+                }
+            },
+            "stages": [
+                {
+                    "name": "FetchInputs",
+                    "startTime": "2019-03-22T23:08:53Z",
+                    "durationMilliseconds": 935,
+                    "steps": [
+                        {
+                            "name": "FetchGitSource",
+                            "startTime": "2019-03-22T23:08:53Z",
+                            "durationMilliseconds": 935
+                        }
+                    ]
+                },
+                {
+                    "name": "PullImages",
+                    "startTime": "2019-03-22T23:08:59Z",
+                    "durationMilliseconds": 316,
+                    "steps": [
+                        {
+                            "name": "PullBaseImage",
+                            "startTime": "2019-03-22T23:08:59Z",
+                            "durationMilliseconds": 316
+                        }
+                    ]
+                },
+                {
+                    "name": "Build",
+                    "startTime": "2019-03-22T23:08:59Z",
+                    "durationMilliseconds": 635473,
+                    "steps": [
+                        {
+                            "name": "DockerBuild",
+                            "startTime": "2019-03-22T23:08:59Z",
+                            "durationMilliseconds": 635473
+                        }
+                    ]
+                },
+                {
+                    "name": "PushImage",
+                    "startTime": "2019-03-22T23:19:35Z",
+                    "durationMilliseconds": 29448,
+                    "steps": [
+                        {
+                            "name": "PushDockerImage",
+                            "startTime": "2019-03-22T23:19:35Z",
+                            "durationMilliseconds": 29448
+                        }
+                    ]
+                }
+            ]
+        }
+    }
+}
+{
+    "type": "ADDED",
+    "object": {
+        "kind": "Build",
+        "apiVersion": "build.openshift.io/v1",
+        "metadata": {
+            "name": "cad-156",
+            "namespace": "databcdc",
+            "selfLink": "/apis/build.openshift.io/v1/namespaces/databcdc/builds/cad-156",
+            "uid": "21038f90-50e8-11e9-891c-0050568379a2",
+            "resourceVersion": "714239661",
+            "creationTimestamp": "2019-03-27T23:29:12Z",
+            "labels": {
+                "appenv": "cad",
+                "buildconfig": "cad",
+                "openshift.io/build-config.name": "cad",
+                "openshift.io/build.start-policy": "Serial"
+            },
+            "annotations": {
+                "openshift.io/build-config.name": "cad",
+                "openshift.io/build.number": "156",
+                "openshift.io/build.pod-name": "cad-156-build"
+            },
+            "ownerReferences": [
+                {
+                    "apiVersion": "build.openshift.io/v1",
+                    "kind": "BuildConfig",
+                    "name": "cad",
+                    "uid": "7a536252-e04b-11e7-9f70-005056832285",
+                    "controller": true
+                }
+            ]
+        },
+        "spec": {
+            "serviceAccount": "builder",
+            "source": {
+                "type": "Git",
+                "git": {
+                    "uri": "https://gogs.data.gov.bc.ca/bcdc/cad"
+                },
+                "sourceSecret": {
+                    "name": "ocp-gogs"
+                }
+            },
+            "revision": {
+                "type": "Git",
+                "git": {
+                    "commit": "53d0f9318913712dd50b8f32cdf9b15622bc59bd",
+                    "author": {
+                        "name": "David Kelsey",
+                        "email": "david.kelsey@gov.bc.ca"
+                    },
+                    "committer": {
+                        "name": "Gogs",
+                        "email": "gogs@fake.local"
+                    },
+                    "message": "Merge branch 'master' of brandonsharratt/cad into master"
+                }
+            },
+            "strategy": {
+                "type": "Docker",
+                "dockerStrategy": {
+                    "from": {
+                        "kind": "DockerImage",
+                        "name": "172.50.0.2:5000/databcdc/ckan-ocp-base@sha256:1ccb5ead0ab135e521ec3cdcb6a1a228d30fa90056a87721da1d745a5240ca9a"
+                    },
+                    "pullSecret": {
+                        "name": "builder-dockercfg-kzv6s"
+                    },
+                    "noCache": true,
+                    "env": [
+                        {
+                            "name": "gToken",
+                            "value": "8262169f6c9921fb0cc4eca5d21fd61f98691bb1"
+                        }
+                    ]
+                }
+            },
+            "output": {
+                "to": {
+                    "kind": "ImageStreamTag",
+                    "name": "cad:latest"
+                },
+                "pushSecret": {
+                    "name": "builder-dockercfg-kzv6s"
+                }
+            },
+            "resources": {},
+            "postCommit": {},
+            "nodeSelector": null,
+            "triggeredBy": [
+                {
+                    "message": "Manually triggered"
+                }
+            ]
+        },
+        "status": {
+            "phase": "Complete",
+            "startTimestamp": "2019-03-27T23:29:13Z",
+            "completionTimestamp": "2019-03-27T23:37:12Z",
+            "duration": 479000000000,
+            "outputDockerImageReference": "docker-registry.default.svc:5000/databcdc/cad:latest",
+            "config": {
+                "kind": "BuildConfig",
+                "namespace": "databcdc",
+                "name": "cad"
+            },
+            "output": {
+                "to": {
+                    "imageDigest": "sha256:dc720916d7c91badfe8447cdc3087363ae02a1ea9055eec2b595b354d8e84834"
+                }
+            },
+            "stages": [
+                {
+                    "name": "FetchInputs",
+                    "startTime": "2019-03-27T23:29:27Z",
+                    "durationMilliseconds": 1001,
+                    "steps": [
+                        {
+                            "name": "FetchGitSource",
+                            "startTime": "2019-03-27T23:29:27Z",
+                            "durationMilliseconds": 1001
+                        }
+                    ]
+                },
+                {
+                    "name": "PullImages",
+                    "startTime": "2019-03-27T23:29:33Z",
+                    "durationMilliseconds": 20119,
+                    "steps": [
+                        {
+                            "name": "PullBaseImage",
+                            "startTime": "2019-03-27T23:29:33Z",
+                            "durationMilliseconds": 20119
+                        }
+                    ]
+                },
+                {
+                    "name": "Build",
+                    "startTime": "2019-03-27T23:29:54Z",
+                    "durationMilliseconds": 411726,
+                    "steps": [
+                        {
+                            "name": "DockerBuild",
+                            "startTime": "2019-03-27T23:29:54Z",
+                            "durationMilliseconds": 411726
+                        }
+                    ]
+                },
+                {
+                    "name": "PushImage",
+                    "startTime": "2019-03-27T23:36:45Z",
+                    "durationMilliseconds": 26075,
+                    "steps": [
+                        {
+                            "name": "PushDockerImage",
+                            "startTime": "2019-03-27T23:36:45Z",
+                            "durationMilliseconds": 26075
+                        }
+                    ]
+                }
+            ]
+        }
+    }
+}
+{
+    "type": "ADDED",
+    "object": {
+        "kind": "Build",
+        "apiVersion": "build.openshift.io/v1",
+        "metadata": {
+            "name": "cad-157",
+            "namespace": "databcdc",
+            "selfLink": "/apis/build.openshift.io/v1/namespaces/databcdc/builds/cad-157",
+            "uid": "1bb3a30b-518a-11e9-9c9b-0050568348cc",
+            "resourceVersion": "715305197",
+            "creationTimestamp": "2019-03-28T18:48:42Z",
+            "labels": {
+                "appenv": "cad",
+                "buildconfig": "cad",
+                "openshift.io/build-config.name": "cad",
+                "openshift.io/build.start-policy": "Serial"
+            },
+            "annotations": {
+                "openshift.io/build-config.name": "cad",
+                "openshift.io/build.number": "157",
+                "openshift.io/build.pod-name": "cad-157-build"
+            },
+            "ownerReferences": [
+                {
+                    "apiVersion": "build.openshift.io/v1",
+                    "kind": "BuildConfig",
+                    "name": "cad",
+                    "uid": "7a536252-e04b-11e7-9f70-005056832285",
+                    "controller": true
+                }
+            ]
+        },
+        "spec": {
+            "serviceAccount": "builder",
+            "source": {
+                "type": "Git",
+                "git": {
+                    "uri": "https://gogs.data.gov.bc.ca/bcdc/cad"
+                },
+                "sourceSecret": {
+                    "name": "ocp-gogs"
+                }
+            },
+            "revision": {
+                "type": "Git",
+                "git": {
+                    "commit": "53d0f9318913712dd50b8f32cdf9b15622bc59bd",
+                    "author": {
+                        "name": "David Kelsey",
+                        "email": "david.kelsey@gov.bc.ca"
+                    },
+                    "committer": {
+                        "name": "Gogs",
+                        "email": "gogs@fake.local"
+                    },
+                    "message": "Merge branch 'master' of brandonsharratt/cad into master"
+                }
+            },
+            "strategy": {
+                "type": "Docker",
+                "dockerStrategy": {
+                    "from": {
+                        "kind": "DockerImage",
+                        "name": "172.50.0.2:5000/databcdc/ckan-ocp-base@sha256:1ccb5ead0ab135e521ec3cdcb6a1a228d30fa90056a87721da1d745a5240ca9a"
+                    },
+                    "pullSecret": {
+                        "name": "builder-dockercfg-kzv6s"
+                    },
+                    "noCache": true,
+                    "env": [
+                        {
+                            "name": "gToken",
+                            "value": "8262169f6c9921fb0cc4eca5d21fd61f98691bb1"
+                        }
+                    ]
+                }
+            },
+            "output": {
+                "to": {
+                    "kind": "ImageStreamTag",
+                    "name": "cad:latest"
+                },
+                "pushSecret": {
+                    "name": "builder-dockercfg-kzv6s"
+                }
+            },
+            "resources": {},
+            "postCommit": {},
+            "nodeSelector": null,
+            "triggeredBy": [
+                {
+                    "message": "Manually triggered"
+                }
+            ]
+        },
+        "status": {
+            "phase": "Complete",
+            "startTimestamp": "2019-03-28T18:48:42Z",
+            "completionTimestamp": "2019-03-28T18:57:04Z",
+            "duration": 502000000000,
+            "outputDockerImageReference": "docker-registry.default.svc:5000/databcdc/cad:latest",
+            "config": {
+                "kind": "BuildConfig",
+                "namespace": "databcdc",
+                "name": "cad"
+            },
+            "output": {
+                "to": {
+                    "imageDigest": "sha256:ec02fd51af75120c03f80bd602d7d8d7b149ca4159184668e5f32b450ab85593"
+                }
+            },
+            "stages": [
+                {
+                    "name": "FetchInputs",
+                    "startTime": "2019-03-28T18:48:51Z",
+                    "durationMilliseconds": 983,
+                    "steps": [
+                        {
+                            "name": "FetchGitSource",
+                            "startTime": "2019-03-28T18:48:51Z",
+                            "durationMilliseconds": 983
+                        }
+                    ]
+                },
+                {
+                    "name": "PullImages",
+                    "startTime": "2019-03-28T18:48:57Z",
+                    "durationMilliseconds": 287,
+                    "steps": [
+                        {
+                            "name": "PullBaseImage",
+                            "startTime": "2019-03-28T18:48:57Z",
+                            "durationMilliseconds": 287
+                        }
+                    ]
+                },
+                {
+                    "name": "Build",
+                    "startTime": "2019-03-28T18:48:57Z",
+                    "durationMilliseconds": 460556,
+                    "steps": [
+                        {
+                            "name": "DockerBuild",
+                            "startTime": "2019-03-28T18:48:57Z",
+                            "durationMilliseconds": 460556
+                        }
+                    ]
+                },
+                {
+                    "name": "PushImage",
+                    "startTime": "2019-03-28T18:56:38Z",
+                    "durationMilliseconds": 25477,
+                    "steps": [
+                        {
+                            "name": "PushDockerImage",
+                            "startTime": "2019-03-28T18:56:38Z",
+                            "durationMilliseconds": 25477
+                        }
+                    ]
+                }
+            ]
+        }
+    }
+}
+{
+    "type": "ADDED",
+    "object": {
+        "kind": "Build",
+        "apiVersion": "build.openshift.io/v1",
+        "metadata": {
+            "name": "cad-158",
+            "namespace": "databcdc",
+            "selfLink": "/apis/build.openshift.io/v1/namespaces/databcdc/builds/cad-158",
+            "uid": "4c93f275-5272-11e9-9c9b-0050568348cc",
+            "resourceVersion": "716854291",
+            "creationTimestamp": "2019-03-29T22:30:47Z",
+            "labels": {
+                "appenv": "cad",
+                "buildconfig": "cad",
+                "openshift.io/build-config.name": "cad",
+                "openshift.io/build.start-policy": "Serial"
+            },
+            "annotations": {
+                "openshift.io/build-config.name": "cad",
+                "openshift.io/build.number": "158",
+                "openshift.io/build.pod-name": "cad-158-build"
+            },
+            "ownerReferences": [
+                {
+                    "apiVersion": "build.openshift.io/v1",
+                    "kind": "BuildConfig",
+                    "name": "cad",
+                    "uid": "7a536252-e04b-11e7-9f70-005056832285",
+                    "controller": true
+                }
+            ]
+        },
+        "spec": {
+            "serviceAccount": "builder",
+            "source": {
+                "type": "Git",
+                "git": {
+                    "uri": "https://gogs.data.gov.bc.ca/bcdc/cad"
+                },
+                "sourceSecret": {
+                    "name": "ocp-gogs"
+                }
+            },
+            "revision": {
+                "type": "Git",
+                "git": {
+                    "commit": "53d0f9318913712dd50b8f32cdf9b15622bc59bd",
+                    "author": {
+                        "name": "David Kelsey",
+                        "email": "david.kelsey@gov.bc.ca"
+                    },
+                    "committer": {
+                        "name": "Gogs",
+                        "email": "gogs@fake.local"
+                    },
+                    "message": "Merge branch 'master' of brandonsharratt/cad into master"
+                }
+            },
+            "strategy": {
+                "type": "Docker",
+                "dockerStrategy": {
+                    "from": {
+                        "kind": "DockerImage",
+                        "name": "172.50.0.2:5000/databcdc/ckan-ocp-base@sha256:1ccb5ead0ab135e521ec3cdcb6a1a228d30fa90056a87721da1d745a5240ca9a"
+                    },
+                    "pullSecret": {
+                        "name": "builder-dockercfg-kzv6s"
+                    },
+                    "noCache": true,
+                    "env": [
+                        {
+                            "name": "gToken",
+                            "value": "8262169f6c9921fb0cc4eca5d21fd61f98691bb1"
+                        }
+                    ]
+                }
+            },
+            "output": {
+                "to": {
+                    "kind": "ImageStreamTag",
+                    "name": "cad:latest"
+                },
+                "pushSecret": {
+                    "name": "builder-dockercfg-kzv6s"
+                }
+            },
+            "resources": {},
+            "postCommit": {},
+            "nodeSelector": null,
+            "triggeredBy": [
+                {
+                    "message": "Generic WebHook",
+                    "genericWebHook": {
+                        "secret": "\u003csecret\u003e"
+                    }
+                }
+            ]
+        },
+        "status": {
+            "phase": "Complete",
+            "startTimestamp": "2019-03-29T22:30:52Z",
+            "completionTimestamp": "2019-03-29T22:39:22Z",
+            "duration": 510000000000,
+            "outputDockerImageReference": "docker-registry.default.svc:5000/databcdc/cad:latest",
+            "config": {
+                "kind": "BuildConfig",
+                "namespace": "databcdc",
+                "name": "cad"
+            },
+            "output": {
+                "to": {
+                    "imageDigest": "sha256:e89874568431e0a2c7260d7b3017497b3643e739dff283c398b7ee7646ef2316"
+                }
+            },
+            "stages": [
+                {
+                    "name": "FetchInputs",
+                    "startTime": "2019-03-29T22:31:12Z",
+                    "durationMilliseconds": 1029,
+                    "steps": [
+                        {
+                            "name": "FetchGitSource",
+                            "startTime": "2019-03-29T22:31:12Z",
+                            "durationMilliseconds": 1029
+                        }
+                    ]
+                },
+                {
+                    "name": "PullImages",
+                    "startTime": "2019-03-29T22:31:19Z",
+                    "durationMilliseconds": 20695,
+                    "steps": [
+                        {
+                            "name": "PullBaseImage",
+                            "startTime": "2019-03-29T22:31:19Z",
+                            "durationMilliseconds": 20695
+                        }
+                    ]
+                },
+                {
+                    "name": "Build",
+                    "startTime": "2019-03-29T22:31:40Z",
+                    "durationMilliseconds": 435694,
+                    "steps": [
+                        {
+                            "name": "DockerBuild",
+                            "startTime": "2019-03-29T22:31:40Z",
+                            "durationMilliseconds": 435694
+                        }
+                    ]
+                },
+                {
+                    "name": "PushImage",
+                    "startTime": "2019-03-29T22:38:56Z",
+                    "durationMilliseconds": 24777,
+                    "steps": [
+                        {
+                            "name": "PushDockerImage",
+                            "startTime": "2019-03-29T22:38:56Z",
+                            "durationMilliseconds": 24777
+                        }
+                    ]
+                }
+            ]
+        }
+    }
+}
+{
+    "type": "ADDED",
+    "object": {
+        "kind": "Build",
+        "apiVersion": "build.openshift.io/v1",
+        "metadata": {
+            "name": "datapusher-2",
+            "namespace": "databcdc",
+            "selfLink": "/apis/build.openshift.io/v1/namespaces/databcdc/builds/datapusher-2",
+            "uid": "168492bb-7e62-11e9-8dc7-0050568348cc",
+            "resourceVersion": "791081023",
+            "creationTimestamp": "2019-05-24T20:25:36Z",
+            "labels": {
+                "app": "datapusher",
+                "buildconfig": "datapusher",
+                "openshift.io/build-config.name": "datapusher",
+                "openshift.io/build.start-policy": "Serial"
+            },
+            "annotations": {
+                "openshift.io/build-config.name": "datapusher",
+                "openshift.io/build.number": "2",
+                "openshift.io/build.pod-name": "datapusher-2-build"
+            },
+            "ownerReferences": [
+                {
+                    "apiVersion": "build.openshift.io/v1",
+                    "kind": "BuildConfig",
+                    "name": "datapusher",
+                    "uid": "6804f207-7e61-11e9-8dc7-0050568348cc",
+                    "controller": true
+                }
+            ]
+        },
+        "spec": {
+            "serviceAccount": "builder",
+            "source": {
+                "type": "Git",
+                "git": {
+                    "uri": "https://github.com/ckan/datapusher.git",
+                    "ref": "0.0.15"
+                }
+            },
+            "revision": {
+                "type": "Git",
+                "git": {
+                    "commit": "3926f14a5fd2143cfa005eede6588b35c4a07513",
+                    "author": {
+                        "name": "David Read",
+                        "email": "david.read@hackneyworkshop.com"
+                    },
+                    "committer": {
+                        "name": "David Read",
+                        "email": "david.read@hackneyworkshop.com"
+                    },
+                    "message": "Bump version number"
+                }
+            },
+            "strategy": {
+                "type": "Source",
+                "sourceStrategy": {
+                    "from": {
+                        "kind": "DockerImage",
+                        "name": "registry.access.redhat.com/rhel8/python-27"
+                    }
+                }
+            },
+            "output": {
+                "to": {
+                    "kind": "ImageStreamTag",
+                    "name": "datapusher:latest"
+                },
+                "pushSecret": {
+                    "name": "builder-dockercfg-kzv6s"
+                }
+            },
+            "resources": {},
+            "postCommit": {},
+            "nodeSelector": null,
+            "triggeredBy": [
+                {
+                    "message": "Manually triggered"
+                }
+            ]
+        },
+        "status": {
+            "phase": "Complete",
+            "startTimestamp": "2019-05-24T20:25:36Z",
+            "completionTimestamp": "2019-05-24T20:27:04Z",
+            "duration": 88000000000,
+            "outputDockerImageReference": "docker-registry.default.svc:5000/databcdc/datapusher:latest",
+            "config": {
+                "kind": "BuildConfig",
+                "namespace": "databcdc",
+                "name": "datapusher"
+            },
+            "output": {
+                "to": {
+                    "imageDigest": "sha256:b4534d1c3dcc3615570ee3f3415eb8f9e0ff1662814e7036b1ab90c5e7525132"
+                }
+            },
+            "stages": [
+                {
+                    "name": "FetchInputs",
+                    "startTime": "2019-05-24T20:25:42Z",
+                    "durationMilliseconds": 1389,
+                    "steps": [
+                        {
+                            "name": "FetchGitSource",
+                            "startTime": "2019-05-24T20:25:42Z",
+                            "durationMilliseconds": 1389
+                        }
+                    ]
+                },
+                {
+                    "name": "CommitContainer",
+                    "startTime": "2019-05-24T20:26:21Z",
+                    "durationMilliseconds": 8040,
+                    "steps": [
+                        {
+                            "name": "CommitContainer",
+                            "startTime": "2019-05-24T20:26:21Z",
+                            "durationMilliseconds": 8040
+                        }
+                    ]
+                },
+                {
+                    "name": "Assemble",
+                    "startTime": "2019-05-24T20:25:49Z",
+                    "durationMilliseconds": 40401,
+                    "steps": [
+                        {
+                            "name": "AssembleBuildScripts",
+                            "startTime": "2019-05-24T20:25:49Z",
+                            "durationMilliseconds": 40401
+                        }
+                    ]
+                },
+                {
+                    "name": "PushImage",
+                    "startTime": "2019-05-24T20:26:29Z",
+                    "durationMilliseconds": 34068,
+                    "steps": [
+                        {
+                            "name": "PushImage",
+                            "startTime": "2019-05-24T20:26:29Z",
+                            "durationMilliseconds": 34068
+                        }
+                    ]
+                }
+            ]
+        }
+    }
+}
+{
+    "type": "ADDED",
+    "object": {
+        "kind": "Build",
+        "apiVersion": "build.openshift.io/v1",
+        "metadata": {
+            "name": "datapusher-3",
+            "namespace": "databcdc",
+            "selfLink": "/apis/build.openshift.io/v1/namespaces/databcdc/builds/datapusher-3",
+            "uid": "18c19b03-7e63-11e9-8dc7-0050568348cc",
+            "resourceVersion": "791087767",
+            "creationTimestamp": "2019-05-24T20:32:49Z",
+            "labels": {
+                "app": "datapusher",
+                "buildconfig": "datapusher",
+                "openshift.io/build-config.name": "datapusher",
+                "openshift.io/build.start-policy": "Serial"
+            },
+            "annotations": {
+                "openshift.io/build-config.name": "datapusher",
+                "openshift.io/build.number": "3",
+                "openshift.io/build.pod-name": "datapusher-3-build"
+            },
+            "ownerReferences": [
+                {
+                    "apiVersion": "build.openshift.io/v1",
+                    "kind": "BuildConfig",
+                    "name": "datapusher",
+                    "uid": "6804f207-7e61-11e9-8dc7-0050568348cc",
+                    "controller": true
+                }
+            ]
+        },
+        "spec": {
+            "serviceAccount": "builder",
+            "source": {
+                "type": "Git",
+                "git": {
+                    "uri": "https://github.com/ckan/datapusher.git",
+                    "ref": "${DP_VER}"
+                }
+            },
+            "strategy": {
+                "type": "Source",
+                "sourceStrategy": {
+                    "from": {
+                        "kind": "DockerImage",
+                        "name": "registry.access.redhat.com/rhel8/python-27"
+                    },
+                    "env": [
+                        {
+                            "name": "DP_VER",
+                            "value": "0.0.15"
+                        }
+                    ]
+                }
+            },
+            "output": {
+                "to": {
+                    "kind": "ImageStreamTag",
+                    "name": "datapusher:latest"
+                },
+                "pushSecret": {
+                    "name": "builder-dockercfg-kzv6s"
+                }
+            },
+            "resources": {},
+            "postCommit": {},
+            "nodeSelector": null,
+            "triggeredBy": [
+                {
+                    "message": "Manually triggered"
+                }
+            ]
+        },
+        "status": {
+            "phase": "Failed",
+            "reason": "FetchSourceFailed",
+            "message": "Failed to fetch the input source.",
+            "startTimestamp": "2019-05-24T20:32:49Z",
+            "completionTimestamp": "2019-05-24T20:32:58Z",
+            "duration": 9000000000,
+            "outputDockerImageReference": "docker-registry.default.svc:5000/databcdc/datapusher:latest",
+            "config": {
+                "kind": "BuildConfig",
+                "namespace": "databcdc",
+                "name": "datapusher"
+            },
+            "output": {},
+            "stages": [
+                {
+                    "name": "FetchInputs",
+                    "startTime": "2019-05-24T20:32:56Z",
+                    "durationMilliseconds": 1415,
+                    "steps": [
+                        {
+                            "name": "FetchGitSource",
+                            "startTime": "2019-05-24T20:32:56Z",
+                            "durationMilliseconds": 1415
+                        }
+                    ]
+                }
+            ]
+        }
+    }
+}
+{
+    "type": "ADDED",
+    "object": {
+        "kind": "Build",
+        "apiVersion": "build.openshift.io/v1",
+        "metadata": {
+            "name": "datapusher-4",
+            "namespace": "databcdc",
+            "selfLink": "/apis/build.openshift.io/v1/namespaces/databcdc/builds/datapusher-4",
+            "uid": "7d255632-7e63-11e9-8dc7-0050568348cc",
+            "resourceVersion": "791092244",
+            "creationTimestamp": "2019-05-24T20:35:37Z",
+            "labels": {
+                "app": "datapusher",
+                "buildconfig": "datapusher",
+                "openshift.io/build-config.name": "datapusher",
+                "openshift.io/build.start-policy": "Serial"
+            },
+            "annotations": {
+                "openshift.io/build-config.name": "datapusher",
+                "openshift.io/build.number": "4",
+                "openshift.io/build.pod-name": "datapusher-4-build"
+            },
+            "ownerReferences": [
+                {
+                    "apiVersion": "build.openshift.io/v1",
+                    "kind": "BuildConfig",
+                    "name": "datapusher",
+                    "uid": "6804f207-7e61-11e9-8dc7-0050568348cc",
+                    "controller": true
+                }
+            ]
+        },
+        "spec": {
+            "serviceAccount": "builder",
+            "source": {
+                "type": "Git",
+                "git": {
+                    "uri": "https://github.com/ckan/datapusher.git",
+                    "ref": "0.0.15"
+                }
+            },
+            "revision": {
+                "type": "Git",
+                "git": {
+                    "commit": "3926f14a5fd2143cfa005eede6588b35c4a07513",
+                    "author": {
+                        "name": "David Read",
+                        "email": "david.read@hackneyworkshop.com"
+                    },
+                    "committer": {
+                        "name": "David Read",
+                        "email": "david.read@hackneyworkshop.com"
+                    },
+                    "message": "Bump version number"
+                }
+            },
+            "strategy": {
+                "type": "Source",
+                "sourceStrategy": {
+                    "from": {
+                        "kind": "DockerImage",
+                        "name": "registry.access.redhat.com/rhel8/python-27"
+                    }
+                }
+            },
+            "output": {
+                "to": {
+                    "kind": "ImageStreamTag",
+                    "name": "datapusher:latest"
+                },
+                "pushSecret": {
+                    "name": "builder-dockercfg-kzv6s"
+                }
+            },
+            "resources": {},
+            "postCommit": {},
+            "nodeSelector": null,
+            "triggeredBy": [
+                {
+                    "message": "Manually triggered"
+                }
+            ]
+        },
+        "status": {
+            "phase": "Complete",
+            "startTimestamp": "2019-05-24T20:35:38Z",
+            "completionTimestamp": "2019-05-24T20:37:02Z",
+            "duration": 84000000000,
+            "outputDockerImageReference": "docker-registry.default.svc:5000/databcdc/datapusher:latest",
+            "config": {
+                "kind": "BuildConfig",
+                "namespace": "databcdc",
+                "name": "datapusher"
+            },
+            "output": {
+                "to": {
+                    "imageDigest": "sha256:80283bfc5a3865459fcfb4c3641fe14947ac5934862250002cfc54c2956e5b42"
+                }
+            },
+            "stages": [
+                {
+                    "name": "FetchInputs",
+                    "startTime": "2019-05-24T20:35:45Z",
+                    "durationMilliseconds": 2554,
+                    "steps": [
+                        {
+                            "name": "FetchGitSource",
+                            "startTime": "2019-05-24T20:35:45Z",
+                            "durationMilliseconds": 2554
+                        }
+                    ]
+                },
+                {
+                    "name": "CommitContainer",
+                    "startTime": "2019-05-24T20:36:47Z",
+                    "durationMilliseconds": 6850,
+                    "steps": [
+                        {
+                            "name": "CommitContainer",
+                            "startTime": "2019-05-24T20:36:47Z",
+                            "durationMilliseconds": 6850
+                        }
+                    ]
+                },
+                {
+                    "name": "Assemble",
+                    "startTime": "2019-05-24T20:36:19Z",
+                    "durationMilliseconds": 35604,
+                    "steps": [
+                        {
+                            "name": "AssembleBuildScripts",
+                            "startTime": "2019-05-24T20:36:19Z",
+                            "durationMilliseconds": 35604
+                        }
+                    ]
+                },
+                {
+                    "name": "PushImage",
+                    "startTime": "2019-05-24T20:36:54Z",
+                    "durationMilliseconds": 6047,
+                    "steps": [
+                        {
+                            "name": "PushImage",
+                            "startTime": "2019-05-24T20:36:54Z",
+                            "durationMilliseconds": 6047
+                        }
+                    ]
+                }
+            ]
+        }
+    }
+}
+{
+    "type": "ADDED",
+    "object": {
+        "kind": "Build",
+        "apiVersion": "build.openshift.io/v1",
+        "metadata": {
+            "name": "pipeline-bot-31",
+            "namespace": "databcdc",
+            "selfLink": "/apis/build.openshift.io/v1/namespaces/databcdc/builds/pipeline-bot-31",
+            "uid": "06d1989a-059b-11ea-acb8-0050568379a2",
+            "resourceVersion": "1120815956",
+            "creationTimestamp": "2019-11-12T22:23:18Z",
+            "labels": {
+                "app": "bot",
+                "buildconfig": "pipeline-bot",
+                "openshift.io/build-config.name": "pipeline-bot",
+                "openshift.io/build.start-policy": "Serial"
+            },
+            "annotations": {
+                "openshift.io/build-config.name": "pipeline-bot",
+                "openshift.io/build.number": "31",
+                "openshift.io/build.pod-name": "pipeline-bot-31-build"
+            },
+            "ownerReferences": [
+                {
+                    "apiVersion": "build.openshift.io/v1",
+                    "kind": "BuildConfig",
+                    "name": "pipeline-bot",
+                    "uid": "4b83a669-fa66-11e9-a9a8-0050568348cc",
+                    "controller": true
+                }
+            ]
+        },
+        "spec": {
+            "serviceAccount": "builder",
+            "source": {
+                "type": "Git",
+                "git": {
+                    "uri": "https://github.com/bcgov/pipeline-bot.git"
+                }
+            },
+            "revision": {
+                "type": "Git",
+                "git": {
+                    "commit": "333567a72c452d12758d3ea9ad9bca26c178d370",
+                    "author": {
+                        "name": "Craig",
+                        "email": "50336120+craigrigdon@users.noreply.github.com"
+                    },
+                    "committer": {
+                        "name": "GitHub",
+                        "email": "noreply@github.com"
+                    },
+                    "message": "Merge pull request #7 from bcgov/dev"
+                }
+            },
+            "strategy": {
+                "type": "Source",
+                "sourceStrategy": {
+                    "from": {
+                        "kind": "DockerImage",
+                        "name": "docker-registry.default.svc:5000/openshift/nodejs@sha256:91002d434b585df0262f0350fe91dac9adb3e56d6b9ccfea47ac91064f4513b7"
+                    },
+                    "pullSecret": {
+                        "name": "builder-dockercfg-kzv6s"
+                    }
+                }
+            },
+            "output": {
+                "to": {
+                    "kind": "ImageStreamTag",
+                    "name": "pipeline-bot:latest"
+                },
+                "pushSecret": {
+                    "name": "builder-dockercfg-kzv6s"
+                }
+            },
+            "resources": {},
+            "postCommit": {},
+            "nodeSelector": null,
+            "triggeredBy": [
+                {
+                    "message": "Triggered by Bot"
+                }
+            ]
+        },
+        "status": {
+            "phase": "Complete",
+            "startTimestamp": "2019-11-12T22:23:18Z",
+            "completionTimestamp": "2019-11-12T22:24:11Z",
+            "duration": 53000000000,
+            "outputDockerImageReference": "docker-registry.default.svc:5000/databcdc/pipeline-bot:latest",
+            "config": {
+                "kind": "BuildConfig",
+                "namespace": "databcdc",
+                "name": "pipeline-bot"
+            },
+            "output": {
+                "to": {
+                    "imageDigest": "sha256:df662f1982a81468c7a14b9a9be7c49892ce8c12991c18d2babc5874617f491e"
+                }
+            },
+            "stages": [
+                {
+                    "name": "FetchInputs",
+                    "startTime": "2019-11-12T22:23:25Z",
+                    "durationMilliseconds": 1773,
+                    "steps": [
+                        {
+                            "name": "FetchGitSource",
+                            "startTime": "2019-11-12T22:23:25Z",
+                            "durationMilliseconds": 1773
+                        }
+                    ]
+                },
+                {
+                    "name": "CommitContainer",
+                    "startTime": "2019-11-12T22:23:56Z",
+                    "durationMilliseconds": 9413,
+                    "steps": [
+                        {
+                            "name": "CommitContainer",
+                            "startTime": "2019-11-12T22:23:56Z",
+                            "durationMilliseconds": 9413
+                        }
+                    ]
+                },
+                {
+                    "name": "Assemble",
+                    "startTime": "2019-11-12T22:23:34Z",
+                    "durationMilliseconds": 30950,
+                    "steps": [
+                        {
+                            "name": "AssembleBuildScripts",
+                            "startTime": "2019-11-12T22:23:34Z",
+                            "durationMilliseconds": 30950
+                        }
+                    ]
+                },
+                {
+                    "name": "PushImage",
+                    "startTime": "2019-11-12T22:24:05Z",
+                    "durationMilliseconds": 3469,
+                    "steps": [
+                        {
+                            "name": "PushImage",
+                            "startTime": "2019-11-12T22:24:05Z",
+                            "durationMilliseconds": 3469
+                        }
+                    ]
+                }
+            ]
+        }
+    }
+}
+{
+    "type": "ADDED",
+    "object": {
+        "kind": "Build",
+        "apiVersion": "build.openshift.io/v1",
+        "metadata": {
+            "name": "pipeline-bot-32",
+            "namespace": "databcdc",
+            "selfLink": "/apis/build.openshift.io/v1/namespaces/databcdc/builds/pipeline-bot-32",
+            "uid": "2c90cde7-059d-11ea-95d8-005056832285",
+            "resourceVersion": "1120857871",
+            "creationTimestamp": "2019-11-12T22:38:40Z",
+            "labels": {
+                "app": "bot",
+                "buildconfig": "pipeline-bot",
+                "openshift.io/build-config.name": "pipeline-bot",
+                "openshift.io/build.start-policy": "Serial"
+            },
+            "annotations": {
+                "openshift.io/build-config.name": "pipeline-bot",
+                "openshift.io/build.number": "32",
+                "openshift.io/build.pod-name": "pipeline-bot-32-build"
+            },
+            "ownerReferences": [
+                {
+                    "apiVersion": "build.openshift.io/v1",
+                    "kind": "BuildConfig",
+                    "name": "pipeline-bot",
+                    "uid": "4b83a669-fa66-11e9-a9a8-0050568348cc",
+                    "controller": true
+                }
+            ]
+        },
+        "spec": {
+            "serviceAccount": "builder",
+            "source": {
+                "type": "Git",
+                "git": {
+                    "uri": "https://github.com/bcgov/pipeline-bot.git"
+                }
+            },
+            "revision": {
+                "type": "Git",
+                "git": {
+                    "commit": "1437d77daa961b821752acf0d1d01aabd3260c26",
+                    "author": {
+                        "name": "Craig",
+                        "email": "50336120+craigrigdon@users.noreply.github.com"
+                    },
+                    "committer": {
+                        "name": "GitHub",
+                        "email": "noreply@github.com"
+                    },
+                    "message": "Merge pull request #8 from bcgov/dev"
+                }
+            },
+            "strategy": {
+                "type": "Source",
+                "sourceStrategy": {
+                    "from": {
+                        "kind": "DockerImage",
+                        "name": "docker-registry.default.svc:5000/openshift/nodejs@sha256:91002d434b585df0262f0350fe91dac9adb3e56d6b9ccfea47ac91064f4513b7"
+                    },
+                    "pullSecret": {
+                        "name": "builder-dockercfg-kzv6s"
+                    }
+                }
+            },
+            "output": {
+                "to": {
+                    "kind": "ImageStreamTag",
+                    "name": "pipeline-bot:latest"
+                },
+                "pushSecret": {
+                    "name": "builder-dockercfg-kzv6s"
+                }
+            },
+            "resources": {},
+            "postCommit": {},
+            "nodeSelector": null,
+            "triggeredBy": [
+                {
+                    "message": "Manually triggered"
+                }
+            ]
+        },
+        "status": {
+            "phase": "Complete",
+            "startTimestamp": "2019-11-12T22:38:40Z",
+            "completionTimestamp": "2019-11-12T22:39:39Z",
+            "duration": 59000000000,
+            "outputDockerImageReference": "docker-registry.default.svc:5000/databcdc/pipeline-bot:latest",
+            "config": {
+                "kind": "BuildConfig",
+                "namespace": "databcdc",
+                "name": "pipeline-bot"
+            },
+            "output": {
+                "to": {
+                    "imageDigest": "sha256:1d97bf638b098a508561604366298d4bbed4a49ce0202de928864656d348f9b7"
+                }
+            },
+            "stages": [
+                {
+                    "name": "FetchInputs",
+                    "startTime": "2019-11-12T22:38:52Z",
+                    "durationMilliseconds": 1711,
+                    "steps": [
+                        {
+                            "name": "FetchGitSource",
+                            "startTime": "2019-11-12T22:38:52Z",
+                            "durationMilliseconds": 1711
+                        }
+                    ]
+                },
+                {
+                    "name": "CommitContainer",
+                    "startTime": "2019-11-12T22:39:25Z",
+                    "durationMilliseconds": 8320,
+                    "steps": [
+                        {
+                            "name": "CommitContainer",
+                            "startTime": "2019-11-12T22:39:25Z",
+                            "durationMilliseconds": 8320
+                        }
+                    ]
+                },
+                {
+                    "name": "Assemble",
+                    "startTime": "2019-11-12T22:39:02Z",
+                    "durationMilliseconds": 31620,
+                    "steps": [
+                        {
+                            "name": "AssembleBuildScripts",
+                            "startTime": "2019-11-12T22:39:02Z",
+                            "durationMilliseconds": 31620
+                        }
+                    ]
+                },
+                {
+                    "name": "PushImage",
+                    "startTime": "2019-11-12T22:39:34Z",
+                    "durationMilliseconds": 3687,
+                    "steps": [
+                        {
+                            "name": "PushImage",
+                            "startTime": "2019-11-12T22:39:34Z",
+                            "durationMilliseconds": 3687
+                        }
+                    ]
+                }
+            ]
+        }
+    }
+}
+{
+    "type": "ADDED",
+    "object": {
+        "kind": "Build",
+        "apiVersion": "build.openshift.io/v1",
+        "metadata": {
+            "name": "pipeline-bot-33",
+            "namespace": "databcdc",
+            "selfLink": "/apis/build.openshift.io/v1/namespaces/databcdc/builds/pipeline-bot-33",
+            "uid": "0d4962a0-059e-11ea-95d8-005056832285",
+            "resourceVersion": "1120876675",
+            "creationTimestamp": "2019-11-12T22:44:57Z",
+            "labels": {
+                "app": "bot",
+                "buildconfig": "pipeline-bot",
+                "openshift.io/build-config.name": "pipeline-bot",
+                "openshift.io/build.start-policy": "Serial"
+            },
+            "annotations": {
+                "openshift.io/build-config.name": "pipeline-bot",
+                "openshift.io/build.number": "33",
+                "openshift.io/build.pod-name": "pipeline-bot-33-build"
+            },
+            "ownerReferences": [
+                {
+                    "apiVersion": "build.openshift.io/v1",
+                    "kind": "BuildConfig",
+                    "name": "pipeline-bot",
+                    "uid": "4b83a669-fa66-11e9-a9a8-0050568348cc",
+                    "controller": true
+                }
+            ]
+        },
+        "spec": {
+            "serviceAccount": "builder",
+            "source": {
+                "type": "Git",
+                "git": {
+                    "uri": "https://github.com/bcgov/pipeline-bot.git"
+                }
+            },
+            "revision": {
+                "type": "Git",
+                "git": {
+                    "commit": "67ea17819de31ad84564fa39ee448545d1b473a4",
+                    "author": {
+                        "name": "Craig",
+                        "email": "50336120+craigrigdon@users.noreply.github.com"
+                    },
+                    "committer": {
+                        "name": "GitHub",
+                        "email": "noreply@github.com"
+                    },
+                    "message": "Merge pull request #9 from bcgov/dev"
+                }
+            },
+            "strategy": {
+                "type": "Source",
+                "sourceStrategy": {
+                    "from": {
+                        "kind": "DockerImage",
+                        "name": "docker-registry.default.svc:5000/openshift/nodejs@sha256:91002d434b585df0262f0350fe91dac9adb3e56d6b9ccfea47ac91064f4513b7"
+                    },
+                    "pullSecret": {
+                        "name": "builder-dockercfg-kzv6s"
+                    }
+                }
+            },
+            "output": {
+                "to": {
+                    "kind": "ImageStreamTag",
+                    "name": "pipeline-bot:latest"
+                },
+                "pushSecret": {
+                    "name": "builder-dockercfg-kzv6s"
+                }
+            },
+            "resources": {},
+            "postCommit": {},
+            "nodeSelector": null,
+            "triggeredBy": [
+                {
+                    "message": "Manually triggered"
+                }
+            ]
+        },
+        "status": {
+            "phase": "Complete",
+            "startTimestamp": "2019-11-12T22:44:57Z",
+            "completionTimestamp": "2019-11-12T22:46:09Z",
+            "duration": 72000000000,
+            "outputDockerImageReference": "docker-registry.default.svc:5000/databcdc/pipeline-bot:latest",
+            "config": {
+                "kind": "BuildConfig",
+                "namespace": "databcdc",
+                "name": "pipeline-bot"
+            },
+            "output": {
+                "to": {
+                    "imageDigest": "sha256:dc4d7281dc4938eae559939f91f0ab6d1e14e61c4e4c5376392f5ee1581ed4f3"
+                }
+            },
+            "stages": [
+                {
+                    "name": "FetchInputs",
+                    "startTime": "2019-11-12T22:45:14Z",
+                    "durationMilliseconds": 1668,
+                    "steps": [
+                        {
+                            "name": "FetchGitSource",
+                            "startTime": "2019-11-12T22:45:14Z",
+                            "durationMilliseconds": 1668
+                        }
+                    ]
+                },
+                {
+                    "name": "CommitContainer",
+                    "startTime": "2019-11-12T22:45:56Z",
+                    "durationMilliseconds": 8308,
+                    "steps": [
+                        {
+                            "name": "CommitContainer",
+                            "startTime": "2019-11-12T22:45:56Z",
+                            "durationMilliseconds": 8308
+                        }
+                    ]
+                },
+                {
+                    "name": "Assemble",
+                    "startTime": "2019-11-12T22:45:31Z",
+                    "durationMilliseconds": 33475,
+                    "steps": [
+                        {
+                            "name": "AssembleBuildScripts",
+                            "startTime": "2019-11-12T22:45:31Z",
+                            "durationMilliseconds": 33475
+                        }
+                    ]
+                },
+                {
+                    "name": "PushImage",
+                    "startTime": "2019-11-12T22:46:04Z",
+                    "durationMilliseconds": 3743,
+                    "steps": [
+                        {
+                            "name": "PushImage",
+                            "startTime": "2019-11-12T22:46:04Z",
+                            "durationMilliseconds": 3743
+                        }
+                    ]
+                }
+            ]
+        }
+    }
+}
+{
+    "type": "ADDED",
+    "object": {
+        "kind": "Build",
+        "apiVersion": "build.openshift.io/v1",
+        "metadata": {
+            "name": "pipeline-bot-34",
+            "namespace": "databcdc",
+            "selfLink": "/apis/build.openshift.io/v1/namespaces/databcdc/builds/pipeline-bot-34",
+            "uid": "91a9ae61-05a2-11ea-95d8-005056832285",
+            "resourceVersion": "1120961853",
+            "creationTimestamp": "2019-11-12T23:17:17Z",
+            "labels": {
+                "app": "bot",
+                "buildconfig": "pipeline-bot",
+                "openshift.io/build-config.name": "pipeline-bot",
+                "openshift.io/build.start-policy": "Serial"
+            },
+            "annotations": {
+                "openshift.io/build-config.name": "pipeline-bot",
+                "openshift.io/build.number": "34",
+                "openshift.io/build.pod-name": "pipeline-bot-34-build"
+            },
+            "ownerReferences": [
+                {
+                    "apiVersion": "build.openshift.io/v1",
+                    "kind": "BuildConfig",
+                    "name": "pipeline-bot",
+                    "uid": "4b83a669-fa66-11e9-a9a8-0050568348cc",
+                    "controller": true
+                }
+            ]
+        },
+        "spec": {
+            "serviceAccount": "builder",
+            "source": {
+                "type": "Git",
+                "git": {
+                    "uri": "https://github.com/bcgov/pipeline-bot.git"
+                }
+            },
+            "revision": {
+                "type": "Git",
+                "git": {
+                    "commit": "9a6db0ba982e4333ae3a5fabde641dd9cc4ae86d",
+                    "author": {
+                        "name": "Craig",
+                        "email": "50336120+craigrigdon@users.noreply.github.com"
+                    },
+                    "committer": {
+                        "name": "GitHub",
+                        "email": "noreply@github.com"
+                    },
+                    "message": "Merge pull request #10 from bcgov/dev"
+                }
+            },
+            "strategy": {
+                "type": "Source",
+                "sourceStrategy": {
+                    "from": {
+                        "kind": "DockerImage",
+                        "name": "docker-registry.default.svc:5000/openshift/nodejs@sha256:91002d434b585df0262f0350fe91dac9adb3e56d6b9ccfea47ac91064f4513b7"
+                    },
+                    "pullSecret": {
+                        "name": "builder-dockercfg-kzv6s"
+                    }
+                }
+            },
+            "output": {
+                "to": {
+                    "kind": "ImageStreamTag",
+                    "name": "pipeline-bot:latest"
+                },
+                "pushSecret": {
+                    "name": "builder-dockercfg-kzv6s"
+                }
+            },
+            "resources": {},
+            "postCommit": {},
+            "nodeSelector": null,
+            "triggeredBy": [
+                {
+                    "message": "Manually triggered"
+                }
+            ]
+        },
+        "status": {
+            "phase": "Complete",
+            "startTimestamp": "2019-11-12T23:17:17Z",
+            "completionTimestamp": "2019-11-12T23:18:17Z",
+            "duration": 60000000000,
+            "outputDockerImageReference": "docker-registry.default.svc:5000/databcdc/pipeline-bot:latest",
+            "config": {
+                "kind": "BuildConfig",
+                "namespace": "databcdc",
+                "name": "pipeline-bot"
+            },
+            "output": {
+                "to": {
+                    "imageDigest": "sha256:ec5901ba5976fecb121143ecab73ae8c6c8997dbd979df70520f6cc6ed725b36"
+                }
+            },
+            "stages": [
+                {
+                    "name": "FetchInputs",
+                    "startTime": "2019-11-12T23:17:28Z",
+                    "durationMilliseconds": 1718,
+                    "steps": [
+                        {
+                            "name": "FetchGitSource",
+                            "startTime": "2019-11-12T23:17:28Z",
+                            "durationMilliseconds": 1718
+                        }
+                    ]
+                },
+                {
+                    "name": "CommitContainer",
+                    "startTime": "2019-11-12T23:18:01Z",
+                    "durationMilliseconds": 10327,
+                    "steps": [
+                        {
+                            "name": "CommitContainer",
+                            "startTime": "2019-11-12T23:18:01Z",
+                            "durationMilliseconds": 10327
+                        }
+                    ]
+                },
+                {
+                    "name": "Assemble",
+                    "startTime": "2019-11-12T23:17:37Z",
+                    "durationMilliseconds": 34772,
+                    "steps": [
+                        {
+                            "name": "AssembleBuildScripts",
+                            "startTime": "2019-11-12T23:17:37Z",
+                            "durationMilliseconds": 34772
+                        }
+                    ]
+                },
+                {
+                    "name": "PushImage",
+                    "startTime": "2019-11-12T23:18:12Z",
+                    "durationMilliseconds": 3535,
+                    "steps": [
+                        {
+                            "name": "PushImage",
+                            "startTime": "2019-11-12T23:18:12Z",
+                            "durationMilliseconds": 3535
+                        }
+                    ]
+                }
+            ]
+        }
+    }
+}
+{
+    "type": "ADDED",
+    "object": {
+        "kind": "Build",
+        "apiVersion": "build.openshift.io/v1",
+        "metadata": {
+            "name": "pipeline-bot-35",
+            "namespace": "databcdc",
+            "selfLink": "/apis/build.openshift.io/v1/namespaces/databcdc/builds/pipeline-bot-35",
+            "uid": "f8a8cd14-05a4-11ea-95d8-005056832285",
+            "resourceVersion": "1121008010",
+            "creationTimestamp": "2019-11-12T23:34:29Z",
+            "labels": {
+                "app": "bot",
+                "buildconfig": "pipeline-bot",
+                "openshift.io/build-config.name": "pipeline-bot",
+                "openshift.io/build.start-policy": "Serial"
+            },
+            "annotations": {
+                "openshift.io/build-config.name": "pipeline-bot",
+                "openshift.io/build.number": "35",
+                "openshift.io/build.pod-name": "pipeline-bot-35-build"
+            },
+            "ownerReferences": [
+                {
+                    "apiVersion": "build.openshift.io/v1",
+                    "kind": "BuildConfig",
+                    "name": "pipeline-bot",
+                    "uid": "4b83a669-fa66-11e9-a9a8-0050568348cc",
+                    "controller": true
+                }
+            ]
+        },
+        "spec": {
+            "serviceAccount": "builder",
+            "source": {
+                "type": "Git",
+                "git": {
+                    "uri": "https://github.com/bcgov/pipeline-bot.git"
+                }
+            },
+            "revision": {
+                "type": "Git",
+                "git": {
+                    "commit": "66464796a51d8c5875df1fa5d5c34a662ba8d870",
+                    "author": {
+                        "name": "Craig",
+                        "email": "50336120+craigrigdon@users.noreply.github.com"
+                    },
+                    "committer": {
+                        "name": "GitHub",
+                        "email": "noreply@github.com"
+                    },
+                    "message": "Merge pull request #11 from bcgov/dev"
+                }
+            },
+            "strategy": {
+                "type": "Source",
+                "sourceStrategy": {
+                    "from": {
+                        "kind": "DockerImage",
+                        "name": "docker-registry.default.svc:5000/openshift/nodejs@sha256:91002d434b585df0262f0350fe91dac9adb3e56d6b9ccfea47ac91064f4513b7"
+                    },
+                    "pullSecret": {
+                        "name": "builder-dockercfg-kzv6s"
+                    }
+                }
+            },
+            "output": {
+                "to": {
+                    "kind": "ImageStreamTag",
+                    "name": "pipeline-bot:latest"
+                },
+                "pushSecret": {
+                    "name": "builder-dockercfg-kzv6s"
+                }
+            },
+            "resources": {},
+            "postCommit": {},
+            "nodeSelector": null,
+            "triggeredBy": [
+                {
+                    "message": "Manually triggered"
+                }
+            ]
+        },
+        "status": {
+            "phase": "Complete",
+            "startTimestamp": "2019-11-12T23:34:29Z",
+            "completionTimestamp": "2019-11-12T23:35:28Z",
+            "duration": 59000000000,
+            "outputDockerImageReference": "docker-registry.default.svc:5000/databcdc/pipeline-bot:latest",
+            "config": {
+                "kind": "BuildConfig",
+                "namespace": "databcdc",
+                "name": "pipeline-bot"
+            },
+            "output": {
+                "to": {
+                    "imageDigest": "sha256:31c702665010a5817442dac979793c137c640933b732546d313b4907d004f636"
+                }
+            },
+            "stages": [
+                {
+                    "name": "FetchInputs",
+                    "startTime": "2019-11-12T23:34:38Z",
+                    "durationMilliseconds": 1826,
+                    "steps": [
+                        {
+                            "name": "FetchGitSource",
+                            "startTime": "2019-11-12T23:34:38Z",
+                            "durationMilliseconds": 1826
+                        }
+                    ]
+                },
+                {
+                    "name": "CommitContainer",
+                    "startTime": "2019-11-12T23:35:11Z",
+                    "durationMilliseconds": 10866,
+                    "steps": [
+                        {
+                            "name": "CommitContainer",
+                            "startTime": "2019-11-12T23:35:11Z",
+                            "durationMilliseconds": 10866
+                        }
+                    ]
+                },
+                {
+                    "name": "Assemble",
+                    "startTime": "2019-11-12T23:34:48Z",
+                    "durationMilliseconds": 34591,
+                    "steps": [
+                        {
+                            "name": "AssembleBuildScripts",
+                            "startTime": "2019-11-12T23:34:48Z",
+                            "durationMilliseconds": 34591
+                        }
+                    ]
+                },
+                {
+                    "name": "PushImage",
+                    "startTime": "2019-11-12T23:35:22Z",
+                    "durationMilliseconds": 4071,
+                    "steps": [
+                        {
+                            "name": "PushImage",
+                            "startTime": "2019-11-12T23:35:22Z",
+                            "durationMilliseconds": 4071
+                        }
+                    ]
+                }
+            ]
+        }
+    }
+}
+{
+    "type": "ADDED",
+    "object": {
+        "kind": "Build",
+        "apiVersion": "build.openshift.io/v1",
+        "metadata": {
+            "name": "solr-docker-10",
+            "namespace": "databcdc",
+            "selfLink": "/apis/build.openshift.io/v1/namespaces/databcdc/builds/solr-docker-10",
+            "uid": "6d30dc61-2186-11e8-809f-0050568379a2",
+            "resourceVersion": "567943848",
+            "creationTimestamp": "2018-03-06T21:36:27Z",
+            "labels": {
+                "app": "solr",
+                "buildconfig": "solr-docker",
+                "openshift.io/build-config.name": "solr-docker",
+                "openshift.io/build.start-policy": "Serial"
+            },
+            "annotations": {
+                "openshift.io/build-config.name": "solr-docker",
+                "openshift.io/build.number": "10",
+                "openshift.io/build.pod-name": "solr-docker-10-build"
+            },
+            "ownerReferences": [
+                {
+                    "apiVersion": "build.openshift.io/v1",
+                    "kind": "BuildConfig",
+                    "name": "solr-docker",
+                    "uid": "41598385-dadf-11e7-9ace-0050568348cc",
+                    "controller": true
+                }
+            ]
+        },
+        "spec": {
+            "serviceAccount": "builder",
+            "source": {
+                "type": "Git",
+                "git": {
+                    "uri": "https://gogs.data.gov.bc.ca/leolou/solr-docker"
+                }
+            },
+            "revision": {
+                "type": "Git",
+                "git": {
+                    "commit": "af86da9b7ac5b273f9308f1088dc19c3374240e5",
+                    "author": {
+                        "name": "Leo Lou",
+                        "email": "leo.lou@gov.bc.ca"
+                    },
+                    "committer": {
+                        "name": "Leo Lou",
+                        "email": "leo.lou@gov.bc.ca"
+                    },
+                    "message": "Update 'Dockerfile'"
+                }
+            },
+            "strategy": {
+                "type": "Docker",
+                "dockerStrategy": {
+                    "from": {
+                        "kind": "DockerImage",
+                        "name": "172.50.0.2:5000/databcdc/solr@sha256:ecdfe51b357c984da3bc43073f159e4119dfa444e7688d6e22ddbc9541ee55cd"
+                    },
+                    "pullSecret": {
+                        "name": "builder-dockercfg-xyq2u"
+                    },
+                    "noCache": true,
+                    "env": [
+                        {
+                            "name": "JAVA_BUILD",
+                            "value": "12"
+                        },
+                        {
+                            "name": "JAVA_UPDATE",
+                            "value": "161"
+                        },
+                        {
+                            "name": "JAVA_VERSION",
+                            "value": "8"
+                        },
+                        {
+                            "name": "OTNSN",
+                            "value": "2f38c3b165be4555a1fa6e98c45e0808"
+                        }
+                    ]
+                }
+            },
+            "output": {
+                "to": {
+                    "kind": "ImageStreamTag",
+                    "name": "solr-docker:latest"
+                },
+                "pushSecret": {
+                    "name": "builder-dockercfg-xyq2u"
+                }
+            },
+            "resources": {},
+            "postCommit": {},
+            "nodeSelector": null,
+            "triggeredBy": [
+                {
+                    "message": "Image change",
+                    "imageChangeBuild": {
+                        "imageID": "172.50.0.2:5000/databcdc/solr@sha256:ecdfe51b357c984da3bc43073f159e4119dfa444e7688d6e22ddbc9541ee55cd",
+                        "fromRef": {
+                            "kind": "ImageStreamTag",
+                            "name": "solr:6-alpine"
+                        }
+                    }
+                }
+            ]
+        },
+        "status": {
+            "phase": "Complete",
+            "startTimestamp": "2018-03-06T21:36:27Z",
+            "completionTimestamp": "2018-03-06T21:39:03Z",
+            "duration": 156000000000,
+            "outputDockerImageReference": "172.50.0.2:5000/databcdc/solr-docker:latest",
+            "config": {
+                "kind": "BuildConfig",
+                "namespace": "databcdc",
+                "name": "solr-docker"
+            },
+            "output": {
+                "to": {
+                    "imageDigest": "sha256:3f38257788d7f8117d095198206f77430455803316d1057a263580ebe2bb961d"
+                }
+            },
+            "stages": [
+                {
+                    "name": "FetchInputs",
+                    "startTime": "2018-03-06T21:36:35Z",
+                    "durationMilliseconds": 606,
+                    "steps": [
+                        {
+                            "name": "FetchGitSource",
+                            "startTime": "2018-03-06T21:36:35Z",
+                            "durationMilliseconds": 606
+                        }
+                    ]
+                },
+                {
+                    "name": "PullImages",
+                    "startTime": "2018-03-06T21:36:41Z",
+                    "durationMilliseconds": 10824,
+                    "steps": [
+                        {
+                            "name": "PullBaseImage",
+                            "startTime": "2018-03-06T21:36:41Z",
+                            "durationMilliseconds": 10824
+                        }
+                    ]
+                },
+                {
+                    "name": "Build",
+                    "startTime": "2018-03-06T21:36:51Z",
+                    "durationMilliseconds": 92786,
+                    "steps": [
+                        {
+                            "name": "DockerBuild",
+                            "startTime": "2018-03-06T21:36:51Z",
+                            "durationMilliseconds": 92786
+                        }
+                    ]
+                },
+                {
+                    "name": "PushImage",
+                    "startTime": "2018-03-06T21:38:24Z",
+                    "durationMilliseconds": 37724,
+                    "steps": [
+                        {
+                            "name": "PushDockerImage",
+                            "startTime": "2018-03-06T21:38:24Z",
+                            "durationMilliseconds": 37724
+                        }
+                    ]
+                }
+            ]
+        }
+    }
+}
+{
+    "type": "ADDED",
+    "object": {
+        "kind": "Build",
+        "apiVersion": "build.openshift.io/v1",
+        "metadata": {
+            "name": "solr-docker-11",
+            "namespace": "databcdc",
+            "selfLink": "/apis/build.openshift.io/v1/namespaces/databcdc/builds/solr-docker-11",
+            "uid": "087b5aa3-2187-11e8-809f-0050568379a2",
+            "resourceVersion": "567943852",
+            "creationTimestamp": "2018-03-06T21:40:48Z",
+            "labels": {
+                "app": "solr",
+                "buildconfig": "solr-docker",
+                "openshift.io/build-config.name": "solr-docker",
+                "openshift.io/build.start-policy": "Serial"
+            },
+            "annotations": {
+                "openshift.io/build-config.name": "solr-docker",
+                "openshift.io/build.number": "11",
+                "openshift.io/build.pod-name": "solr-docker-11-build"
+            },
+            "ownerReferences": [
+                {
+                    "apiVersion": "build.openshift.io/v1",
+                    "kind": "BuildConfig",
+                    "name": "solr-docker",
+                    "uid": "41598385-dadf-11e7-9ace-0050568348cc",
+                    "controller": true
+                }
+            ]
+        },
+        "spec": {
+            "serviceAccount": "builder",
+            "source": {
+                "type": "Git",
+                "git": {
+                    "uri": "https://gogs.data.gov.bc.ca/leolou/solr-docker"
+                }
+            },
+            "revision": {
+                "type": "Git",
+                "git": {
+                    "commit": "a27c7ed77dc40cc612ce59cd34dee0144ad4662b",
+                    "author": {
+                        "name": "Leo Lou",
+                        "email": "leo.lou@gov.bc.ca"
+                    },
+                    "committer": {
+                        "name": "Leo Lou",
+                        "email": "leo.lou@gov.bc.ca"
+                    },
+                    "message": "Update 'Dockerfile'"
+                }
+            },
+            "strategy": {
+                "type": "Docker",
+                "dockerStrategy": {
+                    "from": {
+                        "kind": "DockerImage",
+                        "name": "172.50.0.2:5000/databcdc/solr@sha256:7a500071407e953dd56400015bd6b4d7b6b669f68e8b3e9abeea9fabf2c8d047"
+                    },
+                    "pullSecret": {
+                        "name": "builder-dockercfg-xyq2u"
+                    },
+                    "noCache": true,
+                    "env": [
+                        {
+                            "name": "JAVA_BUILD",
+                            "value": "12"
+                        },
+                        {
+                            "name": "JAVA_UPDATE",
+                            "value": "161"
+                        },
+                        {
+                            "name": "JAVA_VERSION",
+                            "value": "8"
+                        },
+                        {
+                            "name": "OTNSN",
+                            "value": "2f38c3b165be4555a1fa6e98c45e0808"
+                        }
+                    ]
+                }
+            },
+            "output": {
+                "to": {
+                    "kind": "ImageStreamTag",
+                    "name": "solr-docker:latest"
+                },
+                "pushSecret": {
+                    "name": "builder-dockercfg-xyq2u"
+                }
+            },
+            "resources": {},
+            "postCommit": {},
+            "nodeSelector": null,
+            "triggeredBy": [
+                {
+                    "message": "Image change",
+                    "imageChangeBuild": {
+                        "imageID": "172.50.0.2:5000/databcdc/solr@sha256:7a500071407e953dd56400015bd6b4d7b6b669f68e8b3e9abeea9fabf2c8d047",
+                        "fromRef": {
+                            "kind": "ImageStreamTag",
+                            "name": "solr:7-alpine"
+                        }
+                    }
+                }
+            ]
+        },
+        "status": {
+            "phase": "Complete",
+            "startTimestamp": "2018-03-06T21:40:48Z",
+            "completionTimestamp": "2018-03-06T21:43:24Z",
+            "duration": 156000000000,
+            "outputDockerImageReference": "172.50.0.2:5000/databcdc/solr-docker:latest",
+            "config": {
+                "kind": "BuildConfig",
+                "namespace": "databcdc",
+                "name": "solr-docker"
+            },
+            "output": {
+                "to": {
+                    "imageDigest": "sha256:11b23a68e803edbea3acf9dc7b33a5b54dce614f6e58a9e3959d94a332c2b178"
+                }
+            },
+            "stages": [
+                {
+                    "name": "FetchInputs",
+                    "startTime": "2018-03-06T21:40:51Z",
+                    "durationMilliseconds": 513,
+                    "steps": [
+                        {
+                            "name": "FetchGitSource",
+                            "startTime": "2018-03-06T21:40:51Z",
+                            "durationMilliseconds": 513
+                        }
+                    ]
+                },
+                {
+                    "name": "PullImages",
+                    "startTime": "2018-03-06T21:40:56Z",
+                    "durationMilliseconds": 6927,
+                    "steps": [
+                        {
+                            "name": "PullBaseImage",
+                            "startTime": "2018-03-06T21:40:56Z",
+                            "durationMilliseconds": 6927
+                        }
+                    ]
+                },
+                {
+                    "name": "Build",
+                    "startTime": "2018-03-06T21:41:03Z",
+                    "durationMilliseconds": 105721,
+                    "steps": [
+                        {
+                            "name": "DockerBuild",
+                            "startTime": "2018-03-06T21:41:03Z",
+                            "durationMilliseconds": 105721
+                        }
+                    ]
+                },
+                {
+                    "name": "PushImage",
+                    "startTime": "2018-03-06T21:42:49Z",
+                    "durationMilliseconds": 33263,
+                    "steps": [
+                        {
+                            "name": "PushDockerImage",
+                            "startTime": "2018-03-06T21:42:49Z",
+                            "durationMilliseconds": 33263
+                        }
+                    ]
+                }
+            ]
+        }
+    }
+}
+{
+    "type": "ADDED",
+    "object": {
+        "kind": "Build",
+        "apiVersion": "build.openshift.io/v1",
+        "metadata": {
+            "name": "solr-docker-12",
+            "namespace": "databcdc",
+            "selfLink": "/apis/build.openshift.io/v1/namespaces/databcdc/builds/solr-docker-12",
+            "uid": "82dbad2a-2187-11e8-809f-0050568379a2",
+            "resourceVersion": "567943858",
+            "creationTimestamp": "2018-03-06T21:44:13Z",
+            "labels": {
+                "app": "solr",
+                "buildconfig": "solr-docker",
+                "openshift.io/build-config.name": "solr-docker",
+                "openshift.io/build.start-policy": "Serial"
+            },
+            "annotations": {
+                "openshift.io/build-config.name": "solr-docker",
+                "openshift.io/build.number": "12",
+                "openshift.io/build.pod-name": "solr-docker-12-build"
+            },
+            "ownerReferences": [
+                {
+                    "apiVersion": "build.openshift.io/v1",
+                    "kind": "BuildConfig",
+                    "name": "solr-docker",
+                    "uid": "41598385-dadf-11e7-9ace-0050568348cc",
+                    "controller": true
+                }
+            ]
+        },
+        "spec": {
+            "serviceAccount": "builder",
+            "source": {
+                "type": "Git",
+                "git": {
+                    "uri": "https://gogs.data.gov.bc.ca/leolou/solr-docker"
+                }
+            },
+            "revision": {
+                "type": "Git",
+                "git": {
+                    "commit": "561c45e1b15bb7af00118b176397e27349c375b6",
+                    "author": {
+                        "name": "Leo Lou",
+                        "email": "leo.lou@gov.bc.ca"
+                    },
+                    "committer": {
+                        "name": "Leo Lou",
+                        "email": "leo.lou@gov.bc.ca"
+                    },
+                    "message": "Update 'Dockerfile'"
+                }
+            },
+            "strategy": {
+                "type": "Docker",
+                "dockerStrategy": {
+                    "from": {
+                        "kind": "DockerImage",
+                        "name": "172.50.0.2:5000/databcdc/solr@sha256:7a500071407e953dd56400015bd6b4d7b6b669f68e8b3e9abeea9fabf2c8d047"
+                    },
+                    "pullSecret": {
+                        "name": "builder-dockercfg-xyq2u"
+                    },
+                    "noCache": true,
+                    "env": [
+                        {
+                            "name": "JAVA_BUILD",
+                            "value": "12"
+                        },
+                        {
+                            "name": "JAVA_UPDATE",
+                            "value": "161"
+                        },
+                        {
+                            "name": "JAVA_VERSION",
+                            "value": "8"
+                        },
+                        {
+                            "name": "OTNSN",
+                            "value": "2f38c3b165be4555a1fa6e98c45e0808"
+                        }
+                    ]
+                }
+            },
+            "output": {
+                "to": {
+                    "kind": "ImageStreamTag",
+                    "name": "solr-docker:latest"
+                },
+                "pushSecret": {
+                    "name": "builder-dockercfg-xyq2u"
+                }
+            },
+            "resources": {},
+            "postCommit": {},
+            "nodeSelector": null,
+            "triggeredBy": [
+                {
+                    "message": "Manually triggered"
+                }
+            ]
+        },
+        "status": {
+            "phase": "Complete",
+            "startTimestamp": "2018-03-06T21:44:14Z",
+            "completionTimestamp": "2018-03-06T21:47:17Z",
+            "duration": 183000000000,
+            "outputDockerImageReference": "172.50.0.2:5000/databcdc/solr-docker:latest",
+            "config": {
+                "kind": "BuildConfig",
+                "namespace": "databcdc",
+                "name": "solr-docker"
+            },
+            "output": {
+                "to": {
+                    "imageDigest": "sha256:4bc80b1608eafa070e445dd2940e9a8fd662a9ab605a6175b8299a3cb1bee352"
+                }
+            },
+            "stages": [
+                {
+                    "name": "FetchInputs",
+                    "startTime": "2018-03-06T21:44:18Z",
+                    "durationMilliseconds": 405,
+                    "steps": [
+                        {
+                            "name": "FetchGitSource",
+                            "startTime": "2018-03-06T21:44:18Z",
+                            "durationMilliseconds": 405
+                        }
+                    ]
+                },
+                {
+                    "name": "PullImages",
+                    "startTime": "2018-03-06T21:44:26Z",
+                    "durationMilliseconds": 254,
+                    "steps": [
+                        {
+                            "name": "PullBaseImage",
+                            "startTime": "2018-03-06T21:44:26Z",
+                            "durationMilliseconds": 254
+                        }
+                    ]
+                },
+                {
+                    "name": "Build",
+                    "startTime": "2018-03-06T21:44:26Z",
+                    "durationMilliseconds": 126451,
+                    "steps": [
+                        {
+                            "name": "DockerBuild",
+                            "startTime": "2018-03-06T21:44:26Z",
+                            "durationMilliseconds": 126451
+                        }
+                    ]
+                },
+                {
+                    "name": "PushImage",
+                    "startTime": "2018-03-06T21:46:32Z",
+                    "durationMilliseconds": 40924,
+                    "steps": [
+                        {
+                            "name": "PushDockerImage",
+                            "startTime": "2018-03-06T21:46:32Z",
+                            "durationMilliseconds": 40924
+                        }
+                    ]
+                }
+            ]
+        }
+    }
+}
+{
+    "type": "ADDED",
+    "object": {
+        "kind": "Build",
+        "apiVersion": "build.openshift.io/v1",
+        "metadata": {
+            "name": "solr-docker-3",
+            "namespace": "databcdc",
+            "selfLink": "/apis/build.openshift.io/v1/namespaces/databcdc/builds/solr-docker-3",
+            "uid": "d5de95d1-1801-11e8-844f-005056832285",
+            "resourceVersion": "567943857",
+            "creationTimestamp": "2018-02-22T18:54:39Z",
+            "labels": {
+                "app": "solr",
+                "buildconfig": "solr-docker",
+                "openshift.io/build-config.name": "solr-docker",
+                "openshift.io/build.start-policy": "Serial"
+            },
+            "annotations": {
+                "openshift.io/build-config.name": "solr-docker",
+                "openshift.io/build.number": "3",
+                "openshift.io/build.pod-name": "solr-docker-3-build"
+            },
+            "ownerReferences": [
+                {
+                    "apiVersion": "build.openshift.io/v1",
+                    "kind": "BuildConfig",
+                    "name": "solr-docker",
+                    "uid": "41598385-dadf-11e7-9ace-0050568348cc",
+                    "controller": true
+                }
+            ]
+        },
+        "spec": {
+            "serviceAccount": "builder",
+            "source": {
+                "type": "Git",
+                "git": {
+                    "uri": "https://gogs.data.gov.bc.ca/leolou/solr-docker"
+                }
+            },
+            "revision": {
+                "type": "Git",
+                "git": {
+                    "commit": "5a0cee769a930d6022d3423697d56f6a50809f43",
+                    "author": {
+                        "name": "appRunner",
+                        "email": "leo.lou@gov.bc.ca"
+                    },
+                    "committer": {
+                        "name": "appRunner",
+                        "email": "leo.lou@gov.bc.ca"
+                    },
+                    "message": "add ckan 2.7.2 solr conf"
+                }
+            },
+            "strategy": {
+                "type": "Docker",
+                "dockerStrategy": {
+                    "from": {
+                        "kind": "DockerImage",
+                        "name": "solr@sha256:83454684a27cd8c743e5e775ef92735b654c6a83e6fd0cd1cf79a8b3fa4504d8"
+                    },
+                    "env": [
+                        {
+                            "name": "JAVA_BUILD",
+                            "value": "12"
+                        },
+                        {
+                            "name": "JAVA_UPDATE",
+                            "value": "161"
+                        },
+                        {
+                            "name": "JAVA_VERSION",
+                            "value": "8"
+                        },
+                        {
+                            "name": "OTNSN",
+                            "value": "2f38c3b165be4555a1fa6e98c45e0808"
+                        }
+                    ]
+                }
+            },
+            "output": {
+                "to": {
+                    "kind": "ImageStreamTag",
+                    "name": "solr-docker:latest"
+                },
+                "pushSecret": {
+                    "name": "builder-dockercfg-xyq2u"
+                }
+            },
+            "resources": {},
+            "postCommit": {},
+            "nodeSelector": null,
+            "triggeredBy": [
+                {
+                    "message": "Manually triggered"
+                }
+            ]
+        },
+        "status": {
+            "phase": "Complete",
+            "startTimestamp": "2018-02-22T18:54:39Z",
+            "completionTimestamp": "2018-02-22T18:57:33Z",
+            "duration": 174000000000,
+            "outputDockerImageReference": "172.50.0.2:5000/databcdc/solr-docker:latest",
+            "config": {
+                "kind": "BuildConfig",
+                "namespace": "databcdc",
+                "name": "solr-docker"
+            },
+            "output": {
+                "to": {
+                    "imageDigest": "sha256:c1c661acd4f12933cc766cd30470597ab4f8778062e4896d06697d790b7c692d"
+                }
+            },
+            "stages": [
+                {
+                    "name": "FetchInputs",
+                    "startTime": "2018-02-22T18:54:45Z",
+                    "durationMilliseconds": 668,
+                    "steps": [
+                        {
+                            "name": "FetchGitSource",
+                            "startTime": "2018-02-22T18:54:45Z",
+                            "durationMilliseconds": 668
+                        }
+                    ]
+                },
+                {
+                    "name": "PullImages",
+                    "startTime": "2018-02-22T18:54:46Z",
+                    "durationMilliseconds": 21637,
+                    "steps": [
+                        {
+                            "name": "PullBaseImage",
+                            "startTime": "2018-02-22T18:54:46Z",
+                            "durationMilliseconds": 21637
+                        }
+                    ]
+                },
+                {
+                    "name": "Build",
+                    "startTime": "2018-02-22T18:55:07Z",
+                    "durationMilliseconds": 109108,
+                    "steps": [
+                        {
+                            "name": "DockerBuild",
+                            "startTime": "2018-02-22T18:55:07Z",
+                            "durationMilliseconds": 109108
+                        }
+                    ]
+                },
+                {
+                    "name": "PostCommit",
+                    "startTime": "2018-02-22T18:56:56Z",
+                    "steps": [
+                        {
+                            "name": "RunPostCommitHook",
+                            "startTime": "2018-02-22T18:56:56Z"
+                        }
+                    ]
+                },
+                {
+                    "name": "PushImage",
+                    "startTime": "2018-02-22T18:56:56Z",
+                    "durationMilliseconds": 35567,
+                    "steps": [
+                        {
+                            "name": "PushDockerImage",
+                            "startTime": "2018-02-22T18:56:56Z",
+                            "durationMilliseconds": 35567
+                        }
+                    ]
+                }
+            ]
+        }
+    }
+}
+{
+    "type": "ADDED",
+    "object": {
+        "kind": "Build",
+        "apiVersion": "build.openshift.io/v1",
+        "metadata": {
+            "name": "solr-docker-4",
+            "namespace": "databcdc",
+            "selfLink": "/apis/build.openshift.io/v1/namespaces/databcdc/builds/solr-docker-4",
+            "uid": "40661f08-1f17-11e8-863d-0050568348cc",
+            "resourceVersion": "567943851",
+            "creationTimestamp": "2018-03-03T19:15:35Z",
+            "labels": {
+                "app": "solr",
+                "buildconfig": "solr-docker",
+                "openshift.io/build-config.name": "solr-docker",
+                "openshift.io/build.start-policy": "Serial"
+            },
+            "annotations": {
+                "openshift.io/build-config.name": "solr-docker",
+                "openshift.io/build.number": "4",
+                "openshift.io/build.pod-name": "solr-docker-4-build"
+            },
+            "ownerReferences": [
+                {
+                    "apiVersion": "build.openshift.io/v1",
+                    "kind": "BuildConfig",
+                    "name": "solr-docker",
+                    "uid": "41598385-dadf-11e7-9ace-0050568348cc",
+                    "controller": true
+                }
+            ]
+        },
+        "spec": {
+            "serviceAccount": "builder",
+            "source": {
+                "type": "Git",
+                "git": {
+                    "uri": "https://gogs.data.gov.bc.ca/leolou/solr-docker"
+                }
+            },
+            "revision": {
+                "type": "Git",
+                "git": {
+                    "commit": "473b59ebc7c02e9d14a08b38ffaefcf17af902b8",
+                    "author": {
+                        "name": "Leo Lou",
+                        "email": "leo.lou@gov.bc.ca"
+                    },
+                    "committer": {
+                        "name": "Leo Lou",
+                        "email": "leo.lou@gov.bc.ca"
+                    },
+                    "message": "Update 'solr/solrconfig.xml'"
+                }
+            },
+            "strategy": {
+                "type": "Docker",
+                "dockerStrategy": {
+                    "from": {
+                        "kind": "DockerImage",
+                        "name": "solr@sha256:83454684a27cd8c743e5e775ef92735b654c6a83e6fd0cd1cf79a8b3fa4504d8"
+                    },
+                    "env": [
+                        {
+                            "name": "JAVA_BUILD",
+                            "value": "12"
+                        },
+                        {
+                            "name": "JAVA_UPDATE",
+                            "value": "161"
+                        },
+                        {
+                            "name": "JAVA_VERSION",
+                            "value": "8"
+                        },
+                        {
+                            "name": "OTNSN",
+                            "value": "2f38c3b165be4555a1fa6e98c45e0808"
+                        }
+                    ]
+                }
+            },
+            "output": {
+                "to": {
+                    "kind": "ImageStreamTag",
+                    "name": "solr-docker:latest"
+                },
+                "pushSecret": {
+                    "name": "builder-dockercfg-xyq2u"
+                }
+            },
+            "resources": {},
+            "postCommit": {},
+            "nodeSelector": null,
+            "triggeredBy": [
+                {
+                    "message": "Manually triggered"
+                }
+            ]
+        },
+        "status": {
+            "phase": "Complete",
+            "startTimestamp": "2018-03-03T19:15:36Z",
+            "completionTimestamp": "2018-03-03T19:18:24Z",
+            "duration": 168000000000,
+            "outputDockerImageReference": "172.50.0.2:5000/databcdc/solr-docker:latest",
+            "config": {
+                "kind": "BuildConfig",
+                "namespace": "databcdc",
+                "name": "solr-docker"
+            },
+            "output": {
+                "to": {
+                    "imageDigest": "sha256:96351936f86fa5a8fdfb3509669724458446ed0877f958b367586ab19e6c14db"
+                }
+            },
+            "stages": [
+                {
+                    "name": "FetchInputs",
+                    "startTime": "2018-03-03T19:15:38Z",
+                    "durationMilliseconds": 372,
+                    "steps": [
+                        {
+                            "name": "FetchGitSource",
+                            "startTime": "2018-03-03T19:15:38Z",
+                            "durationMilliseconds": 372
+                        }
+                    ]
+                },
+                {
+                    "name": "Build",
+                    "startTime": "2018-03-03T19:15:43Z",
+                    "durationMilliseconds": 124059,
+                    "steps": [
+                        {
+                            "name": "DockerBuild",
+                            "startTime": "2018-03-03T19:15:43Z",
+                            "durationMilliseconds": 124059
+                        }
+                    ]
+                },
+                {
+                    "name": "PushImage",
+                    "startTime": "2018-03-03T19:17:47Z",
+                    "durationMilliseconds": 35152,
+                    "steps": [
+                        {
+                            "name": "PushDockerImage",
+                            "startTime": "2018-03-03T19:17:47Z",
+                            "durationMilliseconds": 35152
+                        }
+                    ]
+                }
+            ]
+        }
+    }
+}
+{
+    "type": "ADDED",
+    "object": {
+        "kind": "Build",
+        "apiVersion": "build.openshift.io/v1",
+        "metadata": {
+            "name": "solr-docker-9",
+            "namespace": "databcdc",
+            "selfLink": "/apis/build.openshift.io/v1/namespaces/databcdc/builds/solr-docker-9",
+            "uid": "8dd7fbe4-2185-11e8-809f-0050568379a2",
+            "resourceVersion": "567943873",
+            "creationTimestamp": "2018-03-06T21:30:12Z",
+            "labels": {
+                "app": "solr",
+                "buildconfig": "solr-docker",
+                "openshift.io/build-config.name": "solr-docker",
+                "openshift.io/build.start-policy": "Serial"
+            },
+            "annotations": {
+                "openshift.io/build-config.name": "solr-docker",
+                "openshift.io/build.number": "9",
+                "openshift.io/build.pod-name": "solr-docker-9-build"
+            },
+            "ownerReferences": [
+                {
+                    "apiVersion": "build.openshift.io/v1",
+                    "kind": "BuildConfig",
+                    "name": "solr-docker",
+                    "uid": "41598385-dadf-11e7-9ace-0050568348cc",
+                    "controller": true
+                }
+            ]
+        },
+        "spec": {
+            "serviceAccount": "builder",
+            "source": {
+                "type": "Git",
+                "git": {
+                    "uri": "https://gogs.data.gov.bc.ca/leolou/solr-docker"
+                }
+            },
+            "revision": {
+                "type": "Git",
+                "git": {
+                    "commit": "af86da9b7ac5b273f9308f1088dc19c3374240e5",
+                    "author": {
+                        "name": "Leo Lou",
+                        "email": "leo.lou@gov.bc.ca"
+                    },
+                    "committer": {
+                        "name": "Leo Lou",
+                        "email": "leo.lou@gov.bc.ca"
+                    },
+                    "message": "Update 'Dockerfile'"
+                }
+            },
+            "strategy": {
+                "type": "Docker",
+                "dockerStrategy": {
+                    "from": {
+                        "kind": "DockerImage",
+                        "name": "docker.io/solr@sha256:e94eb11d6375a8f6fbab96bae0336e17fe839da153a54054090ff3aa35fa0193"
+                    },
+                    "noCache": true,
+                    "env": [
+                        {
+                            "name": "JAVA_BUILD",
+                            "value": "12"
+                        },
+                        {
+                            "name": "JAVA_UPDATE",
+                            "value": "161"
+                        },
+                        {
+                            "name": "JAVA_VERSION",
+                            "value": "8"
+                        },
+                        {
+                            "name": "OTNSN",
+                            "value": "2f38c3b165be4555a1fa6e98c45e0808"
+                        }
+                    ]
+                }
+            },
+            "output": {
+                "to": {
+                    "kind": "ImageStreamTag",
+                    "name": "solr-docker:latest"
+                },
+                "pushSecret": {
+                    "name": "builder-dockercfg-xyq2u"
+                }
+            },
+            "resources": {},
+            "postCommit": {},
+            "nodeSelector": null,
+            "triggeredBy": [
+                {
+                    "message": "Manually triggered"
+                }
+            ]
+        },
+        "status": {
+            "phase": "Failed",
+            "reason": "DockerBuildFailed",
+            "message": "Docker build strategy has failed.",
+            "startTimestamp": "2018-03-06T21:30:13Z",
+            "completionTimestamp": "2018-03-06T21:31:14Z",
+            "duration": 61000000000,
+            "outputDockerImageReference": "172.50.0.2:5000/databcdc/solr-docker:latest",
+            "config": {
+                "kind": "BuildConfig",
+                "namespace": "databcdc",
+                "name": "solr-docker"
+            },
+            "output": {},
+            "stages": [
+                {
+                    "name": "FetchInputs",
+                    "startTime": "2018-03-06T21:30:20Z",
+                    "durationMilliseconds": 533,
+                    "steps": [
+                        {
+                            "name": "FetchGitSource",
+                            "startTime":"2018-

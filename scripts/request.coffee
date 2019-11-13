@@ -5,13 +5,11 @@
 
 
 request = require('request-promise')
-rq = require('request')
-stream = require('stream')
 _ = require('lodash')
 oboe = require('oboe')
 
 
-class OCAPI
+class exports.OCAPI
     domain = null
     protocol = 'https'
     buildStatus = 'NOT STARTED'
@@ -78,9 +76,9 @@ class OCAPI
         
         request reqObj
            .then (response) -> 
-               console.log response
+               #console.log response
                json = response
-               console.log JSON.stringify(response, undefined, 2)
+               #console.log JSON.stringify(response, undefined, 2)
                return response
            .catch (err) -> 
                console.log '------- error called -------'
@@ -88,6 +86,10 @@ class OCAPI
                json = err
 
     watchBuildNP : (ocProject, buildData)->
+        # ocProject: the name of the openshift project that should be watched
+        # buildData: the payload returned from the build request
+        #
+        # returns: a promise 
         reqConfig = {
             method: 'GET',
             headers: {
@@ -113,12 +115,12 @@ class OCAPI
                         cnt = cnt + 1
                         recordtype = node
                     else if (path.length == 3) 
-                        console.log "#{JSON.stringify(path)}"
+                        #console.log "#{JSON.stringify(path)}"
                         if _.isEqual(path, ["object", "status", "phase"])
                             phase = node
                             console.log "phase: #{phase}"
                     #if recordtype == 'ADDED' and phase == 'New'
-                    if recordtype == 'MODIFIED' and ( phase in ['Complete', 'Cancelled'])
+                    if recordtype == 'MODIFIED' and ( phase in ['Complete', 'Cancelled', 'Failed'])
                         console.log "returning data: #{recordtype} #{phase}"
                         this.abort()
                         resolve [recordtype, phase]
@@ -129,7 +131,13 @@ class OCAPI
                 .done( () ->
                     console.log "done")
 
-    startAndWatch : (ocProject, ocBuildConfigName) ->
+    buildSync : (ocProject, ocBuildConfigName) ->
+        # ocProject: the openshift project that needs to be built
+        # ocBuildConfigName: the name of the buildconfig that is to be used to init the 
+        #                    build
+        #
+        # returns: the status of the build, possible values: [Complete, Cancelled, Failed]
+        #
         # another pattern to try:
         #  https://stackoverflow.com/questions/33599688/how-to-use-es8-async-await-with-streams
         buildPromise = await this.startBuild(ocProject, ocBuildConfigName)
@@ -138,19 +146,3 @@ class OCAPI
         watchBuildStatus = await this.watchBuildNP(ocProject, buildPromise)
         console.log "---watchBuild---: #{watchBuildStatus} #{typeof watchBuildStatus}"
         return watchBuildStatus
-
-# call the function that was created
-#getAPIEndPoints()
-
-apikey = process.env.APIKEY
-domain = process.env.DOMAIN
-console.log "apikey: #{apikey}"
-
-api = new OCAPI(domain, apikey)
-#retVal = api.getAPIEndPoints() # returns promise
-
-project = 'databcdc'
-buildConfig = 'bcdc-test-dev'
-
-status = api.startAndWatch(project, buildConfig)
-console.log("status: #{status}")
