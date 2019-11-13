@@ -36,7 +36,7 @@ module.exports = (robot) ->
      keys = Object.keys(robot.brain.data._private)
      console.log keys
 
-     if keys?
+     if keys.length > 0
         mesg = "pipelines in progress: #{JSON.stringify(keys)}"
      else
         mesg = "no pipelines in progress"
@@ -45,7 +45,7 @@ module.exports = (robot) ->
 
    robot.respond /status (.*)/i, (res) ->
      repo = res.match[1]
-     console.log "#{rep}"
+     console.log "#{repo}"
 
      # get
      event = robot.brain.get(repo)
