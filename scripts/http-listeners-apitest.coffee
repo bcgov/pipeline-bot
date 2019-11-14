@@ -1,5 +1,5 @@
 # Description:
-#   http listener for github action payload
+#   http listener for bcdc-api test payload
 #
 # Dependencies:
 #
@@ -10,8 +10,6 @@
 # Commands:
 #
 # Notes:
-#   expects GITHUB_EVENT_PATH payload from github actions
-#   example: curl -X POST -H "Content-Type: application/json" -H "apikey: <key-if-required>" -d @GITHUB_EVENT_PATH https://<bot-url/hubot/github
 #
 #
 # Author:
@@ -36,7 +34,7 @@ module.exports = (robot) ->
     results = data.results
 
     # build message
-    mesg = "API Test Results: [#{status}](#{env}):#{results}"
+    mesg = "API Test Results: [#{status}](#{env}):#{JSON.stringify(results)}"
     console.log mesg
 
 #    # TODO get reponame somehow
