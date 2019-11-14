@@ -51,4 +51,5 @@ module.exports = (robot) ->
 
     console.log "My Brain has: #{JSON.stringify(event)}"
 #    robot.messageRoom mat_room, "#{env} #{stage} #{status}"
-    res.send "#{route} UP"
+    status = "Success"
+    res.send status

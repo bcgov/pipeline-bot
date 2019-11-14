@@ -11,7 +11,7 @@
 #
 # Notes:
 #   expects GITHUB_EVENT_PATH payload from github actions
-#   example: curl -X POST -H "Content-Type: application/json" -H "apikey: <key-if-required>" -d GITHUB_EVENT_PATH https://<bot-url/hubot/github
+#   example: curl -X POST -H "Content-Type: application/json" -H "apikey: ${{ secrets.BOT_KEY }}" -d @$GITHUB_EVENT_PATH https://${{ secrets.BOT_URL }}/hubot/github
 #
 #
 # Author:
