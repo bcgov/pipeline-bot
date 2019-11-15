@@ -34,7 +34,7 @@ module.exports = (robot) ->
     results = data.results
 
     # build message
-    mesg = "API Test Results: [#{status}](#{env}):#{JSON.stringify(results)}"
+    mesg = "API Test Results: #{status}#{env}:#{JSON.stringify(results)}"
     console.log mesg
 
 #    # TODO get reponame somehow
