@@ -1,0 +1,16 @@
+{
+        "groups":
+        {
+                "admins": [ "crigdon", "ll911", "guylafleur"]
+        },
+  "commands":
+  {
+    "restricted":
+    {
+      "run": [ "admins" ],
+      "os info": [ "admins" ],
+      "restart service": [ "admins" ]
+    }
+  }
+}
+
