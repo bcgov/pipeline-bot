@@ -7,9 +7,7 @@
   {
     "restricted":
     {
-      "run": [ "admins" ],
-      "os info": [ "admins" ],
-      "restart service": [ "admins" ]
+      "time": [ "admins" ]
     }
   }
 }
