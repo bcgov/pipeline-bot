@@ -1,6 +1,6 @@
 underscore = require "underscore"
 util = require "util"
-config = require "./acl.config.json"
+config = require "../acl.config.json"
 
 getTimeStamp = ->
   date = new Date()
