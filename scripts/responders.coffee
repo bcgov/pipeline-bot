@@ -13,6 +13,7 @@
 #   pipeline-bot mission - get pipeline-bots mission in life
 #   pipeline-bot status <repo/name> - get status of pipeline
 #   pipeline-bot list - get list of repos in pipeline
+#   pipeline-bot test <[cati|cadi]> - run api test against cati/cadi
 #
 #
 # Notes:
@@ -25,8 +26,10 @@ mat_room = process.env.HUBOT_MATTERMOST_CHANNEL
 apikey = process.env.HUBOT_OCPAPIKEY
 domain = process.env.HUBOT_OCPDOMAIN
 
+
 module.exports = (robot) ->
 
+   # state your mission
    robot.respond /mission/i, (res) ->
      res.reply 'I am a CI/CD Pipeline Tool.  I will monitor and orchestrate deployments. Feel free to check-in on me anytime by using "pipeline-bot status"'
 
@@ -136,5 +139,55 @@ module.exports = (robot) ->
         console.log mesg
         res.reply mesg
 
+   # start OCP job from template - api-test
+   robot.respond /test (.*) (.*)/i, (res) ->
+     # pipeline-bot test <[cati|cadi]> - run api test against cati/cadi
+     env = res.match[1]
+     project = res.match[2]
+     console.log env
 
+     templateUrl = 'https://raw.githubusercontent.com/bcgov/bcdc-test/dev/k8s/test-dwelf-job-template-dev.yaml'
 
+     robot.http(templateUrl)
+       .header('Accept', 'application/json')
+       .get() (err, httpres, body) ->
+
+         # check for errs
+         if err
+           res.reply "Encountered an error :( #{err}"
+           return
+         #TODO: check httpres
+
+         data = JSON.parse(JSON.stringify(body))
+         console.log data
+         payload = data
+
+         robot.http("https://#{domain}/apis/batch/v1/namespaces/#{project}/jobs")
+           .header('Accept', 'application/json')
+           .header("Authorization", "Bearer #{apikey}")
+           .post(payload) (err, httpRes, body) ->
+            # check for errs
+            if err
+              res.reply "Encountered an error :( #{err}"
+              return
+
+            data = JSON.parse body
+            console.log data
+
+            # check for ocp returned status responses.
+            if data.kind == "Status"
+              status = data.status
+              reason = data.message
+              res.reply "#{status} #{reason} "
+              return
+
+            #continue and message back succesful resp details
+            kind = data.kind
+            buildName = data.metadata.name
+            namespace = data.metadata.namespace
+            time = data.metadata.creationTimestamp
+            phase = data.status.phase
+
+            mesg = "Starting #{phase} #{kind} #{buildName} in #{namespace} at #{time}"
+            console.log mesg
+            res.reply mesg
