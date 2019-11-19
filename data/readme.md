@@ -25,8 +25,7 @@ BUILDNAME
 curl -k \
     -H "Authorization: Bearer $APIKEY" \
     -H 'Accept: application/json' \
-    https://$DOMAIN/apis/build.openshift.io/v1/watch/namespaces/$PROJECT/builds/$BUILDNAME?watch=true&timeoutSeconds=5
-
+    https://$DOMAIN/apis/build.openshift.io/v1/watch/namespaces/$PROJECT/builds/$BUILDNAME
 
 curl -k \
     -H "Authorization: Bearer $APIKEY" \
@@ -35,5 +34,46 @@ curl -k \
 
 [build watch return json](./build_watch.json)
 
+## list Builds
+
+curl -k \
+    -H "Authorization: Bearer $APIKEY" \
+    -H 'Accept: application/json' \
+    https://$DOMAIN/oapi/v1/namespaces/$PROJECT/builds/$BUILDNAME
+
+## Get a deployment
 
 
+## start Deployment
+
+curl -k -v -X POST  \
+    --data '{"kind":"DeploymentRequest","apiVersion":"apps.openshift.io/v1","name":"pipeline-bot","latest":true,"force":true}' \
+    -H "Authorization: Bearer $APIKEY" \
+    -H "Accept: application/json, */*" \
+    -H "Content-Type: application/json" \
+    https://$DOMAIN/apis/apps.openshift.io/v1/namespaces/$PROJECT/deploymentconfigs/$DEPLOY_CONFIG_NAME/instantiate
+
+[returns a deploymentconfig object](./data/deployment_init_payload.json)
+
+## watch deployment
+
+curl -k \
+    -H "Authorization: Bearer $APIKEY" \
+    -H 'Accept: application/json' \
+    https://$DOMAIN/apis/apps/v1/watch/namespaces/$PROJECT/deployments/$DEPLOY_CONFIG_NAME
+
+curl -k \
+    --keepalive-time 300 \
+    -H "Authorization: Bearer $APIKEY" \
+    -H 'Accept: application/json' \
+    https://$DOMAIN/api/v1/namespaces/$PROJECT/replicationcontrollers/pipeline-bot-71
+
+
+
+
+## Get a replicaset
+
+curl -k \
+    -H "Authorization: Bearer $APIKEY" \
+    -H 'Accept: application/json' \
+    https://$DOMAIN/apis/apps/v1/namespaces/$PROJECT/replicasets
