@@ -11,29 +11,29 @@ buildConfig = 'bcdc-test-dev'
 deployConfig = 'pipeline-bot'
 
 project = 'databcdc'
-buildConfig = 'datapusher'
+#buildConfig = 'datapusher'
 deployConfig = 'datapusher'
 
 if apikey == undefined
     console.log 'APIKEY enviroment variable not defiend'
 
 console.log "apikey: #{'*'.repeat(apikey.length)}"
-
 api = new request.OCAPI(domain, apikey)
 
-retVal = api.buildSync(project, buildConfig) # returns promise
+# Try as I have to figure out how to make the build call
+# simply buildSync()... It doesn't seem to be possible to 
+# get the promise to wait / block the execution stack until
+# the promise is complete, and THEN return a value.  Solution
+# seems to be to just put the buildsync in a function
+# as is demonstrated below.
+buildSync = () ->
 
-#dep = api.deploy(project, deployConfig)
-#dep.then (response) ->
-#    console.log "response: #{JSON.stringify(response)}"
-#    replicationController = "#{response.metadata.name}-#{response.status.latestVersion}"
-#    api.deployWatch(project, replicationController)
+    retVal = await api.buildSync(project, buildConfig) # returns promise
+    # what you want to do with the build sync
+    console.log('---complete---')
+    console.log("#{JSON.stringify(retVal)}")
+    console.log("#{typeof retVal}")
 
-# #api.getAPIEndPoints()
-# isEqual = api.isLatestImageDeployed(project, buildConfig, deployConfig)
-# console.log("isEqual: #{isEqual}")
-# isEqual.then (response) ->
-#     console.log("isEqual: #{response}")
+# call the build
+buildSync()
 
-# status = api.buildSync(project, buildConfig)
-# console.log("status: #{status}")

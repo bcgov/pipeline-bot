@@ -70,7 +70,6 @@ class exports.OCAPI
         urlString = "#{urldomain}#{apiEndPoints}"
         reqObj = this.getCoreRequest()
         reqObj.uri = urlString
-        json = ""
         return request reqObj
            .then (response) -> 
                console.log response.resources.length
@@ -111,16 +110,13 @@ class exports.OCAPI
                 sourceStrategyOptions: {}
             }
 
-        request reqObj
+        return request reqObj
            .then (response) -> 
-               #console.log response
-               json = response
                #console.log JSON.stringify(response, undefined, 2)
                return response
            .catch (err) -> 
-               console.log '------- error called -------'
-               console.log err
-               json = err
+               console.log "------- error: #{err}-------"
+               console.log err.stack
 
     ###*
     # Gets the data from a build instantiate event (type: build), and extracts the build config name
@@ -130,7 +126,12 @@ class exports.OCAPI
     # @param   {buildData} the payload returned by the instantiate (start build) event
     # 
     # @returns {oboePromise} a promise that will untimately yield the results of the watch
-    #                        event that concludes the build 
+    #                        event that concludes the build, the promise will return a list
+    #                        with the following elements
+    #                            1. record type: (MODIFIED|ADDED|?) 
+    #                            2. phase: (completed|cancelled|failed)
+    #                            3. build name: the unique name that is assigned to this 
+    #                                           build attempt
     ###
     watchBuild : (ocProject, buildData)->
         urldomain = this.baseUrl()
@@ -145,7 +146,7 @@ class exports.OCAPI
             buildname = undefined
             oboeRequest = oboe(reqObj)
                 .node('*', (node, path) ->
-                    console.log "path: #{path}, #{typeof path}, #{path.length}, #{Array.isArray(path)}"
+                    #console.log "path: #{path}, #{typeof path}, #{path.length}, #{Array.isArray(path)}"
                     # extracting the required data from the stream
                     if ( path.length == 1) and path[0] == 'type'
                         # type is the first value of the object so putting 
@@ -181,7 +182,26 @@ class exports.OCAPI
                     console.log "done")
         return oboePromise
 
-    ###*
+
+    getBuildStatus : (ocProject, ocBuildName) ->
+        # calls build list on the specific build, returns the promise
+        # that will yield the payload
+
+        reqObj = this.getCoreRequest()
+        urldomain = this.baseUrl()
+        apiEndPoints = "/oapi/v1/namespaces/#{ocProject}/builds/#{ocBuildName}"
+        urlString = "#{urldomain}#{apiEndPoints}"
+        reqObj.uri = urlString
+        return request reqObj
+            .then (response) ->
+                console.log "response is: #{response}"
+                #console.log typeof response, JSON.stringify(response)
+                return response
+            .catch (err) ->
+                console.log '------- error called -------' + err
+                json = err
+        
+     ###*
     # Initates and monitors the build for the specified project / buildconfig
     # and returns a status object
     # 
@@ -191,15 +211,39 @@ class exports.OCAPI
     #                   build
     ###
     buildSync : (ocProject, ocBuildConfigName) ->
-        buildPromise = await this.startBuild(ocProject, ocBuildConfigName)
-        console.log("buildPromise #{buildPromise}, #{typeof buildPromise}")
-        console.log("buildPromise #{JSON.stringify(buildPromise)}, #{typeof buildPromise}")
-        watchBuildStatus = await this.watchBuild(ocProject, buildPromise)
-        console.log "---watchBuild---: #{watchBuildStatus} #{typeof watchBuildStatus}"
-        console.log JSON.stringify(watchBuildStatus)
-        # the third value in watchBuildStatus will be the name of the build, now get the 
-        # payload for that build and add to the status object
-        return watchBuildStatus
+        try
+            watchBuildStatus = undefined
+            buildPayload = await this.startBuild(ocProject, ocBuildConfigName)
+            this.statuses.updateStatus('build', 'initiated', buildPayload)
+            watchBuildStatus = await this.watchBuild(ocProject, buildPayload)
+            this.statuses.updateStatus('build', watchBuildStatus[1])
+            console.log "---watchBuild---: #{watchBuildStatus} #{typeof watchBuildStatus}"
+            console.log JSON.stringify(watchBuildStatus)
+            buildStatus = await this.getBuildStatus(ocProject, watchBuildStatus[2])
+            console.log "buildstatus kind: #{buildStatus.kind}"
+            console.log "buildstatus: #{JSON.stringify(buildStatus)}"
+
+            #this.statuses.updateStatus('build', buildStatus.object.status.phase, buildStatus)
+            return await this.statuses.updateStatusAsync('build', buildStatus.status.phase, buildStatus)
+            # create a promise in the status object and return that, with an await
+            #resolve this.statuses
+        catch err
+            console.log "error encountered in buildSync: #{err}"
+            console.log err.stack
+            return err
+
+
+            # put into anonymous function that puts this into a promise and 
+            # await response.
+            #buildStatus = await this.getBuildStatus(ocProject, watchBuildStatus[2])
+            #this.statuses.updateStatus('build', buildStatus.object.status.phase, buildStatus)
+            #return this.statuses
+            #console.log("build is complete")
+            #return this.statuses
+        # catch err
+        #     console.log "error encountered in buildSync: #{err}"
+        #     console.log err.stack
+        #     return err
 
     getDeployedImageSync : (ocProject, deployConfig) ->
         imageName = await this.getDeployedImage(ocProject, deployConfig)
@@ -407,7 +451,7 @@ class exports.OCAPI
 #
 #  status:
 #    - completed
-#    -
+#    - cancelled
 #    - failed
 #    - running
 #    - initiated
@@ -418,12 +462,25 @@ class exports.OCAPI
 class OCStatus
     constructor: () ->
         @statuses = {}
-
-    addNewStatus: (action, status) ->
+    
+    ###*
+    # 
+    #
+    ###
+    updateStatus : (action, status, payload=undefined) ->
         if @statuses[action] == undefined
             @statuses[action] = {}
         @statuses[action]['status'] = status
+        if payload != undefined
+            @statuses[action]['payload'] = payload
 
-    setPayload: (action, payload) ->
+    setPayload : (action, payload) ->
         @statuses[action]['payload'] = payload
     
+    updateStatusAsync : (action, status, payload=undefined) ->
+        objref = this
+        return val = new Promise (resolve) ->
+            objref.updateStatus(action, status, payload)
+            resolve objref
+
+            
