@@ -496,7 +496,12 @@ class OCStatus
         @statuses[action]['payload'] = payload
     
     ###*
-    #
+    # @param {string} action - a string describing the action (build | deploy)
+    # @param {string} status - status - a string describing the status of the 
+    #                          action (completed | cancelled | failed | running |
+    #                          instantiated )
+    # @return {Promise} - a promise that will resolve to a reference to this
+    #                     status object
     ###
     updateStatusAsync : (action, status, payload=undefined) ->
         objref = this
