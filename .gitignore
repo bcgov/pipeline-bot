@@ -1,3 +1,7 @@
 node_modules
 .DS_Store*
 .hubot_history
+scripts/junk.coffee
+data/dummy.json
+scripts/junk.coffee
+scripts/junk.coffee
