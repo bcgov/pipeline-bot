@@ -11,10 +11,11 @@ switch --loglevel=9
 To run any of the following commands set the following environment 
 variables before.
 
-APIKEY
-PROJECT
-DOMAIN
-BUILDNAME
+APIKEY - api key to use for authorization / authentication
+PROJECT - openshift project name
+DOMAIN - The domain for the url  something.something.com
+BC_NAME - build config
+BUILDNAME - A specific build name BC_NAME with a -number
 
 ## Start Build
 
@@ -25,12 +26,14 @@ BUILDNAME
 curl -k \
     -H "Authorization: Bearer $APIKEY" \
     -H 'Accept: application/json' \
-    https://$DOMAIN/apis/build.openshift.io/v1/watch/namespaces/$PROJECT/builds/$BUILDNAME
+    https://$DOMAIN/apis/build.openshift.io/v1/watch/namespaces/$PROJECT/builds/$BC_NAME
 
 curl -k \
     -H "Authorization: Bearer $APIKEY" \
     -H 'Accept: application/json' \
     https://$DOMAIN/apis/build.openshift.io/v1/watch/namespaces/$PROJECT/builds/
+
+
 
 [build watch return json](./build_watch.json)
 
@@ -39,7 +42,15 @@ curl -k \
 curl -k \
     -H "Authorization: Bearer $APIKEY" \
     -H 'Accept: application/json' \
+    https://$DOMAIN/oapi/v1/namespaces/$PROJECT/builds
+
+## Get a specific Build Status / payload / result
+
+curl -k \
+    -H "Authorization: Bearer $APIKEY" \
+    -H 'Accept: application/json' \
     https://$DOMAIN/oapi/v1/namespaces/$PROJECT/builds/$BUILDNAME
+
 
 ## Get a deployment
 
