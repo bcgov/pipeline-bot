@@ -25,7 +25,8 @@ BUILDNAME
 curl -k \
     -H "Authorization: Bearer $APIKEY" \
     -H 'Accept: application/json' \
-    https://$DOMAIN/apis/build.openshift.io/v1/watch/namespaces/$PROJECT/builds/$BUILDNAME
+    https://$DOMAIN/apis/build.openshift.io/v1/watch/namespaces/$PROJECT/builds/$BUILDNAME?watch=true&timeoutSeconds=5
+
 
 curl -k \
     -H "Authorization: Bearer $APIKEY" \
