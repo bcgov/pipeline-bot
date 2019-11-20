@@ -11,7 +11,7 @@ buildConfig = 'bcdc-test-dev'
 deployConfig = 'pipeline-bot'
 
 project = 'databcdc'
-#buildConfig = 'datapusher'
+buildConfig = 'datapusher'
 deployConfig = 'datapusher'
 
 if apikey == undefined
@@ -20,6 +20,8 @@ if apikey == undefined
 console.log "apikey: #{'*'.repeat(apikey.length)}"
 api = new request.OCAPI(domain, apikey)
 
+#DEBUG- Commenting out while working on deploy
+
 # Try as I have to figure out how to make the build call
 # simply buildSync()... It doesn't seem to be possible to 
 # get the promise to wait / block the execution stack until
@@ -27,6 +29,7 @@ api = new request.OCAPI(domain, apikey)
 # seems to be to just put the buildsync in a function
 # as is demonstrated below.
 buildSync = () ->
+    console.log("project: #{project}")
 
     retVal = await api.buildSync(project, buildConfig) # returns promise
     # what you want to do with the build sync
@@ -35,5 +38,9 @@ buildSync = () ->
     console.log("#{typeof retVal}")
 
 # call the build
+console.log("project: #{project}")
 buildSync()
 
+
+# deployStatus = api.deployLatest(project, deployConfig)
+# console.log "DEPLY STATUS: #{deployStatus}"

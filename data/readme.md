@@ -11,11 +11,11 @@ switch --loglevel=9
 To run any of the following commands set the following environment 
 variables before.
 
-APIKEY - api key to use for authorization / authentication
-PROJECT - openshift project name
-DOMAIN - The domain for the url  something.something.com
-BC_NAME - build config
-BUILDNAME - A specific build name BC_NAME with a -number
+* APIKEY - api key to use for authorization / authentication
+* PROJECT - openshift project name
+* DOMAIN - The domain for the url  something.something.com
+* BC_NAME - build config
+* BUILDNAME - A specific build name BC_NAME with a -number
 
 ## Start Build
 

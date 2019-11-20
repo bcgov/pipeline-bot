@@ -94,7 +94,7 @@ class exports.OCAPI
     # @returns {reqObj} a promise that will return the payload retured by the start build event
     ###
 
-    startBuild : (, ocBuildConfigName ) ->
+    startBuild : (ocProject, ocBuildConfigName ) ->
         urldomain = this.baseUrl()
         initBuildPath = "/apis/build.openshift.io/v1/namespaces/#{ocProject}/buildconfigs/#{ocBuildConfigName}/instantiate"
         urlString = "#{urldomain}#{initBuildPath}"
@@ -228,6 +228,7 @@ class exports.OCAPI
     ###
     buildSync : (ocProject, ocBuildConfigName) ->
         try
+            console.log "ocProject: #{ocProject}, buildconfig: #{ocBuildConfigName}"
             watchBuildStatus = undefined
             buildPayload = await this.startBuild(ocProject, ocBuildConfigName)
             this.statuses.updateStatus('build', 'initiated', buildPayload)
@@ -435,7 +436,9 @@ class exports.OCAPI
         if !isLatest
             deployObj = await this.deploy(ocProject, deployConfig)
             replicationController = "#{deployObj.metadata.name}-#{deployObj.status.latestVersion}"
-
+            deployStatus = await this.deployWatch(ocProject, replicationController)
+            console.log "----------Deploy complete ----------"
+            console.log JSON.stringify(deployStatus)
             
             # need to get the replication controller from the payload
             # then use to query the replication controller here
