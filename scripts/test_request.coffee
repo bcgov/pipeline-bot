@@ -3,8 +3,8 @@
 request = require('./request.coffee')
 
 
-apikey = process.env.APIKEY
-domain = process.env.DOMAIN
+apikey = process.env.HUBOT_OCPAPIKEY
+domain = process.env.HUBOT_OCPDOMAIN
 
 project = 'databcdc'
 buildConfig = 'bcdc-test-dev'
