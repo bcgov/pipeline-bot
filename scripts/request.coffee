@@ -436,7 +436,7 @@ class exports.OCAPI
         if !isLatest
             deployObj = await this.deploy(ocProject, deployConfig)
             replicationController = "#{deployObj.metadata.name}-#{deployObj.status.latestVersion}"
-            deployStatus = await this.deployWatch(ocProject, replicationController)
+            deployStatus = this.deployWatch(ocProject, replicationController)
             console.log "----------Deploy complete ----------"
             console.log JSON.stringify(deployStatus)
             

@@ -3,8 +3,8 @@
 request = require('./request.coffee')
 
 
-apikey = process.env.APIKEY
-domain = process.env.DOMAIN
+apikey = process.env.HUBOT_OCPAPIKEY
+domain = process.env.HUBOT_OCPDOMAIN
 
 project = 'databcdc'
 buildConfig = 'bcdc-test-dev'
@@ -20,6 +20,7 @@ if apikey == undefined
 console.log "apikey: #{'*'.repeat(apikey.length)}"
 api = new request.OCAPI(domain, apikey)
 
+###
 #DEBUG- Commenting out while working on deploy
 
 # Try as I have to figure out how to make the build call
@@ -40,7 +41,7 @@ buildSync = () ->
 # call the build
 console.log("project: #{project}")
 buildSync()
+###
 
-
-# deployStatus = api.deployLatest(project, deployConfig)
-# console.log "DEPLY STATUS: #{deployStatus}"
+deployStatus = api.deployLatest(project, deployConfig)
+console.log "DEPLY STATUS: #{deployStatus}"
