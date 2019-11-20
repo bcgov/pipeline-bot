@@ -23,19 +23,21 @@ BUILDNAME - A specific build name BC_NAME with a -number
 
 ## Build Watch
 
+### Watch a specific build config:
+
 curl -k \
     -H "Authorization: Bearer $APIKEY" \
     -H 'Accept: application/json' \
     https://$DOMAIN/apis/build.openshift.io/v1/watch/namespaces/$PROJECT/builds/$BC_NAME
+
+### Watch all builds in project
 
 curl -k \
     -H "Authorization: Bearer $APIKEY" \
     -H 'Accept: application/json' \
     https://$DOMAIN/apis/build.openshift.io/v1/watch/namespaces/$PROJECT/builds/
 
-
-
-[build watch return json](./build_watch.json)
+example output: [build_watch.json](./build_watch.json)
 
 ## list Builds
 
@@ -44,6 +46,8 @@ curl -k \
     -H 'Accept: application/json' \
     https://$DOMAIN/oapi/v1/namespaces/$PROJECT/builds
 
+example return object: [build_list.json](./build_list.json)
+
 ## Get a specific Build Status / payload / result
 
 curl -k \
@@ -51,9 +55,8 @@ curl -k \
     -H 'Accept: application/json' \
     https://$DOMAIN/oapi/v1/namespaces/$PROJECT/builds/$BUILDNAME
 
-
-## Get a deployment
-
+Same call as the *list Builds* but only returns the specified build. Example return struct: 
+[build_list_single_build.json](build_list_single_build.json)
 
 ## start Deployment
 
@@ -64,27 +67,16 @@ curl -k -v -X POST  \
     -H "Content-Type: application/json" \
     https://$DOMAIN/apis/apps.openshift.io/v1/namespaces/$PROJECT/deploymentconfigs/$DEPLOY_CONFIG_NAME/instantiate
 
-[returns a deploymentconfig object](./data/deployment_init_payload.json)
+[returns a deploymentconfig object](deployment_init_payload.json)
 
-## watch deployment
-
-curl -k \
-    -H "Authorization: Bearer $APIKEY" \
-    -H 'Accept: application/json' \
-    https://$DOMAIN/apis/apps/v1/watch/namespaces/$PROJECT/deployments/$DEPLOY_CONFIG_NAME
+## Get status of a deployment / replication controller
 
 curl -k \
     --keepalive-time 300 \
     -H "Authorization: Bearer $APIKEY" \
     -H 'Accept: application/json' \
-    https://$DOMAIN/api/v1/namespaces/$PROJECT/replicationcontrollers/pipeline-bot-71
+    https://$DOMAIN/api/v1/namespaces/$PROJECT/replicationcontrollers/$DEPLOY_CONFIG_NAME-93
+
+return json: [replication_controller.json](./replication_controller.json)
 
 
-
-
-## Get a replicaset
-
-curl -k \
-    -H "Authorization: Bearer $APIKEY" \
-    -H 'Accept: application/json' \
-    https://$DOMAIN/apis/apps/v1/namespaces/$PROJECT/replicasets

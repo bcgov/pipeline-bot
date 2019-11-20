@@ -1,0 +1,112 @@
+{
+  "kind": "Build",
+  "apiVersion": "v1",
+  "metadata": {
+    "name": "bcdc-test-dev-233",
+    "namespace": "databcdc",
+    "selfLink": "/oapi/v1/namespaces/databcdc/builds/bcdc-test-dev-233",
+    "uid": "97f5d847-0b07-11ea-a81b-0050568379a2",
+    "resourceVersion": "1147395308",
+    "creationTimestamp": "2019-11-19T20:03:03Z",
+    "labels": {
+      "app": "",
+      "buildconfig": "bcdc-test-dev",
+      "openshift.io/build-config.name": "bcdc-test-dev",
+      "openshift.io/build.start-policy": "Serial"
+    },
+    "annotations": {
+      "openshift.io/build-config.name": "bcdc-test-dev",
+      "openshift.io/build.number": "233",
+      "openshift.io/build.pod-name": "bcdc-test-dev-233-build"
+    },
+    "ownerReferences": [
+      {
+        "apiVersion": "build.openshift.io/v1",
+        "kind": "BuildConfig",
+        "name": "bcdc-test-dev",
+        "uid": "6bb6f1f6-e9fd-11e9-8615-0050568348cc",
+        "controller": true
+      }
+    ]
+  },
+  "spec": {
+    "serviceAccount": "builder",
+    "source": {
+      "type": "Dockerfile",
+      "dockerfile": "FROM python:3-slim\nADD . /app\nWORKDIR /app\nRUN pip install pypandoc\nRUN pip install --upgrade --force-reinstall bcdc-apitests-dev\nRUN pip install -I bcdc-apitests-dev\nRUN pip install matterhook\nENTRYPOINT [ \"pytest-run.py\" ]"
+    },
+    "strategy": {
+      "type": "Docker",
+      "dockerStrategy": {
+        "from": {
+          "kind": "DockerImage",
+          "name": "python:3-slim"
+        }
+      }
+    },
+    "output": {
+      "to": {
+        "kind": "ImageStreamTag",
+        "name": "bcdc-test-dev:latest"
+      },
+      "pushSecret": {
+        "name": "builder-dockercfg-kzv6s"
+      }
+    },
+    "resources": {
+      
+    },
+    "postCommit": {
+      
+    },
+    "nodeSelector": null,
+    "triggeredBy": [
+      {
+        "message": "Triggered with coffee"
+      }
+    ]
+  },
+  "status": {
+    "phase": "Complete",
+    "startTimestamp": "2019-11-19T20:03:07Z",
+    "completionTimestamp": "2019-11-19T20:04:51Z",
+    "duration": 104000000000,
+    "outputDockerImageReference": "docker-registry.default.svc:5000/databcdc/bcdc-test-dev:latest",
+    "config": {
+      "kind": "BuildConfig",
+      "namespace": "databcdc",
+      "name": "bcdc-test-dev"
+    },
+    "output": {
+      "to": {
+        "imageDigest": "sha256:c150e838af7ecc3919ff92f469756122caabb9e65c71b4dbb656c9db4b101ebf"
+      }
+    },
+    "stages": [
+      {
+        "name": "Build",
+        "startTime": "2019-11-19T20:03:23Z",
+        "durationMilliseconds": 81349,
+        "steps": [
+          {
+            "name": "DockerBuild",
+            "startTime": "2019-11-19T20:03:23Z",
+            "durationMilliseconds": 81349
+          }
+        ]
+      },
+      {
+        "name": "PushImage",
+        "startTime": "2019-11-19T20:04:44Z",
+        "durationMilliseconds": 5475,
+        "steps": [
+          {
+            "name": "PushDockerImage",
+            "startTime": "2019-11-19T20:04:44Z",
+            "durationMilliseconds": 5475
+          }
+        ]
+      }
+    ]
+  }
+}
