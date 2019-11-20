@@ -14,7 +14,10 @@ request = require('request-promise')
 _ = require('lodash')
 oboe = require('oboe')
 
-
+###*
+# Class used to wrap up various openshift methods with the goal 
+# of making it easy for hubot calls to interact with openshift.
+###
 class exports.OCAPI
     domain = null
     protocol = 'https'
@@ -22,7 +25,11 @@ class exports.OCAPI
     deployStatus = 'NOT STARTED'
 
     requestTimeoutSeconds = 300
-
+    ###*
+    # @param {string} domain - The domain to use in the url when communicating with 
+    #                           openshift.
+    # @param {string} apikey - The api key to use when making api calls
+    ###
     constructor : (domain, apikey=null) ->
         @domain = domain
         @protocol = protocol
@@ -70,7 +77,6 @@ class exports.OCAPI
         urlString = "#{urldomain}#{apiEndPoints}"
         reqObj = this.getCoreRequest()
         reqObj.uri = urlString
-        json = ""
         return request reqObj
            .then (response) -> 
                console.log response.resources.length
@@ -88,7 +94,7 @@ class exports.OCAPI
     # @returns {reqObj} a promise that will return the payload retured by the start build event
     ###
 
-    startBuild : (ocProject, ocBuildConfigName ) ->
+    startBuild : (, ocBuildConfigName ) ->
         urldomain = this.baseUrl()
         initBuildPath = "/apis/build.openshift.io/v1/namespaces/#{ocProject}/buildconfigs/#{ocBuildConfigName}/instantiate"
         urlString = "#{urldomain}#{initBuildPath}"
@@ -111,26 +117,28 @@ class exports.OCAPI
                 sourceStrategyOptions: {}
             }
 
-        request reqObj
+        return request reqObj
            .then (response) -> 
-               #console.log response
-               json = response
                #console.log JSON.stringify(response, undefined, 2)
                return response
            .catch (err) -> 
-               console.log '------- error called -------'
-               console.log err
-               json = err
+               console.log "------- error: #{err}-------"
+               console.log err.stack
 
     ###*
     # Gets the data from a build instantiate event (type: build), and extracts the build config name
     # to define the end point for the build that is to be watched.
     # 
-    # @param   {ocProject} openshift project
-    # @param   {buildData} the payload returned by the instantiate (start build) event
+    # @param {string} ocProject-  openshift project
+    # @param {string} buildData - the payload returned by the instantiate (start build) event
     # 
-    # @returns {oboePromise} a promise that will untimately yield the results of the watch
-    #                        event that concludes the build 
+    # @returns {Promise} a promise that will untimately yield the results of the watch
+    #                    event that concludes the build, the promise will return a list
+    #                    with the following elements
+    #                            1. record type: (MODIFIED|ADDED|?) 
+    #                            2. phase: (completed|cancelled|failed)
+    #                            3. build name: the unique name that is assigned to this 
+    #                                           build attempt
     ###
     watchBuild : (ocProject, buildData)->
         urldomain = this.baseUrl()
@@ -145,7 +153,7 @@ class exports.OCAPI
             buildname = undefined
             oboeRequest = oboe(reqObj)
                 .node('*', (node, path) ->
-                    console.log "path: #{path}, #{typeof path}, #{path.length}, #{Array.isArray(path)}"
+                    #console.log "path: #{path}, #{typeof path}, #{path.length}, #{Array.isArray(path)}"
                     # extracting the required data from the stream
                     if ( path.length == 1) and path[0] == 'type'
                         # type is the first value of the object so putting 
@@ -182,24 +190,66 @@ class exports.OCAPI
         return oboePromise
 
     ###*
+    # hits the api and returns the json that is used to describe the 
+    # provided build name.
+    # 
+    # @param {string} ocProject - the openshift project name
+    # @param {object} buildData - the json returned by the instantiate build api call
+    #
+    # @return {Promise} - a request promise that will ultimately yield the 
+    #                     concluding event to associated with the build
+    ###
+    getBuildStatus : (ocProject, ocBuildName) ->
+        # calls build list on the specific build, returns the promise
+        # that will yield the payload
+
+        reqObj = this.getCoreRequest()
+        urldomain = this.baseUrl()
+        apiEndPoints = "/oapi/v1/namespaces/#{ocProject}/builds/#{ocBuildName}"
+        urlString = "#{urldomain}#{apiEndPoints}"
+        reqObj.uri = urlString
+        return request reqObj
+            .then (response) ->
+                console.log "response is: #{response}"
+                #console.log typeof response, JSON.stringify(response)
+                return response
+            .catch (err) ->
+                console.log '------- error called -------' + err
+                json = err
+        
+     ###*
     # Initates and monitors the build for the specified project / buildconfig
     # and returns a status object
     # 
     # @param  {ocProject} openshift project
     # @param  {ocBuildConfigName} the build config that is to be run and monitored
-    # @returns {status} a status object with the properties associated with this 
-    #                   build
+    # @returns {OCStatus} status-  a status object with the properties associated 
+    #                              with this build
     ###
     buildSync : (ocProject, ocBuildConfigName) ->
-        buildPromise = await this.startBuild(ocProject, ocBuildConfigName)
-        console.log("buildPromise #{buildPromise}, #{typeof buildPromise}")
-        console.log("buildPromise #{JSON.stringify(buildPromise)}, #{typeof buildPromise}")
-        watchBuildStatus = await this.watchBuild(ocProject, buildPromise)
-        console.log "---watchBuild---: #{watchBuildStatus} #{typeof watchBuildStatus}"
-        console.log JSON.stringify(watchBuildStatus)
-        # the third value in watchBuildStatus will be the name of the build, now get the 
-        # payload for that build and add to the status object
-        return watchBuildStatus
+        try
+            watchBuildStatus = undefined
+            buildPayload = await this.startBuild(ocProject, ocBuildConfigName)
+            this.statuses.updateStatus('build', 'initiated', buildPayload)
+
+            watchBuildStatus = await this.watchBuild(ocProject, buildPayload)
+            this.statuses.updateStatus('build', watchBuildStatus[1])
+            console.log "---watchBuild---: #{watchBuildStatus} #{typeof watchBuildStatus}"
+            #console.log JSON.stringify(watchBuildStatus)
+
+            buildStatus = await this.getBuildStatus(ocProject, watchBuildStatus[2])
+            console.log "buildstatus kind: #{buildStatus.kind}"
+            #console.log "buildstatus: #{JSON.stringify(buildStatus)}"
+
+            # put the update into a promise to ensure it gets completed before the status 
+            # object is returned.
+            return await this.statuses.updateStatusAsync('build', buildStatus.status.phase, buildStatus)
+            # create a promise in the status object and return that, with an await
+            #resolve this.statuses
+        catch err
+            console.log "error encountered in buildSync: #{err}"
+            console.log err.stack
+            return err
 
     getDeployedImageSync : (ocProject, deployConfig) ->
         imageName = await this.getDeployedImage(ocProject, deployConfig)
@@ -407,7 +457,7 @@ class exports.OCAPI
 #
 #  status:
 #    - completed
-#    -
+#    - cancelled
 #    - failed
 #    - running
 #    - initiated
@@ -418,12 +468,45 @@ class exports.OCAPI
 class OCStatus
     constructor: () ->
         @statuses = {}
-
-    addNewStatus: (action, status) ->
+    
+    ###*
+    # updates the status of an action, if the action has not been defined then 
+    # it gets added to this object. OC status object is used to collect the 
+    # statuses of a number of different actions 
+    #
+    # @param {string} action - a string describing the action (build | deploy)
+    # @param {string} status - a string describing the status of the action (completed | cancelled | failed | running | instantiated )
+    ###
+    updateStatus : (action, status, payload=undefined) ->
         if @statuses[action] == undefined
             @statuses[action] = {}
         @statuses[action]['status'] = status
-
-    setPayload: (action, payload) ->
+        if payload != undefined
+            @statuses[action]['payload'] = payload
+    
+    ###*
+    # Finds the status record that alignes with the action and updates the payload
+    # associated with that action 
+    # 
+    # @param {string} action - a string describing the action (build | deploy)
+    # @param {object} payload - an object that describes the action.. typically this
+    #                           is json data returned by an oc endpoint
+    ###
+    setPayload : (action, payload) ->
         @statuses[action]['payload'] = payload
     
+    ###*
+    # @param {string} action - a string describing the action (build | deploy)
+    # @param {string} status - status - a string describing the status of the 
+    #                          action (completed | cancelled | failed | running |
+    #                          instantiated )
+    # @return {Promise} - a promise that will resolve to a reference to this
+    #                     status object
+    ###
+    updateStatusAsync : (action, status, payload=undefined) ->
+        objref = this
+        return val = new Promise (resolve) ->
+            objref.updateStatus(action, status, payload)
+            resolve objref
+
+            
