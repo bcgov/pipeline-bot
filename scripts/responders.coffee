@@ -13,7 +13,7 @@
 #   pipeline-bot mission - get pipeline-bots mission in life
 #   pipeline-bot status <repo/name> - get status of pipeline
 #   pipeline-bot list - get list of repos in pipeline
-#   pipeline-bot test <[cati|cadi]> - run api test against cati/cadi
+#   pipeline-bot test <[dev|test]>  <project> - run api test against dev/test in OCP projectspace
 #
 #
 # Notes:
@@ -25,6 +25,8 @@
 mat_room = process.env.HUBOT_MATTERMOST_CHANNEL
 apikey = process.env.HUBOT_OCPAPIKEY
 domain = process.env.HUBOT_OCPDOMAIN
+devApiTestTemplate = process.env.HUBOT_DEV_APITEST_TEMPLATE
+testApiTestTemplate = process.env.HUBOT_TEST_APITEST_TEMPLATE
 
 
 module.exports = (robot) ->
@@ -140,14 +142,22 @@ module.exports = (robot) ->
         res.reply mesg
 
    # start OCP job from template - api-test
-   robot.respond /test/i, (res) ->
-#   /test (.*) (.*)/i
-     # pipeline-bot test <[cati|cadi]> - run api test against cati/cadi
-     env = res.match[1]
-     project = "databcdc"
-     console.log env
+   robot.respond /test (.*) (.*)/i, (res) ->
+     # pipeline-bot test <[dev|test]>  <project> - run api test against dev/test in OCP projectspace
+     env = res.match[1].toLowerCase()
+     project = res.match[2].toLowerCase()
 
-     templateUrl = 'https://raw.githubusercontent.com/bcgov/bcdc-test/dev/k8s/test-dwelf-job-template-dev.yaml'
+     if env == 'dev'
+        templateUrl = devApiTestTemplate
+     else if env == 'test'
+        templateUrl = testApiTestTemplate
+     else
+        templateUrl = ""
+        console.log "failed to set templateURL"
+        res.reply "please provide envrioment option dev/test"
+        return
+     #TODO: err check args and exit
+     console.log env
 
      robot.http(templateUrl)
        .header('Accept', 'application/json')
@@ -160,22 +170,27 @@ module.exports = (robot) ->
 
          fs = require('fs')
          yaml = require('js-yaml')
-         payload = yaml.safeLoad(fs.readFileSync('./test-dwelf-job-dev.yaml', 'utf8'))
-         console.log payload
 
+         data = yaml.load(body)
+         jsonString = JSON.stringify(data)
+         jsonParsed = JSON.parse(jsonString)
+         # get job object from template
+         # TODO: check if kind is of job type
+         job = jsonParsed.objects[0]
+         console.log job
 
-
+         # send job to ocp api jobs endpoint
          robot.http("https://#{domain}/apis/batch/v1/namespaces/#{project}/jobs")
           .header('Accept', 'application/json')
           .header('Authorization', "Bearer #{apikey}")
-          .post(JSON.stringify(payload)) (err, httpRes, body2) ->
+          .post(JSON.stringify(job)) (err, httpRes, body2) ->
            # check for errs
            if err
              res.reply "Encountered an error :( #{err}"
              return
 
            data = JSON.parse body2
-           console.log "jobs"
+           console.log "returning jobs response"
            console.log data
 
            # check for ocp returned status responses.
@@ -191,3 +206,7 @@ module.exports = (robot) ->
            namespace = data.metadata.namespace
            time = data.metadata.creationTimestamp
 
+
+           mesg = "Starting #{kind} #{buildName} in #{namespace} at #{time}"
+           console.log mesg
+           res.reply mesg
