@@ -345,7 +345,7 @@ class exports.OCAPI
         apiEndPoints = "/oapi/v1/namespaces/#{ocProject}/deploymentconfigs/#{deployConfig}/status"
         urlString = "#{urldomain}#{apiEndPoints}"
         reqObj.uri = urlString
-
+        console.log "getting: #{urlString}"
         return request reqObj
          .then (response) -> 
                 replicationController = "#{deployConfig}-#{response.status.latestVersion}"
@@ -432,6 +432,7 @@ class exports.OCAPI
         # Checks to see if the latest build is the version that is 
         # currently deployed, and if it is stops, otherwise proceeds
         # with a deployment.
+        console.log "getting latest..."
         isLatest = await this.isLatestImageDeployed(ocProject, buildConfig, deployConfig)
         if !isLatest
             deployObj = await this.deploy(ocProject, deployConfig)
