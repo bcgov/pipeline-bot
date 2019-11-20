@@ -39,7 +39,7 @@ buildSync = () ->
 
 # call the build
 console.log("project: #{project}")
-buildSync()
+#buildSync()
 
 
 # deployStatus = api.deployLatest(project, deployConfig)
