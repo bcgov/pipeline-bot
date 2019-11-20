@@ -1,7 +1,7 @@
 underscore = require "underscore"
 util = require "util"
 #config = require "../acl.config.json"
-config = = process.env.HUBOT_ACL
+config = process.env.HUBOT_ACL
 
 getTimeStamp = ->
   date = new Date()

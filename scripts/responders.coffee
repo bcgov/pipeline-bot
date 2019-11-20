@@ -31,7 +31,7 @@ module.exports = (robot) ->
 
    # state your mission
    robot.respond /mission/i, (res) ->
-     res.reply 'I am a CI/CD Pipeline Tool.  I will monitor and orchestrate deployments. Feel free to check-in on me anytime by using "pipeline-bot status"'
+     res.reply 'I am a CI/CD Pipeline Tool.  I will monitor and orchestrate deployments. Feel free to check-in on me anytime by using "pipeline-bot status <repo/name>"'
 
    # list all
    robot.respond /list/i, (res) ->
@@ -140,10 +140,11 @@ module.exports = (robot) ->
         res.reply mesg
 
    # start OCP job from template - api-test
-   robot.respond /test (.*) (.*)/i, (res) ->
+   robot.respond /test/i, (res) ->
+#   /test (.*) (.*)/i
      # pipeline-bot test <[cati|cadi]> - run api test against cati/cadi
      env = res.match[1]
-     project = res.match[2]
+     project = "databcdc"
      console.log env
 
      templateUrl = 'https://raw.githubusercontent.com/bcgov/bcdc-test/dev/k8s/test-dwelf-job-template-dev.yaml'
@@ -156,38 +157,37 @@ module.exports = (robot) ->
          if err
            res.reply "Encountered an error :( #{err}"
            return
-         #TODO: check httpres
 
-         data = JSON.parse(JSON.stringify(body))
-         console.log data
-         payload = data
+         fs = require('fs')
+         yaml = require('js-yaml')
+         payload = yaml.safeLoad(fs.readFileSync('./test-dwelf-job-dev.yaml', 'utf8'))
+         console.log payload
+
+
 
          robot.http("https://#{domain}/apis/batch/v1/namespaces/#{project}/jobs")
-           .header('Accept', 'application/json')
-           .header("Authorization", "Bearer #{apikey}")
-           .post(payload) (err, httpRes, body) ->
-            # check for errs
-            if err
-              res.reply "Encountered an error :( #{err}"
-              return
+          .header('Accept', 'application/json')
+          .header('Authorization', "Bearer #{apikey}")
+          .post(JSON.stringify(payload)) (err, httpRes, body2) ->
+           # check for errs
+           if err
+             res.reply "Encountered an error :( #{err}"
+             return
 
-            data = JSON.parse body
-            console.log data
+           data = JSON.parse body2
+           console.log "jobs"
+           console.log data
 
-            # check for ocp returned status responses.
-            if data.kind == "Status"
-              status = data.status
-              reason = data.message
-              res.reply "#{status} #{reason} "
-              return
+           # check for ocp returned status responses.
+           if data.kind == "Status"
+             status = data.status
+             reason = data.message
+             res.reply "#{status} #{reason} "
+             return
 
-            #continue and message back succesful resp details
-            kind = data.kind
-            buildName = data.metadata.name
-            namespace = data.metadata.namespace
-            time = data.metadata.creationTimestamp
-            phase = data.status.phase
+           #continue and message back succesful resp details
+           kind = data.kind
+           buildName = data.metadata.name
+           namespace = data.metadata.namespace
+           time = data.metadata.creationTimestamp
 
-            mesg = "Starting #{phase} #{kind} #{buildName} in #{namespace} at #{time}"
-            console.log mesg
-            res.reply mesg
