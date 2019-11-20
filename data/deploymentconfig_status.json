@@ -1,0 +1,193 @@
+{
+  "kind": "DeploymentConfig",
+  "apiVersion": "v1",
+  "metadata": {
+    "name": "pipeline-bot",
+    "namespace": "databcdc",
+    "selfLink": "/oapi/v1/namespaces/databcdc/deploymentconfigs/pipeline-bot/status",
+    "uid": "5c85c83d-fa67-11e9-a9a8-0050568348cc",
+    "resourceVersion": "1128750425",
+    "generation": 89,
+    "creationTimestamp": "2019-10-29T16:15:45Z",
+    "labels": {
+      "app": "pipeline-bot"
+    },
+    "annotations": {
+      "openshift.io/generated-by": "OpenShiftNewApp"
+    }
+  },
+  "spec": {
+    "strategy": {
+      "type": "Rolling",
+      "rollingParams": {
+        "updatePeriodSeconds": 1,
+        "intervalSeconds": 1,
+        "timeoutSeconds": 600,
+        "maxUnavailable": "25%",
+        "maxSurge": "25%"
+      },
+      "resources": {
+        
+      },
+      "activeDeadlineSeconds": 21600
+    },
+    "triggers": [
+      {
+        "type": "ImageChange",
+        "imageChangeParams": {
+          "containerNames": [
+            "pipeline-bot"
+          ],
+          "from": {
+            "kind": "ImageStreamTag",
+            "namespace": "databcdc",
+            "name": "pipeline-bot:latest"
+          },
+          "lastTriggeredImage": "docker-registry.default.svc:5000/databcdc/pipeline-bot@sha256:2ac1e453971516d77fca25fb85541aaa0cb02b82178945b536f7f1d270cd950f"
+        }
+      },
+      {
+        "type": "ConfigChange"
+      }
+    ],
+    "replicas": 1,
+    "revisionHistoryLimit": 10,
+    "test": false,
+    "selector": {
+      "app": "pipeline-bot",
+      "deploymentconfig": "pipeline-bot"
+    },
+    "template": {
+      "metadata": {
+        "creationTimestamp": null,
+        "labels": {
+          "app": "pipeline-bot",
+          "deploymentconfig": "pipeline-bot"
+        },
+        "annotations": {
+          "openshift.io/generated-by": "OpenShiftNewApp"
+        }
+      },
+      "spec": {
+        "containers": [
+          {
+            "name": "pipeline-bot",
+            "image": "docker-registry.default.svc:5000/databcdc/pipeline-bot@sha256:2ac1e453971516d77fca25fb85541aaa0cb02b82178945b536f7f1d270cd950f",
+            "ports": [
+              {
+                "containerPort": 8080,
+                "protocol": "TCP"
+              }
+            ],
+            "env": [
+              {
+                "name": "MATTERMOST_HOST",
+                "valueFrom": {
+                  "secretKeyRef": {
+                    "name": "hubot-mm-access",
+                    "key": "host"
+                  }
+                }
+              },
+              {
+                "name": "MATTERMOST_USER",
+                "valueFrom": {
+                  "secretKeyRef": {
+                    "name": "hubot-mm-access",
+                    "key": "user"
+                  }
+                }
+              },
+              {
+                "name": "MATTERMOST_GROUP",
+                "value": "dss"
+              },
+              {
+                "name": "MATTERMOST_HTTP_PORT",
+                "value": "443"
+              },
+              {
+                "name": "MATTERMOST_PASSWORD",
+                "valueFrom": {
+                  "secretKeyRef": {
+                    "name": "hubot-mm-access",
+                    "key": "pwd"
+                  }
+                }
+              },
+              {
+                "name": "HUBOT_MATTERMOST_CHANNEL",
+                "value": "bot-pipeline"
+              },
+              {
+                "name": "HUBOT_OCPAPIKEY",
+                "valueFrom": {
+                  "secretKeyRef": {
+                    "name": "default-token-8kzhp",
+                    "key": "token"
+                  }
+                }
+              },
+              {
+                "name": "HUBOT_OCPDOMAIN",
+                "valueFrom": {
+                  "secretKeyRef": {
+                    "name": "ocp-domain-port",
+                    "key": "domain-port"
+                  }
+                }
+              }
+            ],
+            "resources": {
+              
+            },
+            "terminationMessagePath": "/dev/termination-log",
+            "terminationMessagePolicy": "File",
+            "imagePullPolicy": "Always"
+          }
+        ],
+        "restartPolicy": "Always",
+        "terminationGracePeriodSeconds": 30,
+        "dnsPolicy": "ClusterFirst",
+        "securityContext": {
+          
+        },
+        "schedulerName": "default-scheduler"
+      }
+    }
+  },
+  "status": {
+    "latestVersion": 78,
+    "observedGeneration": 89,
+    "replicas": 1,
+    "updatedReplicas": 1,
+    "availableReplicas": 1,
+    "unavailableReplicas": 0,
+    "details": {
+      "message": "manual change",
+      "causes": [
+        {
+          "type": "Manual"
+        }
+      ]
+    },
+    "conditions": [
+      {
+        "type": "Available",
+        "status": "True",
+        "lastUpdateTime": "2019-11-07T09:23:55Z",
+        "lastTransitionTime": "2019-11-07T09:23:55Z",
+        "message": "Deployment config has minimum availability."
+      },
+      {
+        "type": "Progressing",
+        "status": "True",
+        "lastUpdateTime": "2019-11-15T01:11:08Z",
+        "lastTransitionTime": "2019-11-15T01:11:01Z",
+        "reason": "NewReplicationControllerAvailable",
+        "message": "replication controller \"pipeline-bot-78\" successfully rolled out"
+      }
+    ],
+    "readyReplicas": 1
+  }
+}
