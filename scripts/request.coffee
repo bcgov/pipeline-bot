@@ -105,7 +105,7 @@ class exports.OCAPI
                 kind: "BuildRequest",
                 apiVersion: "build.openshift.io/v1",
                 metadata: {
-                    name: "bcdc-test-dev",
+                    name: "#{ocBuildConfigName}",
                     creationTimestamp: null
                 },
                 triggeredBy: [
@@ -512,4 +512,3 @@ class OCStatus
             objref.updateStatus(action, status, payload)
             resolve objref
 
-            
