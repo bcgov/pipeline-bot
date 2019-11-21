@@ -28,6 +28,18 @@ domain = process.env.HUBOT_OCPDOMAIN
 devApiTestTemplate = process.env.HUBOT_DEV_APITEST_TEMPLATE
 testApiTestTemplate = process.env.HUBOT_TEST_APITEST_TEMPLATE
 
+request = require('./request.coffee')
+
+api = new request.OCAPI(domain, apikey)
+
+buildSync = (project, buildConfig) ->
+    console.log("project: #{project}")
+    retVal = await api.buildSync(project, buildConfig) # returns promise
+    # what you want to do with the build sync
+    console.log('---complete---')
+    console.log("#{JSON.stringify(retVal)}")
+    console.log("#{typeof retVal}")
+    await return retVal
 
 module.exports = (robot) ->
 
@@ -102,44 +114,44 @@ module.exports = (robot) ->
         res.reply mesg
 
 
-   # Build example
-   robot.respond /build (.*) (.*)/i, (res) ->
-     # pipeline-bot build <configName> <project>
-     config = res.match[1]
-     project = res.match[2]
-     console.log "#{config} #{project}"
-
-     robot.http("https://#{domain}/apis/build.openshift.io/v1/namespaces/#{project}/buildconfigs/#{config}/instantiate")
-       .header('Accept', 'application/json')
-       .header("Authorization", "Bearer #{apikey}")
-       .post(JSON.stringify({
-        kind: "BuildRequest", apiVersion: "build.openshift.io/v1", metadata: {name:"#{config}", creationTimestamp: null}, triggeredBy: [{message: "Triggered by Bot"}], dockerStrategyOptions: {}, sourceStrategyOptions: {}
-      })) (err, httpRes, body) ->
-        # check for errs
-        if err
-          res.reply "Encountered an error :( #{err}"
-          return
-
-        data = JSON.parse body
-        console.log data
-
-        # check for ocp returned status responses.
-        if data.kind == "Status"
-          status = data.status
-          reason = data.message
-          res.reply "#{status} #{reason} "
-          return
-
-        #continue and message back succesful resp details
-        kind = data.kind
-        buildName = data.metadata.name
-        namespace = data.metadata.namespace
-        time = data.metadata.creationTimestamp
-        phase = data.status.phase
-
-        mesg = "Starting #{phase} #{kind} #{buildName} in #{namespace} at #{time}"
-        console.log mesg
-        res.reply mesg
+#   # Build example
+#   robot.respond /build (.*) (.*)/i, (res) ->
+#     # pipeline-bot build <configName> <project>
+#     config = res.match[1]
+#     project = res.match[2]
+#     console.log "#{config} #{project}"
+#
+#     robot.http("https://#{domain}/apis/build.openshift.io/v1/namespaces/#{project}/buildconfigs/#{config}/instantiate")
+#       .header('Accept', 'application/json')
+#       .header("Authorization", "Bearer #{apikey}")
+#       .post(JSON.stringify({
+#        kind: "BuildRequest", apiVersion: "build.openshift.io/v1", metadata: {name:"#{config}", creationTimestamp: null}, triggeredBy: [{message: "Triggered by Bot"}], dockerStrategyOptions: {}, sourceStrategyOptions: {}
+#      })) (err, httpRes, body) ->
+#        # check for errs
+#        if err
+#          res.reply "Encountered an error :( #{err}"
+#          return
+#
+#        data = JSON.parse body
+#        console.log data
+#
+#        # check for ocp returned status responses.
+#        if data.kind == "Status"
+#          status = data.status
+#          reason = data.message
+#          res.reply "#{status} #{reason} "
+#          return
+#
+#        #continue and message back succesful resp details
+#        kind = data.kind
+#        buildName = data.metadata.name
+#        namespace = data.metadata.namespace
+#        time = data.metadata.creationTimestamp
+#        phase = data.status.phase
+#
+#        mesg = "Starting #{phase} #{kind} #{buildName} in #{namespace} at #{time}"
+#        console.log mesg
+#        res.reply mesg
 
    # start OCP job from template - api-test
    robot.respond /test (.*) (.*)/i, (res) ->
@@ -206,7 +218,26 @@ module.exports = (robot) ->
            namespace = data.metadata.namespace
            time = data.metadata.creationTimestamp
 
-
            mesg = "Starting #{kind} #{buildName} in #{namespace} at #{time}"
            console.log mesg
            res.reply mesg
+
+
+   #build and watch
+   robot.respond /build (.*) (.*)/i, (res) ->
+     # pipeline-bot build <buildConfig> <project> - start OCP build and watch
+     buildConfig = res.match[1].toLowerCase()
+     project = res.match[2].toLowerCase()
+     res.reply "Lets start building #{buildConfig}"
+     resp = await buildSync(project, buildConfig)
+     console.log "your response is : #{JSON.stringify(resp)}"
+
+     console.log resp.statuses
+     status = resp.statuses.build.status
+     kind = resp.statuses.build.payload.kind
+     name = resp.statuses.build.payload.metadata.name
+     creationTimestamp = resp.statuses.build.payload.metadata.creationTimestamp
+     commit = resp.statuses.build.payload.spec.revision.git.commit
+     mesg = "Commit #{commit} #{status} #{kind} #{name} #{creationTimestamp}"
+     console.log mesg
+     res.reply mesg
