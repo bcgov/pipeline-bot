@@ -70,7 +70,7 @@ module.exports = (robot) ->
     #start build and watch
     buildConfig = "pipeline-bot" # hard code for testing only
     project = "databcdc" # hard code for testing only
-    res.reply "Lets start building #{buildConfig}"
+#    res.reply "Lets start building #{buildConfig}"
     resp = await buildSync(project, buildConfig)
     console.log "your response is : #{JSON.stringify(resp)}"
 
@@ -86,7 +86,7 @@ module.exports = (robot) ->
 
     # add to brain
     robot.brain.set(repoName, {mesg: mesg})
-    res.reply mesg
+#    res.reply mesg
 
     # send message to chat
     robot.messageRoom mat_room, "#{mesg}"
@@ -102,7 +102,7 @@ module.exports = (robot) ->
       else
          templateUrl = ""
          console.log "failed to set templateURL"
-         res.reply "please provide enviro option dev/test"
+#         res.reply "please provide enviro option dev/test"
          return
       #TODO: err check args and exit
       console.log env
@@ -113,7 +113,7 @@ module.exports = (robot) ->
 
           # check for errs
           if err
-            res.reply "Encountered an error :( #{err}"
+#            res.reply "Encountered an error :( #{err}"
             return
 
           fs = require('fs')
@@ -134,7 +134,7 @@ module.exports = (robot) ->
            .post(JSON.stringify(job)) (err, httpRes, body2) ->
             # check for errs
             if err
-              res.reply "Encountered an error :( #{err}"
+#              res.reply "Encountered an error :( #{err}"
               return
 
             data = JSON.parse body2
@@ -145,7 +145,7 @@ module.exports = (robot) ->
             if data.kind == "Status"
               status = data.status
               reason = data.message
-              res.reply "#{status} #{reason} "
+#              res.reply "#{status} #{reason} "
               return
 
             #continue and message back succesful resp details
