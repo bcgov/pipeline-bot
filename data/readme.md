@@ -75,8 +75,17 @@ curl -k \
     --keepalive-time 300 \
     -H "Authorization: Bearer $HUBOT_OCPAPIKEY" \
     -H 'Accept: application/json' \
-    https://$HUBOT_OCPDOMAIN/api/v1/namespaces/$PROJECT/replicationcontrollers/$DEPLOY_CONFIG_NAME-93
+    https://$HUBOT_OCPDOMAIN/api/v1/namespaces/$PROJECT/replicationcontrollers/$DEPLOY_CONFIG_NAME-97
 
 return json: [replication_controller.json](./replication_controller.json)
 
 
+## Get status 
+
+curl -k \
+    --keepalive-time 300 \
+    -H "Authorization: Bearer $HUBOT_OCPAPIKEY" \
+    -H 'Accept: application/json' \
+    https://$HUBOT_OCPDOMAIN/oapi/v1/namespaces/$PROJECT/deploymentconfigs/$DEPLOY_CONFIG_NAME/status
+
+/oapi/v1/namespaces/#{ocProject}/deploymentconfigs/#{deployConfig}/status

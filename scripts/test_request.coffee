@@ -30,7 +30,7 @@ api = new request.OCAPI(domain, apikey)
 # seems to be to just put the buildsync in a function
 # as is demonstrated below.
 buildDeploySync = () ->
-    
+
     console.log("project: #{project}")
 
     retVal = await api.buildSync(project, buildConfig) # returns promise
@@ -42,6 +42,10 @@ buildDeploySync = () ->
     console.log("----- running deploy now -----")
     deployStatus =  api.deployLatest(project, buildConfig, deployConfig)
     console.log "DEPLY STATUS: #{deployStatus}"
+
+    # todo: Thinking that could put another app specific test in here to 
+    #       verify that the app can be pinged?
+
 
 # call the build
 console.log("project: #{project}")
