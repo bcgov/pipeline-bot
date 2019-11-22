@@ -28,17 +28,27 @@ request = require('./request.coffee')
 
 api = new request.OCAPI(domain, apikey)
 
-buildSync = (project, buildConfig) ->
+
+buildDeploySync = (project, buildConfig, deployConfig) ->
+
     console.log("project: #{project}")
+
     retVal = await api.buildSync(project, buildConfig) # returns promise
     # what you want to do with the build sync
     console.log('---complete---')
     console.log("#{JSON.stringify(retVal)}")
     console.log("#{typeof retVal}")
-    await return retVal
+
+    console.log("----- running deploy now -----")
+    deployStatus =  await api.deployLatest(project, buildConfig, deployConfig)
+    console.log "DEPLY STATUS: #{deployStatus}"
+    console.log JSON.stringify(deployStatus)
+    await return deployStatus
+
+
+
 
 route = '/hubot/github'
-
 
 module.exports = (robot) ->
 
@@ -67,14 +77,20 @@ module.exports = (robot) ->
     # send message to chat
     robot.messageRoom mat_room, "#{mesg}"
 
-    #start build and watch
+    #start build deploy watch
     buildConfig = "pipeline-bot" # hard code for testing only
     project = "databcdc" # hard code for testing only
-#    res.reply "Lets start building #{buildConfig}"
-    resp = await buildSync(project, buildConfig)
-    console.log "your response is : #{JSON.stringify(resp)}"
+    deployConfig = buildConfig # hardcode for testing.. this will not always be the same
 
+    # send message to chat
+    robot.messageRoom mat_room, "Build and Deploying #{buildConfig}"
+
+    # call build/deploy watch
+    resp = await buildDeploySync(project, buildConfig, deployConfig)
+
+    console.log "your response is : #{JSON.stringify(resp)}"
     console.log resp.statuses
+
     status = resp.statuses.build.status
     kind = resp.statuses.build.payload.kind
     name = resp.statuses.build.payload.metadata.name
@@ -86,7 +102,6 @@ module.exports = (robot) ->
 
     # add to brain
     robot.brain.set(repoName, {mesg: mesg})
-#    res.reply mesg
 
     # send message to chat
     robot.messageRoom mat_room, "#{mesg}"
@@ -102,18 +117,18 @@ module.exports = (robot) ->
       else
          templateUrl = ""
          console.log "failed to set templateURL"
-#         res.reply "please provide enviro option dev/test"
          return
-      #TODO: err check args and exit
+      #TODO: err check args and exit , let chat room know
       console.log env
 
+      # get job template from repo
       robot.http(templateUrl)
         .header('Accept', 'application/json')
         .get() (err, httpres, body) ->
 
           # check for errs
           if err
-#            res.reply "Encountered an error :( #{err}"
+            console.log "Encountered an error :( #{err}"
             return
 
           fs = require('fs')
@@ -134,7 +149,7 @@ module.exports = (robot) ->
            .post(JSON.stringify(job)) (err, httpRes, body2) ->
             # check for errs
             if err
-#              res.reply "Encountered an error :( #{err}"
+              console.log "Encountered an error :( #{err}"
               return
 
             data = JSON.parse body2
@@ -145,7 +160,7 @@ module.exports = (robot) ->
             if data.kind == "Status"
               status = data.status
               reason = data.message
-#              res.reply "#{status} #{reason} "
+              console.log "#{status} #{reason} "
               return
 
             #continue and message back succesful resp details
