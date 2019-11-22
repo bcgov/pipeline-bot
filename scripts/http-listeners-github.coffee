@@ -71,7 +71,7 @@ module.exports = (robot) ->
     console.log mesg
 
     # add to brain
-    robot.brain.set(repoName, {id: "", stage: stage, status: status, entry: [mesg]}))
+    robot.brain.set(repoName, {id: "", stage: stage, status: status, entry: [mesg]})
 
     # send message to chat
     robot.messageRoom mat_room, "#{mesg}"
