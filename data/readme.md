@@ -80,7 +80,7 @@ curl -k \
 return json: [replication_controller.json](./replication_controller.json)
 
 
-## Get status 
+## Get Deployment status 
 
 curl -k \
     --keepalive-time 300 \
@@ -88,4 +88,3 @@ curl -k \
     -H 'Accept: application/json' \
     https://$HUBOT_OCPDOMAIN/oapi/v1/namespaces/$PROJECT/deploymentconfigs/$DEPLOY_CONFIG_NAME/status
 
-/oapi/v1/namespaces/#{ocProject}/deploymentconfigs/#{deployConfig}/status
