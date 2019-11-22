@@ -71,3 +71,6 @@ module.exports = (robot) ->
       data = robot.brain.data
       console.log data
       console.log "Again Now My Brain has: #{JSON.stringify(data)}"
+
+
+      res.reply data
