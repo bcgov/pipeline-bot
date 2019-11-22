@@ -7,8 +7,8 @@
 #  @requires     NPM:request-promise
 #  @requires     NPM:lodash
 #  @requires     NPM:oboe
+#
 ###
-
 
 request = require('request-promise')
 _ = require('lodash')
@@ -105,7 +105,7 @@ class exports.OCAPI
                 kind: "BuildRequest",
                 apiVersion: "build.openshift.io/v1",
                 metadata: {
-                    name: "#{ocBuildConfigName}",
+                    name: ocBuildConfigName,
                     creationTimestamp: null
                 },
                 triggeredBy: [
@@ -217,7 +217,7 @@ class exports.OCAPI
                 console.log '------- error called -------' + err
                 json = err
         
-     ###*
+    ###*
     # Initates and monitors the build for the specified project / buildconfig
     # and returns a status object
     # 
@@ -250,12 +250,20 @@ class exports.OCAPI
         catch err
             console.log "error encountered in buildSync: #{err}"
             console.log err.stack
-            return err
+            return await this.statuses.updateStatusAsync('build', 'error', err)
 
-    getDeployedImageSync : (ocProject, deployConfig) ->
-        imageName = await this.getDeployedImage(ocProject, deployConfig)
-        console.log "imageName after await: #{imageName}"
-
+    ###*
+    # Gets the latest image that was built using the specified 
+    # buildconfig name
+    #
+    #  - iterates over all builds in the project
+    #  - finds builds that used the build config name provided as arg
+    #  - checks the build dates, to get the last image built 
+    # 
+    # @param {string} ocProject - The name of the oc project
+    # @param {string} ocBuildConfigName - The name of the build config
+    # @return {promise} - yields the name of the build image
+    ###
     getLatestBuildImage : (ocProject, ocBuildConfigName) ->
         # ocProject: name of the openshift project
         # ocBuildConfigName: build config name
@@ -312,6 +320,18 @@ class exports.OCAPI
                console.log '------- error called -------' + err
                json = err
 
+    ###*
+    # Gets the name of the last image that was built and the image
+    # that is currently deployed, compares the names and returns
+    # true or false indicating whether the latest image has been 
+    # deployed
+    #
+    # @param {string} ocProject - the name of the oc project
+    # @param {string} buildConifg - the name of the build config
+    # @param {string} deployConfig - the name of the deploy config
+    # @return {boolean} - indicator of whether the latest image built has been 
+    #                     or is currently being deployed.
+    ###
     isLatestImageDeployed : (ocProject, buildConifg, deployConfig) ->
         # ocProject: the openshift project
         # ocBuildConfigName: a build config name
@@ -321,23 +341,21 @@ class exports.OCAPI
         # using the depoly config identifies the image that is currently 
         # deployed.  If they are the same returns true otherwise returns
         # false.
-        currentDeployedImage = await this.getDeployedImage(ocProject, deployConfig)
+        # Will return true even if the replication is only part way complete
         mostRecentlyBuildImage = await this.getLatestBuildImage(ocProject, buildConifg)
+        currentDeployedImage = await this.getDeployedImage(ocProject, deployConfig)
         console.log "#{currentDeployedImage}  currentDeployedImage"
         console.log "#{mostRecentlyBuildImage}  mostRecentlyBuildImage"
         return currentDeployedImage == mostRecentlyBuildImage
 
-    getDeployedImage : (ocProject, deployConfig) ->
-        # ocProject: openshift project name
-        # deployConfig; Deployconfig name
-        #
-        #  queries deploymentconfigs for the last deployment, ie replication
-        #  controller number
-        #
-        #  queries the current replication controller for the image that was deployed.
-        #
-        #  returns a promise with the image name that is currently deployed.
-        #
+
+    ###*
+    # Hits the deployment config status end point and returns json 
+    # @param {string} ocProject - openshift project name
+    # @param {string} deployConfig - the name of the deployment config
+    # @return {object} - the json object that is returned by the end point
+    ###    
+    getDeploymentStatus: (ocProject, deployConfig) ->
         imageName = undefined
 
         reqObj = this.getCoreRequest()
@@ -345,7 +363,41 @@ class exports.OCAPI
         apiEndPoints = "/oapi/v1/namespaces/#{ocProject}/deploymentconfigs/#{deployConfig}/status"
         urlString = "#{urldomain}#{apiEndPoints}"
         reqObj.uri = urlString
+        console.log "getting: #{urlString}"
+        return request reqObj
+            .then (response) -> 
+                console.log('getDeploymentStatus called')
+                return response
+            .catch (err) ->
+                console.log "caught error #{err}"
+                console.log "#{err.stack}"
+        
+    ###*
+    # Gets the currently configured image name... looks like:
+    #  docker-registry.default.svc:5000/databcdc/datapusher@sha256:2eff082c999cbe0eff08816d2b8d4d7b97e6e7d5825ca85ef3714990752b1c7c
+    #
+    # does this by getting the latestVersion property from the deploy config 
+    # status end point, then appends the latestVersion to the end of the 
+    # deployconfig name to get the replicationcontroller name
+    # queries the replication controller end point to get the image that
+    # that the latest replication controller deployed.
+    #
+    # @param {string} ocProject - the name of the oc project
+    # @param {string} deployConfig - the name of the deploy config
+    # @return {promise} - will yield the name of the image
+    #
+    ###
+    getDeployedImage : (ocProject, deployConfig) ->
+        imageName = undefined
 
+        reqObj = this.getCoreRequest()
+        urldomain = this.baseUrl()
+        apiEndPoints = "/oapi/v1/namespaces/#{ocProject}/deploymentconfigs/#{deployConfig}/status"
+        urlString = "#{urldomain}#{apiEndPoints}"
+        reqObj.uri = urlString
+        console.log "getting: #{urlString}"
+        # this first request gets the "latestVersion" which oc uses to name the 
+        # replication controller, then queries the status of the replication controller.
         return request reqObj
          .then (response) -> 
                 replicationController = "#{deployConfig}-#{response.status.latestVersion}"
@@ -365,10 +417,23 @@ class exports.OCAPI
                             imageName = container.image
                             console.log "image name: #{imageName}"
                             return imageName
+                .catch (err) ->
+                    console.log "Error: Unable to get the replication controller: #{replicationController}"
+                    console.log "response was: #{JSON.stringify(response)}"
            .catch (err) -> 
-               console.log '------- error called -------' + err
-               json = err
+               console.log '------- error called -------'
+               console.log "error: #{err}"
+               console.log "request: #{JSON.stringify(reqObj)}"
 
+    ###*
+    # Calls the deployment instantiation end point and returns the json 
+    # data 
+    #
+    # @param {string} ocProject - the openshift project
+    # @param {deployConfig} deployConfig - The deploy config
+    # @return {promise} - promise that will yield the payload from the deployment
+    #                     instantiation event
+    ###
     deploy : (ocProject, deployConfig) ->
         # ocProject: the openshift project
         # deployConfig: the deployment config to be deployed
@@ -388,16 +453,34 @@ class exports.OCAPI
             "force":true}
         return request reqObj
 
+    ###*
+    # returns a promise that will wait for the specified number or seconds to 
+    # complete 
+    #
+    # @param {number} waittime - the amount of time in milliseconds to wait
+    # @return {promise} - that waits for a set amount of time
+    ###
     delay : (waittime) ->   
         ms = new Promise (resolve) ->
             setTimeout(resolve, waittime)
 
+    ###*
+    # Queries the status of the replication controller and retrieves the desired 
+    # number of controllers from `spec.replicas` and compares against 
+    # status.replicas.  Cancels out when they are either equal, or the maxuimum
+    # number of recursions is exceeded.  
+    # 
+    # When desired replicas vs existing replicas is not equal will wait for 
+    # 5 seconds then check again.
+    #
+    # @param {string} ocProject - The openshift project
+    # @param {replicationControllerName} - name of the replication controller
+    # @param {number} cnt - Leave this parameter, it is used internally to manage
+    #                       recursion depth.  Used to cancel out beyond a set 
+    #                       number of iterations
+    #
+    ###
     deployWatch : (ocProject, replicationControllerName, cnt=0) ->
-        # ocProject: openshift project
-        # replicationControllerName: the name of the replication controller to monitor
-        #
-        #  monitors the replication controller until the status.replicas is equal 
-        # to spec.replicas
         maxIterations = 5
         timeBetweenIterations = 5000
         reqObj = this.getCoreRequest()
@@ -406,47 +489,73 @@ class exports.OCAPI
         urlString = "#{urldomain}#{apiEndPoints}"
         reqObj.uri = urlString
         repQuery = await request reqObj
-
-        console.log "repQuery: #{JSON.stringify(repQuery)}"
-        console.log("#{repQuery.spec.replicas} ?= #{repQuery.metadata.annotations["kubectl.kubernetes.io/desired-replicas"]}")
+        this.statuses.updateStatus('deploy', 'deploying', repQuery)
+        #console.log "repQuery: #{JSON.stringify(repQuery)}"
+        console.log "requested replicas: #{repQuery.spec.replicas} ?= existing replicas: #{repQuery.status.replicas}"
+        console.log "kubectl.kubernetes.io/desired-replicas: #{repQuery.metadata.annotations['kubectl.kubernetes.io/desired-replicas']}"
         # Code below is monitoring the target replicas vs the actual
         # replicas... waits until they are equal
         #
         # Possible source of target pods: repQuery.metadata.annotations["kubectl.kubernetes.io/desired-replicas"]
         # and.. repQuery.spec.replicas
         if repQuery.spec.replicas == repQuery.status.replicas
-            return {'status': 'success', \
-                    'replicationController': repQuery}
+            console.log "requested replicas are up"
+            this.statuses.updateStatus('deploy', 'success', repQuery)
+            return  repQuery
         else if cnt > maxIterations
             console.log("max attempts exceeded #{cnt}")
-            return {'status': 'failed', \
-                    'replicationController': repQuery}
+            this.statuses.updateStatus('deploy', 'failed', repQuery)
+            return repQuery
         else
             cnt = cnt + 1
             console.log("attempting await")
             await this.delay(timeBetweenIterations)
             console.log("await complete")
             this.deployWatch(ocProject, replicationControllerName, cnt)
-
+    
+    ###*
+    #
+    # Checks to see if the latest build is the version that is 
+    # currently deployed, and if it is stops, otherwise proceeds
+    # with a deployment.
+    # @param {string} ocProject - The name of the openshift project
+    # @param {string} buildConfig - The build config name
+    # @return {object} - returns a OCStatus object
+    #
+    ###
     deployLatest : (ocProject, buildConfig, deployConfig) ->
-        # Checks to see if the latest build is the version that is 
-        # currently deployed, and if it is stops, otherwise proceeds
-        # with a deployment.
-        isLatest = await this.isLatestImageDeployed(ocProject, buildConfig, deployConfig)
-        if !isLatest
-            deployObj = await this.deploy(ocProject, deployConfig)
-            replicationController = "#{deployObj.metadata.name}-#{deployObj.status.latestVersion}"
+        # 
+        replicationController = undefined
+        this.statuses.updateStatus('deploy', 'checking')
+        try
+            console.log "getting latest..."
+            isLatest = await this.isLatestImageDeployed(ocProject, buildConfig, deployConfig)
+
+            if !isLatest
+                console.log "instantiating a deploy..."
+                this.statuses.updateStatus('deploy', 'initiated')
+                deployObj = await this.deploy(ocProject, deployConfig)
+                replicationController = "#{deployObj.metadata.name}-#{deployObj.status.latestVersion}"
+                this.statuses.updateStatus('deploy', 'initiated', deployObj)
+            if replicationController == undefined
+                # Getting the name of the replication controller that is doing
+                # the rollout for the depolyment
+                console.log "getting the replication controller name..."
+                this.statuses.updateStatus('deploy', 'initiated')
+                # should get the actual object instead of just the status, then could
+                # update the status object
+                latestDeployment = await this.getDeploymentStatus(ocProject, deployConfig)
+                replicationController = "#{deployConfig}-#{latestDeployment.status.latestVersion}"
+            # is latest only indicates that the deployment has already been triggered
+            # code below will monitor for its completion.
+            this.statuses.updateStatus('deploy', 'deploying')
             deployStatus = await this.deployWatch(ocProject, replicationController)
+            return  this.statuses
+
             console.log "----------Deploy complete ----------"
-            console.log JSON.stringify(deployStatus)
-            
-            # need to get the replication controller from the payload
-            # then use to query the replication controller here
-            # curl -k \
-            # --keepalive-time 300 \
-            # -H "Authorization: Bearer $APIKEY" \
-            # -H 'Accept: application/json' \
-            # https://$DOMAIN/api/v1/namespaces/$PROJECT/replicationcontrollers/pipeline-bot-71
+        catch err 
+            console.log "error encountered in attempt to deploy..", err
+            return await this.statuses.updateStatusAsync('deploy', 'error', err)
 
             
 ###*

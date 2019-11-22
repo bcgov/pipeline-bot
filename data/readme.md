@@ -11,9 +11,9 @@ switch --loglevel=9
 To run any of the following commands set the following environment 
 variables before.
 
-* APIKEY - api key to use for authorization / authentication
+* HUBOT_OCPAPIKEY - api key to use for authorization / authentication
 * PROJECT - openshift project name
-* DOMAIN - The domain for the url  something.something.com
+* HUBOT_OCPDOMAIN - The domain for the url  something.something.com
 * BC_NAME - build config
 * BUILDNAME - A specific build name BC_NAME with a -number
 
@@ -26,14 +26,14 @@ variables before.
 ### Watch a specific build config:
 
 curl -k \
-    -H "Authorization: Bearer $APIKEY" \
+    -H "Authorization: Bearer $HUBOT_OCPAPIKEY" \
     -H 'Accept: application/json' \
     https://$DOMAIN/apis/build.openshift.io/v1/watch/namespaces/$PROJECT/builds/$BC_NAME
 
 ### Watch all builds in project
 
 curl -k \
-    -H "Authorization: Bearer $APIKEY" \
+    -H "Authorization: Bearer $HUBOT_OCPAPIKEY" \
     -H 'Accept: application/json' \
     https://$DOMAIN/apis/build.openshift.io/v1/watch/namespaces/$PROJECT/builds/
 
@@ -42,7 +42,7 @@ example output: [build_watch.json](./build_watch.json)
 ## list Builds
 
 curl -k \
-    -H "Authorization: Bearer $APIKEY" \
+    -H "Authorization: Bearer $HUBOT_OCPAPIKEY" \
     -H 'Accept: application/json' \
     https://$DOMAIN/oapi/v1/namespaces/$PROJECT/builds
 
@@ -51,7 +51,7 @@ example return object: [build_list.json](./build_list.json)
 ## Get a specific Build Status / payload / result
 
 curl -k \
-    -H "Authorization: Bearer $APIKEY" \
+    -H "Authorization: Bearer $HUBOT_OCPAPIKEY" \
     -H 'Accept: application/json' \
     https://$DOMAIN/oapi/v1/namespaces/$PROJECT/builds/$BUILDNAME
 
@@ -62,10 +62,10 @@ Same call as the *list Builds* but only returns the specified build. Example ret
 
 curl -k -v -X POST  \
     --data '{"kind":"DeploymentRequest","apiVersion":"apps.openshift.io/v1","name":"pipeline-bot","latest":true,"force":true}' \
-    -H "Authorization: Bearer $APIKEY" \
+    -H "Authorization: Bearer $HUBOT_OCPAPIKEY" \
     -H "Accept: application/json, */*" \
     -H "Content-Type: application/json" \
-    https://$DOMAIN/apis/apps.openshift.io/v1/namespaces/$PROJECT/deploymentconfigs/$DEPLOY_CONFIG_NAME/instantiate
+    https://$HUBOT_OCPDOMAIN/apis/apps.openshift.io/v1/namespaces/$PROJECT/deploymentconfigs/$DEPLOY_CONFIG_NAME/instantiate
 
 [returns a deploymentconfig object](deployment_init_payload.json)
 
@@ -73,10 +73,18 @@ curl -k -v -X POST  \
 
 curl -k \
     --keepalive-time 300 \
-    -H "Authorization: Bearer $APIKEY" \
+    -H "Authorization: Bearer $HUBOT_OCPAPIKEY" \
     -H 'Accept: application/json' \
-    https://$DOMAIN/api/v1/namespaces/$PROJECT/replicationcontrollers/$DEPLOY_CONFIG_NAME-93
+    https://$HUBOT_OCPDOMAIN/api/v1/namespaces/$PROJECT/replicationcontrollers/$DEPLOY_CONFIG_NAME-97
 
 return json: [replication_controller.json](./replication_controller.json)
 
+
+## Get Deployment status 
+
+curl -k \
+    --keepalive-time 300 \
+    -H "Authorization: Bearer $HUBOT_OCPAPIKEY" \
+    -H 'Accept: application/json' \
+    https://$HUBOT_OCPDOMAIN/oapi/v1/namespaces/$PROJECT/deploymentconfigs/$DEPLOY_CONFIG_NAME/status
 

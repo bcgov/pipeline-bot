@@ -6,9 +6,9 @@ request = require('./request.coffee')
 apikey = process.env.HUBOT_OCPAPIKEY
 domain = process.env.HUBOT_OCPDOMAIN
 
-project = 'databcdc'
-buildConfig = 'bcdc-test-dev'
-deployConfig = 'pipeline-bot'
+# project = 'databcdc'
+# buildConfig = 'bcdc-test-dev'
+# deployConfig = 'pipeline-bot'
 
 project = 'databcdc'
 buildConfig = 'datapusher'
@@ -20,6 +20,7 @@ if apikey == undefined
 console.log "apikey: #{'*'.repeat(apikey.length)}"
 api = new request.OCAPI(domain, apikey)
 
+
 #DEBUG- Commenting out while working on deploy
 
 # Try as I have to figure out how to make the build call
@@ -28,7 +29,8 @@ api = new request.OCAPI(domain, apikey)
 # the promise is complete, and THEN return a value.  Solution
 # seems to be to just put the buildsync in a function
 # as is demonstrated below.
-buildSync = () ->
+buildDeploySync = () ->
+
     console.log("project: #{project}")
 
     retVal = await api.buildSync(project, buildConfig) # returns promise
@@ -37,10 +39,16 @@ buildSync = () ->
     console.log("#{JSON.stringify(retVal)}")
     console.log("#{typeof retVal}")
 
+    console.log("----- running deploy now -----")
+    deployStatus =  api.deployLatest(project, buildConfig, deployConfig)
+    console.log "DEPLY STATUS: #{deployStatus}"
+
+    # todo: Thinking that could put another app specific test in here to 
+    #       verify that the app can be pinged?
+
+
 # call the build
 console.log("project: #{project}")
-#buildSync()
+buildDeploySync()
 
-
-# deployStatus = api.deployLatest(project, deployConfig)
-# console.log "DEPLY STATUS: #{deployStatus}"
+# should put this in a function with the build
