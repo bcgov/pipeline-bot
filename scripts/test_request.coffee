@@ -40,8 +40,9 @@ buildDeploySync = () ->
     console.log("#{typeof retVal}")
 
     console.log("----- running deploy now -----")
-    deployStatus =  api.deployLatest(project, buildConfig, deployConfig)
+    deployStatus =  await api.deployLatest(project, buildConfig, deployConfig)
     console.log "DEPLY STATUS: #{deployStatus}"
+    console.log JSON.stringify(deployStatus)
 
     # todo: Thinking that could put another app specific test in here to 
     #       verify that the app can be pinged?
