@@ -49,7 +49,7 @@ buildDeploySync = () ->
 
 
 # call the build
-console.log("project: #{project}")
-buildDeploySync()
+#console.log("project: #{project}")
+#buildDeploySync()
 
 # should put this in a function with the build

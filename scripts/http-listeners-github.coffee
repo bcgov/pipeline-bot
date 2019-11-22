@@ -17,17 +17,17 @@
 # Author:
 #   craigrigdon
 
-# get mattermost channel from env var passed to container on deployment
+
 mat_room = process.env.HUBOT_MATTERMOST_CHANNEL
 apikey = process.env.HUBOT_OCPAPIKEY
 domain = process.env.HUBOT_OCPDOMAIN
 devApiTestTemplate = process.env.HUBOT_DEV_APITEST_TEMPLATE
 testApiTestTemplate = process.env.HUBOT_TEST_APITEST_TEMPLATE
 
+
 request = require('./request.coffee')
-
 api = new request.OCAPI(domain, apikey)
-
+route = '/hubot/github'
 
 buildDeploySync = (project, buildConfig, deployConfig) ->
 
@@ -46,16 +46,15 @@ buildDeploySync = (project, buildConfig, deployConfig) ->
     await return deployStatus
 
 
-
-
-route = '/hubot/github'
-
 module.exports = (robot) ->
 
   robot.router.post route, (req, res) ->
 
     console.log route
 
+    # -------------- STAGE Commit ------------
+    stage = "Commit"
+    status = "in progress"
     # TODO: error check payload
     data = if req.body.payload? then JSON.parse req.body.payload else req.body
     console.log data
@@ -72,18 +71,27 @@ module.exports = (robot) ->
     console.log mesg
 
     # add to brain
-    robot.brain.set(repoName, {mesg: mesg})
+    robot.brain.set(repoName, {id: "", stage: stage, status: status, entry: [mesg]}))
 
     # send message to chat
     robot.messageRoom mat_room, "#{mesg}"
 
+    # -------------- STAGE Build/Deploy ------------
     #start build deploy watch
+    stage = "build and deploy"
     buildConfig = "pipeline-bot" # hard code for testing only
     project = "databcdc" # hard code for testing only
     deployConfig = buildConfig # hardcode for testing.. this will not always be the same
 
+    mesg = " Starting Build and Deploy for #{buildConfig}"
+
     # send message to chat
-    robot.messageRoom mat_room, "Build and Deploying #{buildConfig}"
+    robot.messageRoom mat_room, mesg
+
+    # update brain
+    data = robot.brain.get(repoName)
+    event.entry.push mesg
+    event.status = stage
 
     # call build/deploy watch
     resp = await buildDeploySync(project, buildConfig, deployConfig)
@@ -100,13 +108,17 @@ module.exports = (robot) ->
     mesg = "Commit #{commit} #{status} #{kind} #{name} #{creationTimestamp}"
     console.log mesg
 
-    # add to brain
-    robot.brain.set(repoName, {mesg: mesg})
+    # update brain
+    data = robot.brain.get(repoName)
+    event.entry.push mesg
+    event.id = name
 
     # send message to chat
     robot.messageRoom mat_room, "#{mesg}"
 
+    #----------------TEST Stage----------------------
     if status == "Complete"
+      stage = "Testing"
       env = "dev"  # hard code for testing only
       project = "databcdc"  # hard code for testing only
 
@@ -172,11 +184,14 @@ module.exports = (robot) ->
             mesg = "Starting #{kind} #{buildName} in #{namespace} at #{time}"
             console.log mesg
 
-            # add to brain
-            robot.brain.set(repoName, {mesg: mesg})
+            # update brain
+            data = robot.brain.get(repoName)
+            event.entry.push mesg
+            event.stage = stage
 
             # send message to chat
             robot.messageRoom mat_room, "#{mesg}"
+
 
 
     status = "Success"
