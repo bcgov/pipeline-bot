@@ -79,7 +79,7 @@ module.exports = (robot) ->
     # -------------- STAGE Build/Deploy ------------
     #start build deploy watch
     stage = "build and deploy"
-    buildConfig = "pipeline-bot" # hard code for testing only
+    buildConfig = "datapusher" # hard code for testing only
     project = "databcdc" # hard code for testing only
     deployConfig = buildConfig # hardcode for testing.. this will not always be the same
 
