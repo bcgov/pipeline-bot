@@ -89,7 +89,7 @@ module.exports = (robot) ->
     robot.messageRoom mat_room, mesg
 
     # update brain
-    data = robot.brain.get(repoName)
+    event = robot.brain.get(repoName)
     event.entry.push mesg
     event.status = stage
 
@@ -109,7 +109,7 @@ module.exports = (robot) ->
     console.log mesg
 
     # update brain
-    data = robot.brain.get(repoName)
+    event = robot.brain.get(repoName)
     event.entry.push mesg
     event.id = name
 
@@ -185,7 +185,7 @@ module.exports = (robot) ->
             console.log mesg
 
             # update brain
-            data = robot.brain.get(repoName)
+            event = robot.brain.get(repoName)
             event.entry.push mesg
             event.stage = stage
 
