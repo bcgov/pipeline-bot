@@ -8,7 +8,7 @@
 #
 #
 # Commands:
-
+#   pipeline-bot brain  - show whats on your mind
 #
 #
 # Notes:
