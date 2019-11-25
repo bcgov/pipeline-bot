@@ -158,9 +158,9 @@ module.exports = (robot) ->
           #add env var with ID of deployment for tracking
           data =  [{"name": "","DEPLOY_UID": "deployUID"}]
           console.log data
-          conosle.log "add new data to job yaml"
+          console.log "add new data to job yaml"
           job.spec.template.spec.continaers[0].env.push data
-          conosle.log job
+          console.log job
           # send job to ocp api jobs endpoint
           robot.http("https://#{domain}/apis/batch/v1/namespaces/#{project}/jobs")
            .header('Accept', 'application/json')
