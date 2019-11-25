@@ -118,7 +118,7 @@ module.exports = (robot) ->
     robot.messageRoom mat_room, "#{mesg}"
 
     #----------------TEST Stage----------------------
-    if status == "Complete"
+    if deploydStatus == "Complete"
       stage = "Testing"
       env = "dev"  # hard code for testing only
       project = "databcdc"  # hard code for testing only
