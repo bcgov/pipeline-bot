@@ -14,7 +14,7 @@
 #   pipeline-bot status <repo/name> - get status of pipeline
 #   pipeline-bot list - get list of repos in pipeline
 #   pipeline-bot test <[dev|test]>  <project> - run api test against dev/test in OCP projectspace
-#
+#   pipeline-bot builddeploy <buildConfig> <project> - start OCP build/deploy and watch
 #
 # Notes:
 #
@@ -40,6 +40,25 @@ buildSync = (project, buildConfig) ->
     console.log("#{JSON.stringify(retVal)}")
     console.log("#{typeof retVal}")
     await return retVal
+
+
+buildDeploySync = (project, buildConfig, deployConfig) ->
+
+    console.log("project: #{project}")
+
+    retVal = await api.buildSync(project, buildConfig) # returns promise
+    # what you want to do with the build sync
+    console.log('---complete---')
+    console.log("#{JSON.stringify(retVal)}")
+    console.log("#{typeof retVal}")
+
+    console.log("----- running deploy now -----")
+    deployStatus =  await api.deployLatest(project, buildConfig, deployConfig)
+    console.log "DEPLY STATUS: #{deployStatus}"
+    console.log JSON.stringify(deployStatus)
+    await return deployStatus
+
+
 
 module.exports = (robot) ->
 
@@ -238,6 +257,27 @@ module.exports = (robot) ->
      name = resp.statuses.build.payload.metadata.name
      creationTimestamp = resp.statuses.build.payload.metadata.creationTimestamp
      commit = resp.statuses.build.payload.spec.revision.git.commit
+     mesg = "Commit #{commit} #{status} #{kind} #{name} #{creationTimestamp}"
+     console.log mesg
+     res.reply mesg
+
+
+   #build and deploy
+   robot.respond /builddeploy (.*) (.*)/i, (res) ->
+     # pipeline-bot builddeploy <buildConfig> <project> - start OCP build/deploy and watch
+     buildConfig = res.match[1].toLowerCase()
+     project = res.match[2].toLowerCase()
+     res.reply "Lets start build and deploy for #{buildConfig}"
+     # call build/deploy watch
+     resp = await buildDeploySync(project, buildConfig, deployConfig)
+     console.log "your response is : #{JSON.stringify(resp)}"
+
+     status = resp.statuses.build.status
+     kind = resp.statuses.build.payload.kind
+     name = resp.statuses.build.payload.metadata.name
+     creationTimestamp = resp.statuses.build.payload.metadata.creationTimestamp
+     commit = resp.statuses.build.payload.spec.revision.git.commit
+
      mesg = "Commit #{commit} #{status} #{kind} #{name} #{creationTimestamp}"
      console.log mesg
      res.reply mesg
