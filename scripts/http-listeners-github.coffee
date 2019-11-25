@@ -99,19 +99,20 @@ module.exports = (robot) ->
     console.log "your response is : #{JSON.stringify(resp)}"
     console.log resp.statuses
 
-    status = resp.statuses.build.status
-    kind = resp.statuses.build.payload.kind
-    name = resp.statuses.build.payload.metadata.name
-    creationTimestamp = resp.statuses.build.payload.metadata.creationTimestamp
-    commit = resp.statuses.build.payload.spec.revision.git.commit
+    deploydStatus = resp.statuses.deploy.status
+    deployKind = resp.statuses.deploy.payload.kind
+    deployName = resp.statuses.deploy.payload.metadata.name
+    deployCreationTimestamp = resp.statuses.deploy.payload.metadata.creationTimestamp
+    deployUID = resp.statuses.deploy.payload.metadata.uid
 
-    mesg = "Commit #{commit} #{status} #{kind} #{name} #{creationTimestamp}"
+    # message
+    mesg = "#{deployKind} #{deploydStatus} #{deployName} #{deployCreationTimestamp} #{deployUID} "
     console.log mesg
 
     # update brain
     event = robot.brain.get(repoName)
     event.entry.push mesg
-    event.id = name
+    event.id = deployUID
 
     # send message to chat
     robot.messageRoom mat_room, "#{mesg}"
@@ -154,6 +155,12 @@ module.exports = (robot) ->
           job = jsonParsed.objects[0]
           console.log job
 
+          #add env var with ID of deployment for tracking
+          data =  [{"name": "","DEPLOY_UID": "deployUID"}]
+          console.log data
+          conosle.log "add new data to job yaml"
+          job.spec.template.spec.continaers[0].env.push data
+          conosle.log job
           # send job to ocp api jobs endpoint
           robot.http("https://#{domain}/apis/batch/v1/namespaces/#{project}/jobs")
            .header('Accept', 'application/json')
