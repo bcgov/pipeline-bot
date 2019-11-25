@@ -273,12 +273,38 @@ module.exports = (robot) ->
      resp = await buildDeploySync(project, buildConfig, deployConfig)
      console.log "your response is : #{JSON.stringify(resp)}"
 
-     status = resp.statuses.build.status
-     kind = resp.statuses.build.payload.kind
-     name = resp.statuses.build.payload.metadata.name
-     creationTimestamp = resp.statuses.build.payload.metadata.creationTimestamp
-     commit = resp.statuses.build.payload.spec.revision.git.commit
 
-     mesg = "Commit #{commit} #{status} #{kind} #{name} #{creationTimestamp}"
+
+     #TODO: add parsing to function outside to minimize code.
+     buildStatus = resp.statuses.build.status
+     buildKind = resp.statuses.build.payload.kind
+     buildName = resp.statuses.build.payload.metadata.name
+     buildCreationTimestamp = resp.statuses.build.payload.metadata.creationTimestamp
+     buildUID = resp.statuses.deploy.payload.metadata.uid
+
+     # message
+     mesg = "#{buildKind} #{buildStatus} #{buildName} #{buildCreationTimestamp} #{buildUID} "
      console.log mesg
+
+#     # add to brain
+#     robot.brain.set('OnDemand', { entry: [mesg]})
+
+     # send message to chat
      res.reply mesg
+
+     deploydStatus = resp.statuses.deploy.status
+     deployKind = resp.statuses.deploy.payload.kind
+     deployName = resp.statuses.deploy.payload.metadata.name
+     deployCreationTimestamp = resp.statuses.deploy.payload.metadata.creationTimestamp
+     deployUID = resp.statuses.deploy.payload.metadata.uid
+
+     # message
+     mesg = "#{deployKind} #{deploydStatus} #{deployName} #{deployCreationTimestamp} #{deployUID} "
+     console.log mesg
+
+#     # add to brain
+#     robot.brain.set('OnDemand', { entry: [mesg]})
+
+     # send message to chat
+     res.reply mesg
+
