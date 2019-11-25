@@ -267,6 +267,7 @@ module.exports = (robot) ->
      # pipeline-bot builddeploy <buildConfig> <project> - start OCP build/deploy and watch
      buildConfig = res.match[1].toLowerCase()
      project = res.match[2].toLowerCase()
+     deployConfig = buildConfig  # hardcoded for testing at this time.
      res.reply "Lets start build and deploy for #{buildConfig}"
      # call build/deploy watch
      resp = await buildDeploySync(project, buildConfig, deployConfig)
