@@ -268,7 +268,16 @@ module.exports = (robot) ->
      buildConfig = res.match[1].toLowerCase()
      project = res.match[2].toLowerCase()
      deployConfig = buildConfig  # hardcoded for testing at this time.
-     res.reply "Lets start build and deploy for #{buildConfig}"
+
+     # message
+     mesg = "Start build and deploy for #{buildConfig}"
+
+     # send mesg
+     res.reply mesg
+
+     # add to brain
+     robot.brain.set('BuildandDeploy', { entry: [mesg]})
+
      # call build/deploy watch
      resp = await buildDeploySync(project, buildConfig, deployConfig)
      console.log "your response is : #{JSON.stringify(resp)}"
@@ -286,8 +295,9 @@ module.exports = (robot) ->
      mesg = "#{buildKind} #{buildStatus} #{buildName} #{buildCreationTimestamp} #{buildUID} "
      console.log mesg
 
-#     # add to brain
-#     robot.brain.set('OnDemand', { entry: [mesg]})
+     # add to brain
+     event = robot.brain.get('BuildandDeploy')
+     event.entry.push mesg
 
      # send message to chat
      res.reply mesg
@@ -302,8 +312,9 @@ module.exports = (robot) ->
      mesg = "#{deployKind} #{deploydStatus} #{deployName} #{deployCreationTimestamp} #{deployUID} "
      console.log mesg
 
-#     # add to brain
-#     robot.brain.set('OnDemand', { entry: [mesg]})
+     # add to brain
+     event = robot.brain.get('BuildandDeploy')
+     event.entry.push mesg
 
      # send message to chat
      res.reply mesg
