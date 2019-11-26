@@ -14,7 +14,7 @@
 #   pipeline-bot status <repo/name> - get status of pipeline
 #   pipeline-bot list - get list of repos in pipeline
 #   pipeline-bot test <[dev|test]>  <project> - run api test against dev/test in OCP projectspace
-#   pipeline-bot builddeploy <buildConfig> <project> - start OCP build/deploy and watch
+#   pipeline-bot buildanddeploy <buildConfig> <project> - start OCP build/deploy and watch
 #
 # Notes:
 #
@@ -270,8 +270,8 @@ module.exports = (robot) ->
 
 
    #build and deploy
-   robot.respond /builddeploy (.*) (.*)/i, (res) ->
-     # pipeline-bot builddeploy <buildConfig> <project> - start OCP build/deploy and watch
+   robot.respond /buildanddeploy (.*) (.*)/i, (res) ->
+     # pipeline-bot buildanddeploy <buildConfig> <project> - start OCP build/deploy and watch
      buildConfig = res.match[1].toLowerCase()
      project = res.match[2].toLowerCase()
      deployConfig = buildConfig  # hardcoded for testing at this time.
