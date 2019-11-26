@@ -91,7 +91,7 @@ module.exports = (robot) ->
     # update brain
     event = robot.brain.get(repoName)
     event.entry.push mesg
-    event.status = stage
+    event.stage = stage
 
     # call build/deploy watch
     resp = await buildDeploySync(project, buildConfig, deployConfig)
@@ -156,7 +156,7 @@ module.exports = (robot) ->
           console.log job
 
           #add env var with ID of deployment for tracking
-          data =  {"name": "DEPLOY_UID","value": "deployUID"}
+          data =  {"name": "DEPLOY_UID","value": deployUID}
           console.log "#{JSON.stringify(data)}"
           console.log "add new data to job yaml"
           job.spec.template.spec.containers[0].env.push data
