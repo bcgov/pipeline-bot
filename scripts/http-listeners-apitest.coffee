@@ -43,6 +43,8 @@ module.exports = (robot) ->
     # Search for keys with id matching
     keys = Object.keys(robot.brain.data._private)
     console.log keys
+    # send message
+    robot.messageRoom mat_room, "#{mesg}"
 
     for key in keys
       event = robot.brain.get(key)
@@ -58,12 +60,9 @@ module.exports = (robot) ->
 
         #TODO: to promote or not to promote that is the question.
         # lets call another script for promotion logic.
-        robot.messageRoom mat_room, "#{JSON.stringify(event)} promote or not to promote is the question"
+        robot.messageRoom mat_room, "#{JSON.stringify(key)} promote or not to promote is the question"
       else
         console.log "ID #{id} not found"
-
-    # send message
-    robot.messageRoom mat_room, "#{mesg}"
 
     # TODO: error check and return status
     status = "Success"
