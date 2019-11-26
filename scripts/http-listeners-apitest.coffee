@@ -54,8 +54,11 @@ module.exports = (robot) ->
         event = robot.brain.get(key)
         entry = mesg
         event.entry.push entry
+        event.status = "Completed"
 
         #TODO: to promote or not to promote that is the question.
+        # lets call another script for promotion logic.
+        robot.messageRoom mat_room, "#{JSON.stringify(event)} promote or not to promote is the question"
       else
         console.log "ID #{id} not found"
 
