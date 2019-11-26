@@ -34,18 +34,20 @@ module.exports = (robot) ->
     env = data.env
     results = data.results
     id = data.id
-    console.log id
+    console.log "ID returned is  #{id}"
 
     # build message
     mesg = "#{stage} #{status} #{env} #{JSON.stringify(results)}"
     console.log mesg
 
-#    # TODO get reponame somehow
+    # Search for keys with id matching
     keys = Object.keys(robot.brain.data._private)
     console.log keys
 
     for key in keys
-      if key.id == id
+      event = robot.brain.get(key)
+
+      if event.id == id
         console.log id
 
         # add another entry to array
@@ -53,8 +55,9 @@ module.exports = (robot) ->
         entry = mesg
         event.entry.push entry
 
-        #TODO: call function to promote or not.
-        return
+        #TODO: to promote or not to promote that is the question.
+      else
+        console.log "ID #{id} not found"
 
     # send message
     robot.messageRoom mat_room, "#{mesg}"
