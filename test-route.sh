@@ -7,7 +7,8 @@ curl -X POST -H "Content-Type: application/json" \
 -d '{"status":"success", "stage":"test"}' http://127.0.0.1:32768/hubot/test
 
 curl -X POST -H "Content-Type: application/json" \
--d '{"status":"success or failed", "env":"cadi or cati here", "results":"test results here"}' http://127.0.0.1:32768/hubot/apitest
+-d '{"status":"success or failed", "env":"cadi or cati here", "results":"test results here", "id":"12345"}' http://127.0.0.1:32768/hubot/apitest
 
 #curl -X POST -H "Content-Type: application/json" \
 #-d <payload-here> http://127.0.0.1:32768/hubot/github
+
