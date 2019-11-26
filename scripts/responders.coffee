@@ -210,6 +210,13 @@ module.exports = (robot) ->
          job = jsonParsed.objects[0]
          console.log job
 
+         #add env var with ID of deployment for tracking
+         data =  {"name": "DEPLOY_UID","value": "deployUID"}
+         console.log "#{JSON.stringify(data)}"
+         console.log "add new data to job yaml"
+         job.spec.template.spec.containers[0].env.push data
+         console.log "#{JSON.stringify(job)}#"
+
          # send job to ocp api jobs endpoint
          robot.http("https://#{domain}/apis/batch/v1/namespaces/#{project}/jobs")
           .header('Accept', 'application/json')

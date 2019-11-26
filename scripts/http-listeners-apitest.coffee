@@ -24,6 +24,7 @@ module.exports = (robot) ->
   robot.router.post route, (req, res) ->
 
     console.log route
+    stage = "API-TEST"
 
     # TODO: error check payload
     data = if req.body.payload? then JSON.parse req.body.payload else req.body
@@ -32,15 +33,28 @@ module.exports = (robot) ->
     status = data.status
     env = data.env
     results = data.results
+    id = data.id
+    console.log id
 
     # build message
-    mesg = "API Test Results: #{status} #{env} #{JSON.stringify(results)}"
+    mesg = "#{stage} #{status} #{env} #{JSON.stringify(results)}"
     console.log mesg
 
 #    # TODO get reponame somehow
-#    repoName = ()
-#    # add to brain
-#    robot.brain.set(repoName, {mesg: mesg, timestamp: timestamp})
+    keys = Object.keys(robot.brain.data._private)
+    console.log keys
+
+    for key in keys
+      if key.id == id
+        console.log id
+
+        # add another entry to array
+        event = robot.brain.get(key)
+        entry = mesg
+        event.entry.push entry
+
+        #TODO: call function to promote or not.
+        return
 
     # send message
     robot.messageRoom mat_room, "#{mesg}"
