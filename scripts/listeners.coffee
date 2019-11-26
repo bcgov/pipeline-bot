@@ -21,4 +21,5 @@ module.exports = (robot) ->
 
    # used to check if bot is up.
    robot.hear /hey bot/i, (res) ->
-     res.reply '/gif best bot'
+     gif = "![GIF for ' best bot'](https://media3.giphy.com/media/3ndAvMC5LFPNMCzq7m/100.gif)"
+     res.reply gif
