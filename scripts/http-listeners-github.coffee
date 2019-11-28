@@ -66,6 +66,33 @@ module.exports = (robot) ->
     repoURL = data.repository.html_url
     ref = data.ref
 
+    # From Payload define what env var we should pull from config map.
+    #TODO: get config map from OCP and define vars...for now we will hardcode
+
+    env = "dev"  # hardcode for testing
+
+    switch env
+      when "dev"
+        console.log "define vars for dev"
+        buildConfig = "datapusher" # hard code for testing only
+        deployConfig = "datapusher" # hard code for testing only
+        project = "databcdc" # hard code for testing only
+
+      when "test"
+        console.log "define vars for test"
+        buildConfig = "datapusher" # hard code for testing only
+        deployConfig = "datapusher" # hard code for testing only
+        project = "databcdc" # hard code for testing only
+
+      when "prod"
+        console.log "define vars for prod"
+        buildConfig = "datapusher" # hard code for testing only
+        deployConfig = "datapusher" # hard code for testing only
+        project = "databcdc" # hard code for testing only
+      else
+        console.log "Error Required arguments dev|test|prod"
+
+
     # message
     mesg = "Commit [#{commitID}](#{commitURL}) by #{committer} for #{ref} at #{timestamp} on [#{repoName}](#{repoURL})"
     console.log mesg
@@ -77,12 +104,10 @@ module.exports = (robot) ->
     robot.messageRoom mat_room, "#{mesg}"
 
     # -------------- STAGE Build/Deploy ------------
-    #start build deploy watch
+    # start build deploy watch
     stage = "build and deploy"
-    buildConfig = "datapusher" # hard code for testing only
-    project = "databcdc" # hard code for testing only
-    deployConfig = buildConfig # hardcode for testing.. this will not always be the same
 
+    # message
     mesg = " Starting Build and Deploy for #{buildConfig}"
 
     # send message to chat
@@ -117,11 +142,10 @@ module.exports = (robot) ->
     # send message to chat
     robot.messageRoom mat_room, "#{mesg}"
 
-    #----------------TEST Stage----------------------
+    #----------------STAGE TEST----------------------
     if deploydStatus == "success"
       stage = "Testing"
       env = "dev"  # hard code for testing only
-      project = "databcdc"  # hard code for testing only
 
       if env == 'dev'
          templateUrl = devApiTestTemplate
