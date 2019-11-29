@@ -27,7 +27,7 @@ testApiTestTemplate = process.env.HUBOT_TEST_APITEST_TEMPLATE
 
 request = require('./request.coffee')
 api = new request.OCAPI(domain, apikey)
-route = '/hubot/github'
+route = '/hubot/github/:envkey'
 
 buildDeploySync = (project, buildConfig, deployConfig) ->
 
@@ -51,6 +51,8 @@ module.exports = (robot) ->
   robot.router.post route, (req, res) ->
 
     console.log route
+    env = req.params.envkey
+    console.log env
 
     # -------------- STAGE Commit ------------
     stage = "Commit"
@@ -69,7 +71,7 @@ module.exports = (robot) ->
     # From Payload define what env var we should pull from config map.
     #TODO: get config map from OCP and define vars...for now we will hardcode
 
-    env = "dev"  # hardcode for testing
+
 
     switch env
       when "dev"
