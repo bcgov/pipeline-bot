@@ -20,7 +20,7 @@ mat_room = process.env.HUBOT_MATTERMOST_CHANNEL
 module.exports = (robot) ->
 
    # used to check if bot is up.
-   robot.hear /autobots ready/i, (res) ->
+   robot.hear /autobot ready/i, (res) ->
      gif = "![GIF for ' autobot'](https://thumbs.gfycat.com/AfraidScalyDore-size_restricted.gif)"
      res.reply gif
      res.reply "READY"
