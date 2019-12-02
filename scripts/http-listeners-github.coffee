@@ -70,6 +70,9 @@ module.exports = (robot) ->
     ref = data.ref
 
     # From Payload and param define what env var we should pull from config map.
+    buildConfig = null
+    deployConfig = null
+    project = null
 
     pipes = (JSON.parse(pipelineMap))
     console.log pipes
@@ -95,7 +98,7 @@ module.exports = (robot) ->
 
           else
             console.log "Error Required env arguments dev|test|prod"
-
+#             TODO: exit and message error to chatroom and log to brain
 
 
     # message
