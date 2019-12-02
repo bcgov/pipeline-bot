@@ -79,22 +79,22 @@ module.exports = (robot) ->
         console.log "Repo found in conifg map: #{JSON.stringify(pipe.repoName)}"
 
         switch env
-        when "dev"
-          console.log "define vars for dev"
-          console.log "#{JSON.stringify(pipe.dev)}"
-          buildConfig = pipe.dev.buildconifg
-          deployConfig = pipe.dev.deploymentconifg
-          project = pipe.dev.namespace
+          when "dev"
+            console.log "define vars for dev"
+            console.log "#{JSON.stringify(pipe.dev)}"
+            buildConfig = pipe.dev.buildconifg
+            deployConfig = pipe.dev.deploymentconifg
+            project = pipe.dev.namespace
 
-        when "test"
-          console.log "define vars for test"
-          console.log "#{JSON.stringify(pipe.test)}"
-          buildConfig = pipe.test.buildconifg
-          deployConfig = pipe.test.deploymentconifg
-          project = pipe.test.namespace
+          when "test"
+            console.log "define vars for test"
+            console.log "#{JSON.stringify(pipe.test)}"
+            buildConfig = pipe.test.buildconifg
+            deployConfig = pipe.test.deploymentconifg
+            project = pipe.test.namespace
 
-        else
-          console.log "Error Required env arguments dev|test|prod"
+          else
+            console.log "Error Required env arguments dev|test|prod"
 
 
 
