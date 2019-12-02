@@ -23,6 +23,7 @@ apikey = process.env.HUBOT_OCPAPIKEY
 domain = process.env.HUBOT_OCPDOMAIN
 devApiTestTemplate = process.env.HUBOT_DEV_APITEST_TEMPLATE
 testApiTestTemplate = process.env.HUBOT_TEST_APITEST_TEMPLATE
+pipelineMap = process.env.HUBOT_PIPELINE_MAP
 
 
 request = require('./request.coffee')
@@ -68,31 +69,32 @@ module.exports = (robot) ->
     repoURL = data.repository.html_url
     ref = data.ref
 
-    # From Payload define what env var we should pull from config map.
-    #TODO: get config map from OCP and define vars...for now we will hardcode
+    # From Payload and param define what env var we should pull from config map.
 
+    pipes = (JSON.parse(pipelineMap))
+    console.log pipes
+    for pipe in pipes.pipelines
+      console.log "#{JSON.stringify(pipe.name)}"
+      if pipe.repo == repoName
+        console.log "Repo found in conifg map: #{JSON.stringify(pipe.repoName)}"
 
+        switch env
+          when "dev"
+            console.log "define vars for dev"
+            console.log "#{JSON.stringify(pipe.dev)}"
+            buildConfig = pipe.dev.buildconifg
+            deployConfig = pipe.dev.deploymentconifg
+            project = pipe.dev.namespace
 
-    switch env
-      when "dev"
-        console.log "define vars for dev"
-        buildConfig = "datapusher" # hard code for testing only
-        deployConfig = "datapusher" # hard code for testing only
-        project = "databcdc" # hard code for testing only
+          when "test"
+            console.log "define vars for test"
+            console.log "#{JSON.stringify(pipe.test)}"
+            buildConfig = pipe.test.buildconifg
+            deployConfig = pipe.test.deploymentconifg
+            project = pipe.test.namespace
 
-      when "test"
-        console.log "define vars for test"
-        buildConfig = "datapusher" # hard code for testing only
-        deployConfig = "datapusher" # hard code for testing only
-        project = "databcdc" # hard code for testing only
-
-      when "prod"
-        console.log "define vars for prod"
-        buildConfig = "datapusher" # hard code for testing only
-        deployConfig = "datapusher" # hard code for testing only
-        project = "databcdc" # hard code for testing only
-      else
-        console.log "Error Required arguments dev|test|prod"
+          else
+            console.log "Error Required env arguments dev|test|prod"
 
 
 
