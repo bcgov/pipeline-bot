@@ -85,14 +85,14 @@ module.exports = (robot) ->
           when "dev"
             console.log "define vars for dev"
             console.log "#{JSON.stringify(pipe.dev)}"
-            buildConfig = pipe.dev.buildconifg
+            buildConfig = pipe.dev.buildconfig
             deployConfig = pipe.dev.deployconfig
             project = pipe.dev.namespace
 
           when "test"
             console.log "define vars for test"
             console.log "#{JSON.stringify(pipe.test)}"
-            buildConfig = pipe.test.buildconifg
+            buildConfig = pipe.test.buildconfig
             deployConfig = pipe.test.deployconfig
             project = pipe.test.namespace
 
