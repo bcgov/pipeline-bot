@@ -1,5 +1,6 @@
 # Description:
-#   http listener srcipt to create endpoint to be used by exteral services to notify hubot of status
+#   test http listener srcipt to create endpoint to be used by exteral services to notify hubot of status,
+#   will print payload to console and send success back.
 #
 # Created by:
 #   craigrigdon
@@ -25,33 +26,7 @@ module.exports = (robot) ->
     console.log route
     data   = if req.body.payload? then JSON.parse req.body.payload else req.body
     console.log "Payload is: #{JSON.stringify(data)}"
-#    status = data.status
-#    stage = data.stage
-#    console.log "#{stage} #{status}"
 
-
-#   # testing brain functions
-#   # add
-#    robot.brain.set(stage, {status: status, timestamp: "sometimes"})
-#    # add another
-#    robot.brain.set("prod", {status: "failed", timestamp: "othertimes"})
-#   # get
-#    event = robot.brain.get(stage)
-#
-#   # remove
-##    robot.brain.remove key
-#    robot.brain.save
-#
-#    # get all data in brain
-#    data = robot.brain.data
-#    console.log data
-#
-#    # get all keys in brain
-#    keys = Object.keys(robot.brain.data._private)
-#    console.log keys
-#
-#    console.log "My Brain has: #{JSON.stringify(event)}"
-#    robot.messageRoom mat_room, "#{env} #{stage} #{status}"
 
     status = "Success"
     res.send status
