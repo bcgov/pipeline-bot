@@ -13,7 +13,7 @@
 #   pipeline-bot mission - get pipeline-bots mission in life
 #   pipeline-bot status <repo/name> - get status of pipeline
 #   pipeline-bot list - get list of repos in pipeline
-#   pipeline-bot test <[dev|test]>  <project> - run api test against dev/test in OCP projectspace
+#   pipeline-bot test (<dev>|<test>)  <project> - run api test against dev/test in OCP projectspace
 #   pipeline-bot buildanddeploy <buildConfig> <project> - start OCP build/deploy and watch
 #
 # Notes:
@@ -93,7 +93,7 @@ module.exports = (robot) ->
 
      res.reply mesg
 
-   # Deploy example
+   # Deploy no watch
    robot.respond /deploy (.*) (.*)/i, (res) ->
      # pipeline-bot deploy <configName> <project>
      config = res.match[1]
@@ -132,60 +132,20 @@ module.exports = (robot) ->
         console.log mesg
         res.reply mesg
 
-
-#   # Build example
-#   robot.respond /build (.*) (.*)/i, (res) ->
-#     # pipeline-bot build <configName> <project>
-#     config = res.match[1]
-#     project = res.match[2]
-#     console.log "#{config} #{project}"
-#
-#     robot.http("https://#{domain}/apis/build.openshift.io/v1/namespaces/#{project}/buildconfigs/#{config}/instantiate")
-#       .header('Accept', 'application/json')
-#       .header("Authorization", "Bearer #{apikey}")
-#       .post(JSON.stringify({
-#        kind: "BuildRequest", apiVersion: "build.openshift.io/v1", metadata: {name:"#{config}", creationTimestamp: null}, triggeredBy: [{message: "Triggered by Bot"}], dockerStrategyOptions: {}, sourceStrategyOptions: {}
-#      })) (err, httpRes, body) ->
-#        # check for errs
-#        if err
-#          res.reply "Encountered an error :( #{err}"
-#          return
-#
-#        data = JSON.parse body
-#        console.log data
-#
-#        # check for ocp returned status responses.
-#        if data.kind == "Status"
-#          status = data.status
-#          reason = data.message
-#          res.reply "#{status} #{reason} "
-#          return
-#
-#        #continue and message back succesful resp details
-#        kind = data.kind
-#        buildName = data.metadata.name
-#        namespace = data.metadata.namespace
-#        time = data.metadata.creationTimestamp
-#        phase = data.status.phase
-#
-#        mesg = "Starting #{phase} #{kind} #{buildName} in #{namespace} at #{time}"
-#        console.log mesg
-#        res.reply mesg
-
    # start OCP job from template - api-test
    robot.respond /test (.*) (.*)/i, (res) ->
      # pipeline-bot test <[dev|test]>  <project> - run api test against dev/test in OCP projectspace
-     env = res.match[1].toLowerCase()
-     project = res.match[2].toLowerCase()
+     env = res.match[1].toLowerCase() ? null
+     project = res.match[2].toLowerCase() ? null
 
      if env == 'dev'
         templateUrl = devApiTestTemplate
      else if env == 'test'
         templateUrl = testApiTestTemplate
      else
-        templateUrl = ""
+        templateUrl = null
         console.log "failed to set templateURL"
-        res.reply "please provide envrioment option dev/test"
+        res.reply "please provide envrioment option dev|test"
         return
      #TODO: err check args and exit
      console.log env
@@ -289,9 +249,6 @@ module.exports = (robot) ->
      resp = await buildDeploySync(project, buildConfig, deployConfig)
      console.log "your response is : #{JSON.stringify(resp)}"
 
-
-
-     #TODO: add parsing to function outside to minimize code.
      buildStatus = resp.statuses.build.status
      buildKind = resp.statuses.build.payload.kind
      buildName = resp.statuses.build.payload.metadata.name
@@ -316,7 +273,7 @@ module.exports = (robot) ->
      deployUID = resp.statuses.deploy.payload.metadata.uid
 
      # message
-     mesg = "#{deployKind} #{deploydStatus} #{deployName} #{deployCreationTimestamp} #{deployUID} "
+     mesg = "#{deployKind} #{deploydStatus} #{deployName} #{deployCreationTimestamp} #{deployUID}"
      console.log mesg
 
      # add to brain
