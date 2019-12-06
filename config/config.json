@@ -1,0 +1,27 @@
+	{
+  "pipelines": [
+    {
+      "name": "datapusher",
+      "repo": "craigrigdon/test",
+      "dev": {
+        "buildconfig": "datapusher",
+        "deployconfig": "datapusher",
+        "namespace": "databcdc"
+      },
+      "test": {
+        "buildconfig": "pipeline-bot",
+        "deployconfig": "pipeline-bot",
+        "namespace": "databcdc"
+      }
+    },
+    {
+      "name": "pipeline-bot",
+      "repo": "",
+      "dev": {
+        "buildconfig": "pipeline-bot",
+        "deployconfig": "pipline-bot",
+        "namespace": "databcdc"
+      }
+    }
+  ]
+}
