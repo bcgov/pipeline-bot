@@ -15,6 +15,7 @@
 # get mattermost channel from env var passed to container on deployment
 #mat_room = process.env.HUBOT_MATTERMOST_CHANNEL
 route = '/hubot/test'
+pipelineMap = process.env.HUBOT_PIPELINE_MAP
 
 module.exports = (robot) ->
   # example how to use params
@@ -30,3 +31,13 @@ module.exports = (robot) ->
 
     status = "Success"
     res.send status
+
+
+    console.log pipelineMap
+
+    pipes = (JSON.parse(pipelineMap))
+    console.log pipes
+    for pipe in pipes.pipelines
+      console.log "#{JSON.stringify(pipe.name)}"
+      if pipe.name == "datapusher"
+        console.log "found it: #{JSON.stringify(pipe.name)}"

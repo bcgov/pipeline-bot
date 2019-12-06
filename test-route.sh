@@ -3,8 +3,8 @@
 # to be used to test hubot routes during development
 # you will have to change local ip and port to what you have defined in your docker port bindings for that container.
 
-#curl -X POST -H "Content-Type: application/json" \
-#-d '{"status":"success", "stage":"test"}' http://127.0.0.1:32768/hubot/test
+curl -X POST -H "Content-Type: application/json" \
+-d '{"status":"success", "stage":"test"}' http://127.0.0.1:32768/hubot/test
 
 #curl -X POST -H "Content-Type: application/json" \
 #-d '{"status":"success or failed", "env":"cadi or cati here", "results":"test results here", "id":"12345"}' http://127.0.0.1:32768/hubot/apitest
@@ -25,9 +25,9 @@
 #echo "hello"
 #echo $Payload
 
-#working payload
-payload=$(cat '/Users/crigdon/PycharmProjects/pipeline-bot/data/build_deploy_response.json')
-echo $payload
-echo $payload | jq --arg envKey dev '. + {envKey: $envKey}'
-
-curl -X POST -H "Content-Type: application/json"  -d "$payload" http://127.0.0.1:32768/hubot/github/dev
+##working payload
+#payload=$(cat '/Users/crigdon/PycharmProjects/pipeline-bot/data/build_deploy_response.json')
+#echo $payload
+#echo $payload | jq --arg envKey dev '. + {envKey: $envKey}'
+#
+#curl -X POST -H "Content-Type: application/json"  -d "$payload" http://127.0.0.1:32768/hubot/github/dev
