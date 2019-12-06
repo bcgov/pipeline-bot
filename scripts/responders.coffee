@@ -8,13 +8,13 @@
 #
 #
 # Commands:
-#   autobot deploy <configName> <project> - start deployment config in OCP project space
-#   autobot build <configName> <project> - start buildconfig in OCP project space
-#   autobot mission - get pipeline-bots mission in life
-#   autobot status <repo/name> - get status of pipeline
-#   autobot list - get list of repos in pipeline
-#   autobot test (<dev>|<test>)  <project> - run api test against dev/test in OCP projectspace
-#   autobot buildanddeploy <buildConfig> <project> - start OCP build/deploy and watch
+#   hubot deploy <configName> <project> - start deployment config in OCP project space
+#   hubot build <configName> <project> - start buildconfig in OCP project space
+#   hubot mission - get pipeline-bots mission in life
+#   hubot status <repo/name> - get status of pipeline
+#   hubot list - get list of repos in pipeline
+#   hubot test (<dev>|<test>)  <project> - run api test against dev/test in OCP projectspace
+#   hubot buildanddeploy <buildConfig> <project> - start OCP build/deploy and watch
 #
 # Notes:
 #
