@@ -8,13 +8,13 @@
 #
 #
 # Commands:
-#   pipeline-bot deploy <configName> <project> - start deployment config in OCP project space
-#   pipeline-bot build <configName> <project> - start buildconfig in OCP project space
-#   pipeline-bot mission - get pipeline-bots mission in life
-#   pipeline-bot status <repo/name> - get status of pipeline
-#   pipeline-bot list - get list of repos in pipeline
-#   pipeline-bot test (<dev>|<test>)  <project> - run api test against dev/test in OCP projectspace
-#   pipeline-bot buildanddeploy <buildConfig> <project> - start OCP build/deploy and watch
+#   autobot deploy <configName> <project> - start deployment config in OCP project space
+#   autobot build <configName> <project> - start buildconfig in OCP project space
+#   autobot mission - get pipeline-bots mission in life
+#   autobot status <repo/name> - get status of pipeline
+#   autobot list - get list of repos in pipeline
+#   autobot test (<dev>|<test>)  <project> - run api test against dev/test in OCP projectspace
+#   autobot buildanddeploy <buildConfig> <project> - start OCP build/deploy and watch
 #
 # Notes:
 #

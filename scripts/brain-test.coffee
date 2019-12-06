@@ -8,7 +8,7 @@
 #
 #
 # Commands:
-#   pipeline-bot brain add|show|clearAll  - add test entry, show all keys and values, clear all keys
+#   autobot brain (<add>|<show>|<clear>)  - add test entry, show all keys and values, clear all keys
 #
 #
 # Notes:
@@ -24,8 +24,7 @@ module.exports = (robot) ->
 
    robot.respond /brain (.*)/i, (res) ->
 
-      arg = res.match[1]
-      console.log "Arg is #{arg}"
+      arg = res.match[1].toLowerCase()
 
       # test data
       key = "testKey"
@@ -49,7 +48,7 @@ module.exports = (robot) ->
           console.log data
           console.log "My Brain has: #{JSON.stringify(data)}"
           res.reply "#{JSON.stringify(data)}"
-        when "clearAll"
+        when "clear"
           console.log "removing"
           keys = Object.keys(robot.brain.data._private)
           for key in keys
