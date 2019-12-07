@@ -209,7 +209,7 @@ module.exports = (robot) ->
            res.reply mesg
 
 
-   #build and watch
+   # build and watch
    robot.respond /build (.*) (.*)/i, (res) ->
      # pipeline-bot build <buildConfig> <project> - start OCP build and watch
      buildConfig = res.match[1].toLowerCase()
@@ -229,7 +229,7 @@ module.exports = (robot) ->
      res.reply mesg
 
 
-   #build and deploy
+   #build and deploy watch
    robot.respond /buildanddeploy (.*) (.*)/i, (res) ->
      # pipeline-bot buildanddeploy <buildConfig> <project> - start OCP build/deploy and watch
      buildConfig = res.match[1].toLowerCase()

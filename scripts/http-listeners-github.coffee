@@ -71,14 +71,14 @@ module.exports = (robot) ->
       # get config file from repo for pipeline mappings
       robot.http(configPath)
        .header('Accept', 'application/json')
-       .get() (err, httpres, body) ->
+       .get() (err, httpres, body2) ->
 
        # check for errs
          if err
            res.reply "Encountered an error fetching config file :( #{err}"
            return
 
-         config = if req.body.payload? then JSON.parse req.body.payload else req.body
+         config = if req.body2.payload? then JSON.parse req.body2.payload else req.body2
          console.log config
 
          buildObj = null
