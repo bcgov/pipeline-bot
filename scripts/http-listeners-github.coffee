@@ -80,7 +80,7 @@ module.exports = (robot) ->
 
          config = body2
          console.log config
-         jsonString = JSON.stringify(conifg)
+         jsonString = JSON.stringify(config)
          jsonParsed = JSON.parse(jsonString)
          console.log jsonParsed
 
