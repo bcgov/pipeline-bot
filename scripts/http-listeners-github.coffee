@@ -80,11 +80,14 @@ module.exports = (robot) ->
 
          config = body2
          console.log config
+         jsonString = JSON.stringify(conifg)
+         jsonParsed = JSON.parse(jsonString)
+         console.log jsonParsed
 
          buildObj = null
          deployObj = null
 
-         for pipe in config.pipelines
+         for pipe in jsonParsed.pipelines
            console.log "#{JSON.stringify(pipe.name)}"
            if pipe.repo == repoName
              console.log "Repo found in conifg map: #{JSON.stringify(pipe.repoName)}"
