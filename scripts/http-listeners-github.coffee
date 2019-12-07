@@ -17,7 +17,7 @@
 #   craigrigdon
 
 matRoom = process.env.HUBOT_MATTERMOST_CHANNEL
-configPath = process.env.HUBOT_CONFIG_PATH ? 'https://raw.githubusercontent.com/bcgov/pipeline-bot/EventEmitter/config/config.json'
+configPath = process.env.HUBOT_CONFIG_PATH ? 'https://raw.githubusercontent.com/bcgov/pipeline-bot/EventEmitter/config/config.json' #testing only
 route = '/hubot/github/:envkey'
 pipelineMap = process.env.HUBOT_PIPELINE_MAP
 
@@ -69,7 +69,7 @@ module.exports = (robot) ->
       ref = data.ref
 
       # get config file from repo for pipeline mappings
-      robot.http(conifgURL)
+      robot.http(configPath)
        .header('Accept', 'application/json')
        .get() (err, httpres, body) ->
 
