@@ -4,23 +4,42 @@
       "name": "datapusher",
       "repo": "craigrigdon/test",
       "dev": {
-        "buildconfig": "datapusher",
-        "deployconfig": "datapusher",
-        "namespace": "databcdc"
-      },
-      "test": {
-        "buildconfig": "pipeline-bot",
-        "deployconfig": "pipeline-bot",
-        "namespace": "databcdc"
+        "build": {
+          "buildconfig": "datapusher",
+          "namespace": "databcdc"
+        },
+        "deploy": {
+          "buildconfig": "datapusher",
+          "namespace": "databcdc"
+        }
       }
     },
     {
       "name": "pipeline-bot",
       "repo": "",
       "dev": {
-        "buildconfig": "pipeline-bot",
-        "deployconfig": "pipline-bot",
-        "namespace": "databcdc"
+        "build": {
+          "buildconfig": "pipeline-bot",
+          "namespace": "databcdc"
+        },
+        "deploy": {
+          "deployconfig": "pipeline-bot",
+          "namespace": "databcdc"
+        }
+      }
+    },
+    {
+      "name": "cadi",
+      "repo": "",
+      "dev": {
+        "build": {
+          "buildconfig": "bcdc",
+          "namespace": "dbc-bcdc-tools"
+        },
+        "deploy": {
+          "deployconfig": "bcdc-ckan-main",
+          "namespace": "dbc-bcdc-dev"
+        }
       }
     }
   ]
