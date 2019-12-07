@@ -9,7 +9,7 @@
           "namespace": "databcdc"
         },
         "deploy": {
-          "buildconfig": "datapusher",
+          "deployconfig": "datapusher",
           "namespace": "databcdc"
         }
       }

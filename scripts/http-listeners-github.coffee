@@ -93,20 +93,18 @@ module.exports = (robot) ->
                when "dev"
                  console.log "define vars for dev"
                  console.log "#{JSON.stringify(pipe.dev)}"
-                 buildConfig = pipe.dev.buildconfig
-                 deployConfig = pipe.dev.deployconfig
-                 project = pipe.dev.namespace
+                 buildObj = pipe.dev.build
+                 deployObj = pipe.dev.deploy
 
                when "test"
                  console.log "define vars for test"
                  console.log "#{JSON.stringify(pipe.test)}"
-                 buildConfig = pipe.test.buildconfig
-                 deployConfig = pipe.test.deployconfig
-                 project = pipe.test.namespace
+                 buildObj = pipe.test.build
+                 deployObj = pipe.test.deploy
 
                else
                  console.log "Error Required env arguments dev|test|prod"
-        #            TODO: exit and message error to chatroom and log to brain
+                 # TODO: exit and message error to chatroom and log to brain
 
 
          # message
@@ -119,10 +117,10 @@ module.exports = (robot) ->
          # send message to chat
          robot.messageRoom matRoom, "#{mesg}"
 
-         robot.emit "commit", {
-             user    : {}, #hubot user object
-             repo    : 'https://github.com/github/hubot',
-             hash  : '2e1951c089bd865839328592ff673d2f08153643'
+         robot.emit "GitHubEvent", {
+             buildObj    : buildObj, #build object from config file
+             deployObj   : deployObj, #deploy object from config file
+             repoName    : repoName # repo name from github payload
          }
 
 

@@ -69,8 +69,10 @@ module.exports = (robot) ->
     event.entry.push mesg
     event.stage = stage
 
+    console.log "event is : #{JSON.stringify(event)}"
+
     # call build/deploy watch
-    resp = await buildDeploySync(event.project, event.buildConfig, event.deployConfig)
+    resp = await buildDeploySync(event.build.namespace, event.build.buildConfig, event.deploy.deployConfig)
 
     console.log "your response is : #{JSON.stringify(resp)}"
     console.log resp.statuses
