@@ -30,7 +30,6 @@ getTimeStamp = ->
   date = new Date()
   timeStamp = date.getFullYear() + "/" + (date.getMonth() + 1) + "/" + date.getDate() + " " + date.getHours() + ":" +  date.getMinutes() + ":" + date.getSeconds()
   RE_findSingleDigits = /\b(\d)\b/g
-
   # Places a `0` in front of single digit numbers.
   timeStamp = timeStamp.replace( RE_findSingleDigits, "0$1" )
 
