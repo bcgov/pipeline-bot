@@ -78,7 +78,7 @@ module.exports = (robot) ->
            res.reply "Encountered an error fetching config file :( #{err}"
            return
 
-         config = if req.body2.payload? then JSON.parse req.body2.payload else req.body2
+         config = body2
          console.log config
 
          buildObj = null
