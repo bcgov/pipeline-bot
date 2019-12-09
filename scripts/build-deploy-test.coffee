@@ -35,7 +35,8 @@ getTimeStamp = ->
 
 buildDeploySync = (ocBuildProject, buildConfig, ocDeployProject, deployConfig) ->
 
-    console.log("project: #{project}")
+    console.log("build project: #{ocBuildProject}")
+    console.log("deploy project: #{ocDeployProject}")
     retVal = await api.buildSync(ocBuildProject, buildConfig) # returns promise
     # what you want to do with the build sync
     console.log('---complete---')
@@ -62,7 +63,7 @@ module.exports = (robot) ->
     stage = "build-and-deploy"
 
     # message
-    mesg = "Starting Build and Deploy for #{obj.buildconfig} " + getTimeStamp()
+    mesg = "Starting Build and Deploy for #{obj.repoName} " + getTimeStamp()
 
     # send message to chat
     robot.messageRoom mat_room, mesg
@@ -89,7 +90,7 @@ module.exports = (robot) ->
     console.log mesg
 
     # update brain
-    event = robot.brain.get(event.repoName)
+    event = robot.brain.get(obj.repoName)
     event.entry.push mesg
     event.id = deployUID
 
@@ -171,7 +172,7 @@ module.exports = (robot) ->
             console.log mesg
 
             # update brain
-            event = robot.brain.get(repoName)
+            event = robot.brain.get(obj.repoName)
             event.entry.push mesg
             event.stage = stage
 
