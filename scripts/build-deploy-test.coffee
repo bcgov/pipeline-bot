@@ -20,6 +20,7 @@ domain = process.env.HUBOT_OCPDOMAIN
 devApiTestTemplate = process.env.HUBOT_DEV_APITEST_TEMPLATE
 testApiTestTemplate = process.env.HUBOT_TEST_APITEST_TEMPLATE
 pipelineMap = process.env.HUBOT_PIPELINE_MAP
+ocTestNamespace = process.env.HUBOT_TEST_NAMESPACE
 
 request = require('./request.coffee')
 api = new request.OCAPI(domain, apikey)
@@ -141,8 +142,8 @@ module.exports = (robot) ->
           job.spec.template.spec.containers[0].env.push data
           console.log "#{JSON.stringify(job)}#"
 
-          # send job to ocp api jobs endpoint
-          robot.http("https://#{domain}/apis/batch/v1/namespaces/#{project}/jobs")
+          # send job to ocp api jobs endpoint in test frame work namespace
+          robot.http("https://#{domain}/apis/batch/v1/namespaces/#{ocTestNamespace}/jobs")
            .header('Accept', 'application/json')
            .header('Authorization', "Bearer #{apikey}")
            .post(JSON.stringify(job)) (err, httpRes, body2) ->
