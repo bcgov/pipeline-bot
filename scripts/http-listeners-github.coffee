@@ -87,7 +87,7 @@ module.exports = (robot) ->
          for pipe in pipes.pipelines
            console.log "#{JSON.stringify(pipe.name)}"
            if pipe.repo == repoName
-             console.log "Repo found in conifg map: #{JSON.stringify(pipe.repoName)}"
+             console.log "Repo found in conifg map: #{JSON.stringify(pipe.repo)}"
 
              switch envKey
                when "dev"
@@ -106,6 +106,8 @@ module.exports = (robot) ->
                  console.log "Error Required env arguments dev|test|prod"
                  # TODO: exit and message error to chatroom and log to brain
 
+         console.log "#{JSON.stringify(buildObj)}"
+         console.log "#{JSON.stringify(deployObj)}"
 
          # message
          mesg = "Commit [#{commitID}](#{commitURL}) by #{committer} for #{ref} at #{timestamp} on [#{repoName}](#{repoURL})"
