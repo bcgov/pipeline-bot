@@ -52,27 +52,28 @@ buildDeploySync = (project, buildConfig, deployConfig) ->
 
 module.exports = (robot) ->
 
-  robot.on "GitHubEvent", (event) ->
+  robot.on "build-deploy-test", (obj) ->
+
+
+    console.log "object passed is  : #{JSON.stringify(object)}"
 
     # -------------- STAGE Build/Deploy ------------
     # start build deploy watch
     stage = "build-and-deploy"
 
     # message
-    mesg = "Starting Build and Deploy for #{event.buildConfig} " + getTimeStamp()
+    mesg = "Starting Build and Deploy for #{obj.buildConfig} " + getTimeStamp()
 
     # send message to chat
     robot.messageRoom mat_room, mesg
 
     # update brain
-    event = robot.brain.get(event.repoName)
+    event = robot.brain.get(obj.repoName)
     event.entry.push mesg
     event.stage = stage
 
-    console.log "event is : #{JSON.stringify(event)}"
-
     # call build/deploy watch
-    resp = await buildDeploySync(event.build.namespace, event.build.buildConfig, event.deploy.deployConfig)
+    resp = await buildDeploySync(obj.build.namespace, obj.build.buildConfig, obj.deploy.deployConfig)
 
     console.log "your response is : #{JSON.stringify(resp)}"
     console.log resp.statuses

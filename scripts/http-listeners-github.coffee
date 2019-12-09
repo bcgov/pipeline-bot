@@ -83,6 +83,7 @@ module.exports = (robot) ->
 
          buildObj = null
          deployObj = null
+         envObj = null
 
          for pipe in pipes.pipelines
            console.log "#{JSON.stringify(pipe.name)}"
@@ -95,12 +96,14 @@ module.exports = (robot) ->
                  console.log "#{JSON.stringify(pipe.dev)}"
                  buildObj = pipe.dev.build
                  deployObj = pipe.dev.deploy
+                 envObj = pipe.dev
 
                when "test"
                  console.log "define vars for test"
                  console.log "#{JSON.stringify(pipe.test)}"
                  buildObj = pipe.test.build
                  deployObj = pipe.test.deploy
+                 envObj = pipe.test
 
                else
                  console.log "Error Required env arguments dev|test|prod"
@@ -119,9 +122,9 @@ module.exports = (robot) ->
          # send message to chat
          robot.messageRoom matRoom, "#{mesg}"
 
-         robot.emit "GitHubEvent", {
-             buildObj    : buildObj, #build object from config file
-             deployObj   : deployObj, #deploy object from config file
+         robot.emit "build-deploy-test", {
+             build    : buildObj, #build object from config file
+             deploy   : deployObj, #deploy object from config file
              repoName    : repoName # repo name from github payload
          }
 
