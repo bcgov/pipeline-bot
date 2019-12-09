@@ -89,7 +89,7 @@ module.exports = (robot) ->
            if pipe.repo == repoName
              console.log "Repo found in conifg map: #{JSON.stringify(pipe.repoName)}"
 
-             switch env
+             switch envKey
                when "dev"
                  console.log "define vars for dev"
                  console.log "#{JSON.stringify(pipe.dev)}"
