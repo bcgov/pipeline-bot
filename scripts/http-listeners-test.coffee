@@ -16,6 +16,7 @@
 #mat_room = process.env.HUBOT_MATTERMOST_CHANNEL
 route = '/hubot/test'
 pipelineMap = process.env.HUBOT_PIPELINE_MAP
+configPath = process.env.HUBOT_CONFIG_PATH ? 'https://raw.githubusercontent.com/bcgov/pipeline-bot/EventEmitter/config/config.json' #testing only
 
 module.exports = (robot) ->
   # example how to use params
@@ -33,11 +34,41 @@ module.exports = (robot) ->
     res.send status
 
 
-    console.log pipelineMap
+    robot.http(configPath)
+       .header('Accept', 'application/json')
+       .get() (err, httpres, body2) ->
 
-    pipes = (JSON.parse(pipelineMap))
-    console.log pipes
-    for pipe in pipes.pipelines
-      console.log "#{JSON.stringify(pipe.name)}"
-      if pipe.name == "datapusher"
-        console.log "found it: #{JSON.stringify(pipe.name)}"
+       # check for errs
+         if err
+           res.reply "Encountered an error fetching config file :( #{err}"
+           return
+
+         pipes = JSON.parse(body2)
+         console.log pipes
+
+         buildObj = null
+         deployObj = null
+
+         env = "dev"
+
+         for pipe in pipes.pipelines
+           console.log "#{JSON.stringify(pipe.name)}"
+           if pipe.name == "datapusher"
+             console.log "Repo found in conifg map: #{JSON.stringify(pipe.name)}"
+
+             switch env
+               when "dev"
+                 console.log "define vars for dev"
+                 console.log "#{JSON.stringify(pipe.dev)}"
+                 buildObj = pipe.dev.build
+                 deployObj = pipe.dev.deploy
+
+               when "test"
+                 console.log "define vars for test"
+                 console.log "#{JSON.stringify(pipe.test)}"
+                 buildObj = pipe.test.build
+                 deployObj = pipe.test.deploy
+
+         console.log "#{JSON.stringify(buildObj)}"
+         console.log "#{JSON.stringify(deployObj)}"
+

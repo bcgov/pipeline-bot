@@ -78,16 +78,13 @@ module.exports = (robot) ->
            res.reply "Encountered an error fetching config file :( #{err}"
            return
 
-         config = body2
-         console.log config
-         jsonString = JSON.stringify(config)
-         jsonParsed = JSON.parse(jsonString)
-         console.log jsonParsed
+         pipes = JSON.parse(body2)
+         console.log pipes
 
          buildObj = null
          deployObj = null
 
-         for pipe in jsonParsed.pipelines
+         for pipe in pipes.pipelines
            console.log "#{JSON.stringify(pipe.name)}"
            if pipe.repo == repoName
              console.log "Repo found in conifg map: #{JSON.stringify(pipe.repoName)}"
