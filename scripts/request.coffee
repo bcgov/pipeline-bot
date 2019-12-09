@@ -332,7 +332,7 @@ class exports.OCAPI
     # @return {boolean} - indicator of whether the latest image built has been 
     #                     or is currently being deployed.
     ###
-    isLatestImageDeployed : (ocProject, buildConifg, deployConfig) ->
+    isLatestImageDeployed : (ocBuildProject, buildConifg, ocDeployProject, deployConfig) ->
         # ocProject: the openshift project
         # ocBuildConfigName: a build config name
         # deployConfig: a deployment config
@@ -342,8 +342,8 @@ class exports.OCAPI
         # deployed.  If they are the same returns true otherwise returns
         # false.
         # Will return true even if the replication is only part way complete
-        mostRecentlyBuildImage = await this.getLatestBuildImage(ocProject, buildConifg)
-        currentDeployedImage = await this.getDeployedImage(ocProject, deployConfig)
+        mostRecentlyBuildImage = await this.getLatestBuildImage(ocBuildProject, buildConifg)
+        currentDeployedImage = await this.getDeployedImage(ocDeployProject, deployConfig)
         console.log "#{currentDeployedImage}  currentDeployedImage"
         console.log "#{mostRecentlyBuildImage}  mostRecentlyBuildImage"
         return currentDeployedImage == mostRecentlyBuildImage
@@ -523,19 +523,19 @@ class exports.OCAPI
     # @return {object} - returns a OCStatus object
     #
     ###
-    deployLatest : (ocProject, buildConfig, deployConfig) ->
+    deployLatest : (ocBuildProject, buildConfig, ocDeployProject, deployConfig) ->
         # 
         replicationController = undefined
         this.statuses.updateStatus('deploy', 'checking')
         try
             console.log "getting latest..."
-            isLatest = await this.isLatestImageDeployed(ocProject, buildConfig, deployConfig)
+            isLatest = await this.isLatestImageDeployed(ocBuildProject, buildConfig, ocDeployProject, deployConfig)
 
             if !isLatest
                 console.log "instantiating a deploy..."
                 this.statuses.updateStatus('deploy', 'initiated')
-                deployObj = await this.deploy(ocProject, deployConfig)
-                replicationController = "#{deployObj.metadata.name}-#{deployObj.status.latestVersion}"
+                deployObj = await this.deploy(ocDeployProject, deployConfig)
+                replicationController = "#{deplovyObj.metadata.name}-#{deployObj.status.latestVersion}"
                 this.statuses.updateStatus('deploy', 'initiated', deployObj)
             if replicationController == undefined
                 # Getting the name of the replication controller that is doing
@@ -544,12 +544,12 @@ class exports.OCAPI
                 this.statuses.updateStatus('deploy', 'initiated')
                 # should get the actual object instead of just the status, then could
                 # update the status object
-                latestDeployment = await this.getDeploymentStatus(ocProject, deployConfig)
+                latestDeployment = await this.getDeploymentStatus(ocDeployProject, deployConfig)
                 replicationController = "#{deployConfig}-#{latestDeployment.status.latestVersion}"
             # is latest only indicates that the deployment has already been triggered
             # code below will monitor for its completion.
             this.statuses.updateStatus('deploy', 'deploying')
-            deployStatus = await this.deployWatch(ocProject, replicationController)
+            deployStatus = await this.deployWatch(ocDeployProject, replicationController)
             return  this.statuses
 
             console.log "----------Deploy complete ----------"
