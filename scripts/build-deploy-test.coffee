@@ -55,7 +55,7 @@ module.exports = (robot) ->
   robot.on "build-deploy-test", (obj) ->
 
 
-    console.log "object passed is  : #{JSON.stringify(object)}"
+    console.log "object passed is  : #{JSON.stringify(obj)}"
 
     # -------------- STAGE Build/Deploy ------------
     # start build deploy watch
