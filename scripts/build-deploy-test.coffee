@@ -62,7 +62,7 @@ module.exports = (robot) ->
     stage = "build-and-deploy"
 
     # message
-    mesg = "Starting Build and Deploy for #{obj.buildConfig} " + getTimeStamp()
+    mesg = "Starting Build and Deploy for #{obj.buildconfig} " + getTimeStamp()
 
     # send message to chat
     robot.messageRoom mat_room, mesg
@@ -73,7 +73,7 @@ module.exports = (robot) ->
     event.stage = stage
 
     # call build/deploy watch
-    resp = await buildDeploySync(obj.build.namespace, obj.build.buildConfig, obj.deploy.deployConfig)
+    resp = await buildDeploySync(obj.build.namespace, obj.build.buildconfig, obj.deploy.deployconfig)
 
     console.log "your response is : #{JSON.stringify(resp)}"
     console.log resp.statuses
