@@ -17,9 +17,8 @@
 #   craigrigdon
 
 matRoom = process.env.HUBOT_MATTERMOST_CHANNEL
-configPath = process.env.HUBOT_CONFIG_PATH ? 'https://raw.githubusercontent.com/bcgov/pipeline-bot/EventEmitter/config/config.json' #testing only
+configPath = process.env.HUBOT_CONFIG_PATH
 route = '/hubot/github/:envkey'
-pipelineMap = process.env.HUBOT_PIPELINE_MAP
 
 #---------------Supporting Functions-------------------
 
