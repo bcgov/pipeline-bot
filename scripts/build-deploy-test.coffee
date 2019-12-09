@@ -33,17 +33,17 @@ getTimeStamp = ->
   # Places a `0` in front of single digit numbers.
   timeStamp = timeStamp.replace( RE_findSingleDigits, "0$1" )
 
-buildDeploySync = (project, buildConfig, deployConfig) ->
+buildDeploySync = (ocBuildProject, buildConfig, ocDeployProject, deployConfig) ->
 
     console.log("project: #{project}")
-    retVal = await api.buildSync(project, buildConfig) # returns promise
+    retVal = await api.buildSync(ocBuildProject, buildConfig) # returns promise
     # what you want to do with the build sync
     console.log('---complete---')
     console.log("#{JSON.stringify(retVal)}")
     console.log("#{typeof retVal}")
 
     console.log("----- running deploy now -----")
-    deployStatus =  await api.deployLatest(project, buildConfig, deployConfig)
+    deployStatus =  await api.deployLatest(ocBuildProject, buildConfig, ocDeployProject, deployConfig)
     console.log "DEPLY STATUS: #{deployStatus}"
     console.log JSON.stringify(deployStatus)
     await return deployStatus
@@ -73,7 +73,7 @@ module.exports = (robot) ->
     event.stage = stage
 
     # call build/deploy watch
-    resp = await buildDeploySync(obj.build.namespace, obj.build.buildconfig, obj.deploy.deployconfig)
+    resp = await buildDeploySync(obj.build.namespace, obj.build.buildconfig, obj.deploy.namespace, obj.deploy.deployconfig)
 
     console.log "your response is : #{JSON.stringify(resp)}"
     console.log resp.statuses
