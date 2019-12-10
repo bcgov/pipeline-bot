@@ -61,10 +61,10 @@ module.exports = (robot) ->
         event.entry.push entry
 
         # to promote or not to promote that is the question.
-
+        eventObj
         console.log "Sending pipeline #{JSON.stringify(event.repo)} to promote logic"
         robot.emit "promote", {
-            event    : eventObj, #event object from brain
+            event    : event, #event object from brain
         }
       else
         console.log "ID #{id} not found"
