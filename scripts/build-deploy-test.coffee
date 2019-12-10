@@ -180,3 +180,8 @@ module.exports = (robot) ->
             # send message to chat
             robot.messageRoom mat_room, "#{mesg}"
 
+            statusObj = {}
+            robot.emit "promote", {
+              status    : statusObj, #status object from brain
+              repoName    : obj.repoName # repo name from github payload
+            }
