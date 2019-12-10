@@ -54,6 +54,12 @@ module.exports = (robot) ->
           console.log data
           console.log "My Brain has: #{JSON.stringify(data)}"
           res.reply "#{JSON.stringify(data)}"
+        when "all"
+          console.log "show all namespaces in brain"
+          data = robot.brain.data
+          console.log data
+          console.log "My Brain has: #{JSON.stringify(data)}"
+          res.reply "#{JSON.stringify(data)}"
         else
           console.log "Error Required arguments add|show|clearALL"
 
