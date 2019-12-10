@@ -41,7 +41,6 @@ module.exports = (robot) ->
 
     #define stage and status
     stage = "init"
-    status = "in progress"
 
     # TODO: error check payload
     data = if req.body.payload? then JSON.parse req.body.payload else req.body
@@ -116,7 +115,7 @@ module.exports = (robot) ->
          console.log mesg
 
          # add to brain
-         robot.brain.set(repoName, {id: "", stage: stage, status: status, entry: [mesg]})
+         robot.brain.set(repoName, {id: null, stage: stage, promote: false, entry: [mesg]})
 
          # send message to chat
          robot.messageRoom matRoom, "#{mesg}"

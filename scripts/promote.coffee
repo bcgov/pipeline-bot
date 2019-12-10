@@ -21,10 +21,10 @@ mat_room = process.env.HUBOT_MATTERMOST_CHANNEL
 
 module.exports = (robot) ->
 
-  robot.on "promote", (obj) ->
+  robot.on "promote", (event) ->
 
     console.log "promote has been called"
-    console.log "object passed is  : #{JSON.stringify(obj)}"
+    console.log "object passed is  : #{JSON.stringify(event)}"
 
     # -------------- promote is the question ------------
 

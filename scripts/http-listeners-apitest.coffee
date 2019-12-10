@@ -40,11 +40,14 @@ module.exports = (robot) ->
     mesg = "#{stage} #{status} #{env} #{JSON.stringify(results)}"
     console.log mesg
 
-    # Search for keys with id matching
-    keys = Object.keys(robot.brain.data._private)
-    console.log keys
     # send message
     robot.messageRoom mat_room, "#{mesg}"
+
+
+    # ------------- Search Brain for Deployment ID----------------
+    # Search for keys with id matching deployment id and update brian
+    keys = Object.keys(robot.brain.data._private)
+    console.log keys
 
     for key in keys
       event = robot.brain.get(key)
@@ -53,17 +56,22 @@ module.exports = (robot) ->
         console.log id
 
         # add another entry to array
-        event = robot.brain.get(key)
+#        event = robot.brain.get(key)
         entry = mesg
         event.entry.push entry
-        event.status = "Completed"
 
-        #TODO: to promote or not to promote that is the question.
-        # lets call another script for promotion logic.
-        robot.messageRoom mat_room, "#{JSON.stringify(key)} promote or not to promote is the question"
+        # to promote or not to promote that is the question.
+
+        console.log "Sending pipeline #{JSON.stringify(event.repo)} to promote logic"
+        robot.emit "promote", {
+            event    : eventObj, #event object from brain
+        }
       else
         console.log "ID #{id} not found"
 
     # TODO: error check and return status
     status = "Success"
     res.send status
+
+
+

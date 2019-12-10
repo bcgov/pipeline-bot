@@ -19,7 +19,6 @@ apikey = process.env.HUBOT_OCPAPIKEY
 domain = process.env.HUBOT_OCPDOMAIN
 devApiTestTemplate = process.env.HUBOT_DEV_APITEST_TEMPLATE
 testApiTestTemplate = process.env.HUBOT_TEST_APITEST_TEMPLATE
-pipelineMap = process.env.HUBOT_PIPELINE_MAP
 ocTestNamespace = process.env.HUBOT_TEST_NAMESPACE
 
 request = require('./request.coffee')
@@ -179,9 +178,3 @@ module.exports = (robot) ->
 
             # send message to chat
             robot.messageRoom mat_room, "#{mesg}"
-
-            statusObj = {}
-            robot.emit "promote", {
-              status    : statusObj, #status object from brain
-              repoName    : obj.repoName # repo name from github payload
-            }
