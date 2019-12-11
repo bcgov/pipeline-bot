@@ -54,7 +54,12 @@ buildDeploySync = (ocBuildProject, buildConfig, ocDeployProject, deployConfig) -
 module.exports = (robot) ->
 
   robot.on "build-deploy-test", (obj) ->
-
+#             build    : buildObj, #build object from config file
+#             deploy   : deployObj, #deploy object from config file
+#             repoName    : repoName # repo name from github payload
+#             commitID    : commitID # commit id form github payload
+#             eventStage : eventStage # stage object from memory to update
+#envKey
 
     console.log "object passed is  : #{JSON.stringify(obj)}"
 
@@ -63,15 +68,14 @@ module.exports = (robot) ->
     stage = "build-and-deploy"
 
     # message
-    mesg = "Starting Build and Deploy for #{obj.repoName} " + getTimeStamp()
+    mesg = "Build and Deploy for #{obj.repoName} #{obj.commitID} " + getTimeStamp()
 
     # send message to chat
     robot.messageRoom mat_room, mesg
 
     # update brain
-    event = robot.brain.get(obj.repoName)
+    event = robot.brain.get(obj.commitID)
     event.entry.push mesg
-    event.stage = stage
 
     # call build/deploy watch
     resp = await buildDeploySync(obj.build.namespace, obj.build.buildconfig, obj.deploy.namespace, obj.deploy.deployconfig)
@@ -92,7 +96,8 @@ module.exports = (robot) ->
     # update brain
     event = robot.brain.get(obj.repoName)
     event.entry.push mesg
-    event.id = deployUID
+    eventStage.deployment_status = deploydStatus
+    eventStage.deploy_uid = deployUID
 
     # send message to chat
     robot.messageRoom mat_room, "#{mesg}"
@@ -100,18 +105,18 @@ module.exports = (robot) ->
     #----------------STAGE TEST----------------------
     if deploydStatus == "success"
       stage = "Testing"
-      env = "dev"  # hard code for testing only
 
-      if env == 'dev'
+      switch obj.envKey
+        when "dev"
          templateUrl = devApiTestTemplate
-      else if env == 'test'
+        when 'test'
          templateUrl = testApiTestTemplate
-      else
+        else
          templateUrl = null
          console.log "failed to set templateURL"
          return
       #TODO: err check args and exit , let chat room know
-      console.log "Test against environment #{env}"
+      console.log "Test against environment #{obj.envKey}"
 
       # get job template from repo
       robot.http(templateUrl)
@@ -174,7 +179,9 @@ module.exports = (robot) ->
             # update brain
             event = robot.brain.get(obj.repoName)
             event.entry.push mesg
-            event.stage = stage
 
             # send message to chat
             robot.messageRoom mat_room, "#{mesg}"
+
+
+            #hubot will now wait for test results recieved from another defined route in hubot.

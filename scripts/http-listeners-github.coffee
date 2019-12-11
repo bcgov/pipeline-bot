@@ -66,11 +66,32 @@ module.exports = (robot) ->
       ref = data.ref
 
 
-    #check if pipeline is running then create if not, stop if so
-    event = robot.brain.get(repoName) ? null
-    if event == null
-      # create
-      robot.brain.set(repoName, {id: null, stage: null, completed: false, test: null, promote: false, release: false, entry: []})
+    #TODO check if pipeline is running then create if not, stop if so
+    check = null # set to null for testing
+    if check == null
+
+      # create entry in Brain
+      robot.brain.set(commitID: {
+          commit: null,
+          status: null,
+          pull: null,
+          repo: null,
+          entry: [],
+          stage: {
+            dev: {
+              deploy_status: null,
+              test_status: null,
+              promote: false
+            },
+            test: {
+              deploy_status: null,
+              test_status: null,
+              promote: false
+            }
+          }
+        }
+      )
+#      robot.brain.set(repoName, {id: null, stage: null, completed: false, test: null, promote: false, release: false, entry: []})
 
       # get config file from repo for pipeline mappings
       robot.http(configPath)
@@ -87,12 +108,14 @@ module.exports = (robot) ->
 
          buildObj = null
          deployObj = null
-         envObj = null
 
          for pipe in pipes.pipelines
            console.log "#{JSON.stringify(pipe.name)}"
            if pipe.repo == repoName
              console.log "Repo found in conifg map: #{JSON.stringify(pipe.repo)}"
+
+             #get event from brain
+             event = robot.brain.get(commitID)
 
              switch envKey
                when "dev"
@@ -100,14 +123,18 @@ module.exports = (robot) ->
                  console.log "#{JSON.stringify(pipe.dev)}"
                  buildObj = pipe.dev.build
                  deployObj = pipe.dev.deploy
-                 envObj = pipe.dev
+                 envObj = pipe.dev # may use this later
+                 eventStage = event.stage.dev
+
+
 
                when "test"
                  console.log "define vars for test"
                  console.log "#{JSON.stringify(pipe.test)}"
                  buildObj = pipe.test.build
                  deployObj = pipe.test.deploy
-                 envObj = pipe.test
+                 envObj = pipe.test # may use this later
+                 eventStage = event.stage.test
 
                else
                  console.log "Error Required env arguments dev|test|prod"
@@ -115,15 +142,17 @@ module.exports = (robot) ->
 
          console.log "#{JSON.stringify(buildObj)}"
          console.log "#{JSON.stringify(deployObj)}"
+         console.log "#{eventStage}"
 
          # message
          mesg = "Commit [#{commitID}](#{commitURL}) by #{committer} for #{ref} at #{timestamp} on [#{repoName}](#{repoURL})"
          console.log mesg
 
          # update brain
-         event = robot.brain.get(repoName)
+
          event.entry.push mesg
-         event.stage = stage
+         event.status.push "pending"
+         eventStage.deploy_status.push "pending"
 
          # send message to chat
          robot.messageRoom matRoom, "#{mesg}"
@@ -132,13 +161,16 @@ module.exports = (robot) ->
              build    : buildObj, #build object from config file
              deploy   : deployObj, #deploy object from config file
              repoName    : repoName # repo name from github payload
+             commitID    : commitID # commit id form github payload
+             eventStage : eventStage # stage object from memory to update
+             envKey : envKey # enviromnet key from github action param
          }
 
          # send source status
          res.send status
 
     else
-      if event.completed == false
+      if event.status == "pending"
         # STOP PIPELINE
         mesg = "Pipeline for #{repoName} is in Progress, Hubot will Not Start new Pipeline"
         console.log mesg
