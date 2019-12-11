@@ -66,6 +66,16 @@ module.exports = (robot) ->
       repoURL = data.repository.html_url
       ref = data.ref
 
+
+    #check if pipeline is running then create if not, stop if so
+    event = robot.brain.get(repoName) ? null
+    if event == null
+      robot.brain.set(repoName, {id: null, stage: null, completed: false, passTest: false, promote: false, release: false, entry: []})
+    else
+      if event.completed == false
+        console.log "#{repoName} is in Progress, Do not Start Pipeline"
+        #TODO START HERE
+
       # get config file from repo for pipeline mappings
       robot.http(configPath)
        .header('Accept', 'application/json')
@@ -114,8 +124,10 @@ module.exports = (robot) ->
          mesg = "Commit [#{commitID}](#{commitURL}) by #{committer} for #{ref} at #{timestamp} on [#{repoName}](#{repoURL})"
          console.log mesg
 
-         # add to brain
-         robot.brain.set(repoName, {id: null, stage: stage, promote: false, entry: [mesg]})
+         # update brain
+         event = robot.brain.get(repoName)
+         event.entry.push mesg
+         event.stage = stage
 
          # send message to chat
          robot.messageRoom matRoom, "#{mesg}"
