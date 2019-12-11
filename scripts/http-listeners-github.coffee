@@ -79,11 +79,13 @@ module.exports = (robot) ->
           entry: [],
           stage: {
             dev: {
+              deploy_uid: null,
               deploy_status: null,
               test_status: null,
               promote: false
             },
             test: {
+              deploy_uid: null,
               deploy_status: null,
               test_status: null,
               promote: false
