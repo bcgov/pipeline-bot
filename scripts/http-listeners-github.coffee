@@ -126,9 +126,7 @@ module.exports = (robot) ->
                  buildObj = pipe.dev.build
                  deployObj = pipe.dev.deploy
                  envObj = pipe.dev # may use this later
-                 eventStage = event.stage.dev
-
-
+                 event.stage.dev.deploy_status.push "pending"
 
                when "test"
                  console.log "define vars for test"
@@ -136,7 +134,7 @@ module.exports = (robot) ->
                  buildObj = pipe.test.build
                  deployObj = pipe.test.deploy
                  envObj = pipe.test # may use this later
-                 eventStage = event.stage.test
+                 event.stage.test.deploy_status.push "pending"
 
                else
                  console.log "Error Required env arguments dev|test|prod"
@@ -164,7 +162,6 @@ module.exports = (robot) ->
              deploy   : deployObj, #deploy object from config file
              repoName    : repoName # repo name from github payload
              commitID    : commitID # commit id form github payload
-             eventStage : eventStage # stage object from memory to update
              envKey : envKey # enviromnet key from github action param
          }
 
@@ -179,6 +176,9 @@ module.exports = (robot) ->
 
         # send mesg to chat room
         robot.messageRoom matRoom, "#{mesg}"
+
+        #update brain
+        event.status.push "failed"
 
         # send status back to source with results
         status = mesg

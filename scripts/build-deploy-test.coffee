@@ -54,12 +54,6 @@ buildDeploySync = (ocBuildProject, buildConfig, ocDeployProject, deployConfig) -
 module.exports = (robot) ->
 
   robot.on "build-deploy-test", (obj) ->
-#             build    : buildObj, #build object from config file
-#             deploy   : deployObj, #deploy object from config file
-#             repoName    : repoName # repo name from github payload
-#             commitID    : commitID # commit id form github payload
-#             eventStage : eventStage # stage object from memory to update
-#envKey
 
     console.log "object passed is  : #{JSON.stringify(obj)}"
 
@@ -96,8 +90,15 @@ module.exports = (robot) ->
     # update brain
     event = robot.brain.get(obj.repoName)
     event.entry.push mesg
-    eventStage.deployment_status = deploydStatus
-    eventStage.deploy_uid = deployUID
+
+    switch envKey
+      when "dev"
+        event.stage.dev.deploy_status.push deploydStatus
+        event.stage.dev.deploy_uid.push deployUID
+
+      when "test"
+        event.stage.test.deploy_status.push deploydStatus
+        event.stage.test.deploy_uid.push deployUID
 
     # send message to chat
     robot.messageRoom mat_room, "#{mesg}"

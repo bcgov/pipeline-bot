@@ -25,20 +25,51 @@ module.exports = (robot) ->
       arg = res.match[1].toLowerCase()
 
       # test data
-      key = "testKey"
-      id = "12345"
-      stage = "testStage"
-      status = "testStatus"
+      commitID = "abcdefg"
+      deploy_uid = "12345"
+      deploy_status = "pending"
+      status = "pending"
       entry = "testEntry"
 
       switch arg
         when "add"
           console.log "adding"
-          robot.brain.set(key, {id: id, stage: stage, status: status, entry: [entry]})
+#          robot.brain.set(key, {id: id, stage: stage, status: status, entry: [entry]})
+#                # create entry in Brain
+          robot.brain.set(commitID: {
+              commit: null,
+              status: status,
+              pull: null,
+              repo: null,
+              entry: [entry],
+              stage: {
+                dev: {
+                  deploy_uid: deploy_uid,
+                  deploy_status: deploy_status,
+                  test_status: null,
+                  promote: false
+                },
+                test: {
+                  deploy_uid: null,
+                  deploy_status: null,
+                  test_status: null,
+                  promote: false
+                }
+              }
+            }
+          )
           data = robot.brain.data._private
           console.log data
           console.log "My Brain has: #{JSON.stringify(data)}"
           res.reply "#{JSON.stringify(data)}"
+        when "update"
+          console.log "udpate"
+          event = robot.brain.get(key)
+          eventStage = event.stage.dev
+
+          console.log eventStage
+          console.log "My Brain has: #{JSON.stringify(eventStage)}"
+          res.reply "#{JSON.stringify(eventStage)}"
         when "show"
           console.log "showing"
           data = robot.brain.data._private
