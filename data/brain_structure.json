@@ -1,0 +1,21 @@
+{
+  "key": {
+    "commit": null,
+    "status": null,
+    "pull": null,
+    "repo": null,
+    "entry": [],
+    "stage": {
+      "dev": {
+        "deploy_status": null,
+        "test_status": null,
+        "promote": false
+      },
+      "test": {
+        "deploy_status": null,
+        "test_status": null,
+        "promote": false
+      }
+    }
+  }
+}

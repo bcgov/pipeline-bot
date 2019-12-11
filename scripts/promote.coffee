@@ -28,3 +28,5 @@ module.exports = (robot) ->
 
     # -------------- promote is the question ------------
 
+    if event.passedTest == true
+

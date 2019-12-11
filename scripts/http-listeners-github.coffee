@@ -51,8 +51,7 @@ module.exports = (robot) ->
       status = "Success"
     else
       status = "Expecting <path/(dev|test)> with json payload"
-    # send source status
-    res.send status
+
 
     # check and continue
     if status = "Success"
@@ -70,11 +69,8 @@ module.exports = (robot) ->
     #check if pipeline is running then create if not, stop if so
     event = robot.brain.get(repoName) ? null
     if event == null
-      robot.brain.set(repoName, {id: null, stage: null, completed: false, passTest: false, promote: false, release: false, entry: []})
-    else
-      if event.completed == false
-        console.log "#{repoName} is in Progress, Do not Start Pipeline"
-        #TODO START HERE
+      # create
+      robot.brain.set(repoName, {id: null, stage: null, completed: false, test: null, promote: false, release: false, entry: []})
 
       # get config file from repo for pipeline mappings
       robot.http(configPath)
@@ -137,5 +133,22 @@ module.exports = (robot) ->
              deploy   : deployObj, #deploy object from config file
              repoName    : repoName # repo name from github payload
          }
+
+         # send source status
+         res.send status
+
+    else
+      if event.completed == false
+        # STOP PIPELINE
+        mesg = "Pipeline for #{repoName} is in Progress, Hubot will Not Start new Pipeline"
+        console.log mesg
+
+        # send mesg to chat room
+        robot.messageRoom matRoom, "#{mesg}"
+
+        # send status back to source with results
+        status = mesg
+        res.send status
+
 
 

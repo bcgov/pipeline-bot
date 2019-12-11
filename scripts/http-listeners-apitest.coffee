@@ -59,6 +59,7 @@ module.exports = (robot) ->
 #        event = robot.brain.get(key)
         entry = mesg
         event.entry.push entry
+        event.passedTest
 
         # to promote or not to promote that is the question.
 
