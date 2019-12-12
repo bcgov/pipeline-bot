@@ -73,7 +73,7 @@ module.exports = (robot) ->
     # update brain
     event = robot.brain.get(obj.commitID)
     event.entry.push mesg
-    obj.eventStage.deploy_status.push "pending"
+    obj.eventStage.deploy_status = "pending"
 
     # send message to chat
     robot.messageRoom mat_room, mesg
@@ -97,14 +97,14 @@ module.exports = (robot) ->
     # update brain
     event = robot.brain.get(obj.commitID)
     event.entry.push mesg
-    obj.eventStage.deploy_status.push deploydStatus
-    obj.eventStage.deploy_uid.push deployUID
+    obj.eventStage.deploy_status = deploydStatus
+    obj.eventStage.deploy_uid = deployUID
 
     # send message to chat
     robot.messageRoom mat_room, "#{mesg}"
 
 
-    #TODO test our of script
+    #TODO move test stage out of script
     #----------------STAGE TEST----------------------
     if deploydStatus == "success"
 
@@ -168,23 +168,35 @@ module.exports = (robot) ->
               status = data.status
               reason = data.message
               console.log "#{status} #{reason} "
-              return
+             #TODO: check for other kind and log
 
-            #continue and message back succesful resp details
-            kind = data.kind
-            buildName = data.metadata.name
-            namespace = data.metadata.namespace
-            time = data.metadata.creationTimestamp
+            if status == "success"
+              # continue and message back succesful resp details
+              kind = data.kind
+              buildName = data.metadata.name
+              namespace = data.metadata.namespace
+              time = data.metadata.creationTimestamp
 
-            mesg = "Starting #{kind} #{buildName} in #{namespace} at #{time}"
-            console.log mesg
+              mesg = "Starting #{kind} #{buildName} in #{namespace} at #{time}"
+              console.log mesg
 
-            # update brain
-            event = robot.brain.get(obj.repoName)
-            event.entry.push mesg
+              # update brain
+              event = robot.brain.get(obj.commitID)
+              event.entry.push mesg
+              obj.eventStage.test_status = "pending"
 
-            # send message to chat
-            robot.messageRoom mat_room, "#{mesg}"
+              # send message to chat
+              robot.messageRoom mat_room, "#{mesg}"
 
+              #hubot will now wait for test results recieved from another defined route in hubot.
+            else
+              mesg = "Failed to Start Test #{reason}"
+              console.log mesg
 
-            #hubot will now wait for test results recieved from another defined route in hubot.
+              # update brain
+              event = robot.brain.get(obj.commitID)
+              event.entry.push mesg
+              obj.eventStage.test_status = "failure"
+
+              # send message to chat
+              robot.messageRoom mat_room, "#{mesg}"

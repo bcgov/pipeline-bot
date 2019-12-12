@@ -56,12 +56,12 @@ module.exports = (robot) ->
 
       # define var from gitHub payload
       commitID = data.head_commit.id
-      committer = data.head_commit.committer.username
-      timestamp = data.head_commit.timestamp
-      commitURL = data.head_commit.url
+#      committer = data.head_commit.committer.username
+#      timestamp = data.head_commit.timestamp
+#      commitURL = data.head_commit.url
       repoName = data.repository.full_name
       repoURL = data.repository.html_url
-      ref = data.ref
+#      ref = data.ref
 
       console.log "Checking #{commitID} for #{repoName}"
 
@@ -85,8 +85,9 @@ module.exports = (robot) ->
 
          # check for errs
            if err
-              console.log "Encountered an error fetching config file :( #{err}"
-             return
+            console.log "Encountered an error fetching config file :( #{err}"
+            body2 =  process.env.HUBOT_PIPELINE_MAP ? null  # hardcode for local testing only to be removed
+
 
            pipes = JSON.parse(body2)
            console.log pipes
@@ -127,17 +128,18 @@ module.exports = (robot) ->
 
            console.log "#{JSON.stringify(buildObj)}"
            console.log "#{JSON.stringify(deployObj)}"
-           console.log "#{eventStage}"
+           console.log "#{JSON.stringify(eventStage)}"
 
            # message
            mesg = "Recieved Event [#{commitID}] on [#{repoName}](#{repoURL})"
            console.log mesg
 
            # update brain
-
+           event = robot.brain.get(commitID)
            event.entry.push mesg
-           event.status.push "pending"
-           eventStage.deploy_status.push "pending"
+           console.log "#{JSON.stringify(event)}"
+           event.status = 'pending'
+           eventStage.deploy_status = "pending"
 
            # send message to chat
            robot.messageRoom matRoom, "#{mesg}"
