@@ -26,7 +26,8 @@ module.exports = (robot) ->
 
       # test data
       commitID = "abcdefg"
-      deploy_uid = "12345"
+      dev_deploy_uid = "12345ABC"
+      test_deploy_uid = "123456ABC"
       deploy_status = "pending"
       status = "pending"
       entry = "testEntry"
@@ -36,22 +37,22 @@ module.exports = (robot) ->
           console.log "adding"
 #          robot.brain.set(key, {id: id, stage: stage, status: status, entry: [entry]})
 #                # create entry in Brain
-          robot.brain.set(commitID: {
-              commit: null,
+          robot.brain.set("#{commitID}": {
+              commit: commitID,
               status: status,
               pull: null,
               repo: null,
               entry: [entry],
               stage: {
                 dev: {
-                  deploy_uid: deploy_uid,
+                  deploy_uid: dev_deploy_uid,
                   deploy_status: deploy_status,
                   test_status: null,
                   promote: false
                 },
                 test: {
-                  deploy_uid: null,
-                  deploy_status: null,
+                  deploy_uid: test_deploy_uid,
+                  deploy_status: deploy_status,
                   test_status: null,
                   promote: false
                 }

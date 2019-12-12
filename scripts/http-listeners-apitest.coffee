@@ -19,6 +19,18 @@
 mat_room = process.env.HUBOT_MATTERMOST_CHANNEL
 route = '/hubot/apitest'
 
+forEachNested = (O, f, cur) ->
+  O = [ O ]
+  # ensure that f is called with the top-level object
+  while O.length
+    if !f(cur = O.pop()) and cur instanceof Object and [
+        Object
+        Array
+      ].includes(cur.constructor)
+      O.push.apply O, Object.values(cur)
+  #search all values deeper inside
+  return
+
 module.exports = (robot) ->
 
   robot.router.post route, (req, res) ->
@@ -34,7 +46,7 @@ module.exports = (robot) ->
     env = data.env
     results = data.results
     id = data.id
-    console.log "ID returned is  #{id}"
+    console.log "ID returned with api test result payload:  #{id}"
 
     # build message
     mesg = "#{stage} #{status} #{env} #{JSON.stringify(results)}"
@@ -43,32 +55,40 @@ module.exports = (robot) ->
     # send message
     robot.messageRoom mat_room, "#{mesg}"
 
-
     # ------------- Search Brain for Deployment ID----------------
-    # Search for keys with id matching deployment id and update brian
+    # Search for keys with id matching deployment id in all stages and update brian
+
     keys = Object.keys(robot.brain.data._private)
     console.log keys
 
     for key in keys
       event = robot.brain.get(key)
+      console.log JSON.stringify(event)
 
-      if event.id == id
-        console.log id
+      stages = Object.keys(event.stage)
+      console.log "list of stages : #{JSON.stringify(stages)}"
 
-        # add another entry to array
-#        event = robot.brain.get(key)
-        entry = mesg
-        event.entry.push entry
-        event.passedTest
+      for stage in stages
+        obj = event.stage[stage]
+        console.log "object to search : #{JSON.stringify(obj)}"
+        if obj.deploy_uid == id
+          console.log "found #{id} in #{JSON.stringify(obj)}"
 
-        # to promote or not to promote that is the question.
+          #update brain
+          event = robot.brain.get(key)
+          entry = mesg
+          event.entry.push entry
+          obj.test_status = status
 
-        console.log "Sending pipeline #{JSON.stringify(event.repo)} to promote logic"
-        robot.emit "promote", {
-            event    : event, #event object from brain
-        }
-      else
-        console.log "ID #{id} not found"
+          # to promote or not to promote that is the question.
+          console.log "Sending pipeline #{JSON.stringify(event.repo)} to promote logic"
+          robot.emit "promote", {
+              event    : event, #event object from brain
+          }
+          return
+        else
+          console.log "did not find #{id} in #{JSON.stringify(obj)}"
+
 
     # TODO: error check and return status
     status = "Success"
