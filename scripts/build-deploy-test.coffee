@@ -54,27 +54,34 @@ buildDeploySync = (ocBuildProject, buildConfig, ocDeployProject, deployConfig) -
 module.exports = (robot) ->
 
   robot.on "build-deploy-test", (obj) ->
+    # expecting the following from obj
+    # buildObj, #build object from config file
+    # deployObj, #deploy object from config file
+    # repoName # repo name from github payload
+    # commitID # commit id form github payload
+    # eventStage # stage object from memory to update
+    # envKey # enviromnet key from github action param
 
     console.log "object passed is  : #{JSON.stringify(obj)}"
 
     # -------------- STAGE Build/Deploy ------------
     # start build deploy watch
-    stage = "build-and-deploy"
 
     # message
     mesg = "Build and Deploy for #{obj.repoName} #{obj.commitID} " + getTimeStamp()
 
-    # send message to chat
-    robot.messageRoom mat_room, mesg
-
     # update brain
     event = robot.brain.get(obj.commitID)
     event.entry.push mesg
+    obj.eventStage.deploy_status.push "pending"
+
+    # send message to chat
+    robot.messageRoom mat_room, mesg
 
     # call build/deploy watch
     resp = await buildDeploySync(obj.build.namespace, obj.build.buildconfig, obj.deploy.namespace, obj.deploy.deployconfig)
 
-    console.log "your response is : #{JSON.stringify(resp)}"
+    console.log "build and deploy response is : #{JSON.stringify(resp)}"
     console.log resp.statuses
 
     deploydStatus = resp.statuses.deploy.status
@@ -88,25 +95,20 @@ module.exports = (robot) ->
     console.log mesg
 
     # update brain
-    event = robot.brain.get(obj.repoName)
+    event = robot.brain.get(obj.commitID)
     event.entry.push mesg
-
-    switch envKey
-      when "dev"
-        event.stage.dev.deploy_status.push deploydStatus
-        event.stage.dev.deploy_uid.push deployUID
-
-      when "test"
-        event.stage.test.deploy_status.push deploydStatus
-        event.stage.test.deploy_uid.push deployUID
+    obj.eventStage.deploy_status.push deploydStatus
+    obj.eventStage.deploy_uid.push deployUID
 
     # send message to chat
     robot.messageRoom mat_room, "#{mesg}"
 
+
+    #TODO test our of script
     #----------------STAGE TEST----------------------
     if deploydStatus == "success"
-      stage = "Testing"
 
+      # lets get template path ...may hold this in config file instead.
       switch obj.envKey
         when "dev"
          templateUrl = devApiTestTemplate

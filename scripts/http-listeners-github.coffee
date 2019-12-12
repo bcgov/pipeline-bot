@@ -39,22 +39,20 @@ module.exports = (robot) ->
     envKey = req.params.envkey ? null
     console.log envKey
 
-    #define stage and status
-    stage = "init"
-
     # TODO: error check payload
     data = if req.body.payload? then JSON.parse req.body.payload else req.body
     console.log data
 
     # check payload and param exist then send status back to source.
     if envKey == null || data == null
-      status = "Success"
+      status = "Expecting <path/(dev|test|prod)> with github event payload"
+      console.log status
     else
-      status = "Expecting <path/(dev|test)> with json payload"
-
+      status = "Success"
+      console.log status
 
     # check and continue
-    if status = "Success"
+    if status == "Success"
 
       # define var from gitHub payload
       commitID = data.head_commit.id
@@ -65,126 +63,119 @@ module.exports = (robot) ->
       repoURL = data.repository.html_url
       ref = data.ref
 
-
-    #TODO check if pipeline is running then create if not, stop if so
-    check = null # set to null for testing
-    if check == null
-
-      # create entry in Brain
-      robot.brain.set(commitID: {
-          commit: null,
-          status: null,
-          pull: null,
-          repo: null,
-          entry: [],
-          stage: {
-            dev: {
-              deploy_uid: null,
-              deploy_status: null,
-              test_status: null,
-              promote: false
-            },
-            test: {
-              deploy_uid: null,
-              deploy_status: null,
-              test_status: null,
-              promote: false
-            }
-          }
-        }
-      )
-#      robot.brain.set(repoName, {id: null, stage: null, completed: false, test: null, promote: false, release: false, entry: []})
-
-      # get config file from repo for pipeline mappings
-      robot.http(configPath)
-       .header('Accept', 'application/json')
-       .get() (err, httpres, body2) ->
-
-       # check for errs
-         if err
-           res.reply "Encountered an error fetching config file :( #{err}"
-           return
-
-         pipes = JSON.parse(body2)
-         console.log pipes
-
-         buildObj = null
-         deployObj = null
-
-         for pipe in pipes.pipelines
-           console.log "#{JSON.stringify(pipe.name)}"
-           if pipe.repo == repoName
-             console.log "Repo found in conifg map: #{JSON.stringify(pipe.repo)}"
-
-             #get event from brain
-             event = robot.brain.get(commitID)
+      console.log "Checking #{commitID} for #{repoName}"
 
 
-             switch envKey
-               when "dev"
-                 console.log "define vars for dev"
-                 console.log "#{JSON.stringify(pipe.dev)}"
-                 buildObj = pipe.dev.build
-                 deployObj = pipe.dev.deploy
-                 envObj = pipe.dev # may use this later
-                 console.log "#{JSON.stringify(event)}"
-                 event.stage.dev.deploy_status.push "pending"
+      #TODO check if pipeline is running then create if not, stop if so
+      check = null # set to null for testing
+      if check == null
 
-               when "test"
-                 console.log "define vars for test"
-                 console.log "#{JSON.stringify(pipe.test)}"
-                 buildObj = pipe.test.build
-                 deployObj = pipe.test.deploy
-                 envObj = pipe.test # may use this later
-                 event.stage.test.deploy_status.push "pending"
+        # create entry in Brain
+        robot.brain.set("#{commitID}": {commit: commitID, status: null, pull: null, repo: null, entry: [], \
+        stage: {dev: {deploy_uid: null, deploy_status: null, test_status: null, promote: false}, \
+        test: {deploy_uid: null, deploy_status: null, test_status: null, promote: false}}})
 
-               else
-                 console.log "Error Required env arguments dev|test|prod"
-                 # TODO: exit and message error to chatroom and log to brain
+        event = robot.brain.get(commitID)
+        console.log "Hubot Brain Has: #{JSON.stringify(event)}"
 
-         console.log "#{JSON.stringify(buildObj)}"
-         console.log "#{JSON.stringify(deployObj)}"
-         console.log "#{eventStage}"
+        # get config file from repo for pipeline mappings
+        robot.http(configPath)
+         .header('Accept', 'application/json')
+         .get() (err, httpres, body2) ->
 
-         # message
-         mesg = "Commit [#{commitID}](#{commitURL}) by #{committer} for #{ref} at #{timestamp} on [#{repoName}](#{repoURL})"
-         console.log mesg
+         # check for errs
+           if err
+              console.log "Encountered an error fetching config file :( #{err}"
+             return
 
-         # update brain
+           pipes = JSON.parse(body2)
+           console.log pipes
 
-         event.entry.push mesg
-         event.status.push "pending"
-         eventStage.deploy_status.push "pending"
+           buildObj = null
+           deployObj = null
 
-         # send message to chat
-         robot.messageRoom matRoom, "#{mesg}"
+           for pipe in pipes.pipelines
+             console.log "#{JSON.stringify(pipe.name)}"
+             if pipe.repo == repoName
+               console.log "Repo found in conifg map: #{JSON.stringify(pipe.repo)}"
 
-         robot.emit "build-deploy-test", {
-             build    : buildObj, #build object from config file
-             deploy   : deployObj, #deploy object from config file
-             repoName    : repoName # repo name from github payload
-             commitID    : commitID # commit id form github payload
-             envKey : envKey # enviromnet key from github action param
-         }
+               #get event from brain
+               event = robot.brain.get(commitID)
 
-         # send source status
-         res.send status
+               switch envKey
+                 when "dev"
+                   console.log "define vars for dev"
+                   console.log "#{JSON.stringify(pipe.dev)}"
+                   buildObj = pipe.dev.build
+                   deployObj = pipe.dev.deploy
+                   envObj = pipe.dev # may use this later
+                   # get Stage object from brain
+                   eventStage = event.stage.dev
+
+                 when "test"
+                   console.log "define vars for test"
+                   console.log "#{JSON.stringify(pipe.test)}"
+                   buildObj = pipe.test.build
+                   deployObj = pipe.test.deploy
+                   envObj = pipe.test # may use this later
+                   # get Stage object from brain
+                   eventStage = event.stage.test
+
+                 else
+                   console.log "Error Required env arguments dev|test|prod"
+                   # TODO: exit and message error to chatroom and log to brain
+
+           console.log "#{JSON.stringify(buildObj)}"
+           console.log "#{JSON.stringify(deployObj)}"
+           console.log "#{eventStage}"
+
+           # message
+           mesg = "Recieved Event [#{commitID}] on [#{repoName}](#{repoURL})"
+           console.log mesg
+
+           # update brain
+
+           event.entry.push mesg
+           event.status.push "pending"
+           eventStage.deploy_status.push "pending"
+
+           # send message to chat
+           robot.messageRoom matRoom, "#{mesg}"
+
+           # sent to build deploy test script
+           robot.emit "build-deploy-test", {
+               build    : buildObj, #build object from config file
+               deploy   : deployObj, #deploy object from config file
+               repoName    : repoName # repo name from github payload
+               commitID    : commitID # commit id form github payload
+               eventStage : eventStage # stage object from memory to update
+               envKey : envKey # enviromnet key from github action param
+           }
+
+           # send source status
+           res.send status
+
+      else
+
+        if event.status == "pending"
+          # STOP PIPELINE
+          mesg = "Pipeline for #{repoName} is in Progress, Hubot will Not Start new Pipeline"
+          console.log mesg
+
+          # send mesg to chat room
+          robot.messageRoom matRoom, "#{mesg}"
+
+          #update brain
+          event.status.push "failed"
+
+          # send status back to source with results
+          status = mesg
+          res.send status
 
     else
-      if event.status == "pending"
-        # STOP PIPELINE
-        mesg = "Pipeline for #{repoName} is in Progress, Hubot will Not Start new Pipeline"
-        console.log mesg
-
-        # send mesg to chat room
-        robot.messageRoom matRoom, "#{mesg}"
-
-        #update brain
-        event.status.push "failed"
-
-        # send status back to source with results
-        status = mesg
-        res.send status
-
-
+      # source failed to pass required param and payload
+      console.log "Hubot will Not Start new Pipeline"
+      # send status back to source with results
+      status = mesg
+      res.send status
 
