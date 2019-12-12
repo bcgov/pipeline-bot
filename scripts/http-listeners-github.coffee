@@ -131,7 +131,7 @@ module.exports = (robot) ->
            console.log "#{JSON.stringify(eventStage)}"
 
            # message
-           mesg = "Recieved Event [#{commitID}] on [#{repoName}](#{repoURL})"
+           mesg = "Recieved Github Event [#{commitID}] on [#{repoName}](#{repoURL})"
            console.log mesg
 
            # update brain
@@ -139,13 +139,13 @@ module.exports = (robot) ->
            event.entry.push mesg
            console.log "#{JSON.stringify(event)}"
            event.status = 'pending'
-           eventStage.deploy_status = "pending"
+           event.repo = repoName
 
            # send message to chat
            robot.messageRoom matRoom, "#{mesg}"
 
            # sent to build deploy test script
-           robot.emit "build-deploy-test", {
+           robot.emit "build-deploy-stage", {
                build    : buildObj, #build object from config file
                deploy   : deployObj, #deploy object from config file
                repoName    : repoName # repo name from github payload
