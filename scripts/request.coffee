@@ -23,8 +23,8 @@ class exports.OCAPI
     protocol = 'https'
     buildStatus = 'NOT STARTED'
     deployStatus = 'NOT STARTED'
-
-    requestTimeoutSeconds = 300
+    # ckan build taks around 10 minutes.. making timeout 20 should be adequate
+    requestTimeoutSeconds = 60 * 20
     ###*
     # @param {string} domain - The domain to use in the url when communicating with 
     #                           openshift.
@@ -153,7 +153,7 @@ class exports.OCAPI
             buildname = undefined
             oboeRequest = oboe(reqObj)
                 .node('*', (node, path) ->
-                    #console.log "path: #{path}, #{typeof path}, #{path.length}, #{Array.isArray(path)}"
+                    console.log "path: #{path}, #{typeof path}, #{path.length}, #{Array.isArray(path)}"
                     # extracting the required data from the stream
                     if ( path.length == 1) and path[0] == 'type'
                         # type is the first value of the object so putting 

@@ -20,6 +20,8 @@ if apikey == undefined
 console.log "apikey: #{'*'.repeat(apikey.length)}"
 api = new request.OCAPI(domain, apikey)
 
+api.buildSync('dbc-bcdc-tools', 'bcdc')
+
 
 #DEBUG- Commenting out while working on deploy
 
@@ -29,6 +31,9 @@ api = new request.OCAPI(domain, apikey)
 # the promise is complete, and THEN return a value.  Solution
 # seems to be to just put the buildsync in a function
 # as is demonstrated below.
+
+
+###
 buildDeploySync = () ->
 
     console.log("project: #{project}")
@@ -53,3 +58,6 @@ buildDeploySync = () ->
 #buildDeploySync()
 
 # should put this in a function with the build
+
+
+###
