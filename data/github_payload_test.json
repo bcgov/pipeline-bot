@@ -1,0 +1,13 @@
+{
+  "head_commit":
+    {
+      "id": "1a7926c24118d67815f6d2bc899ad5103608078e",
+      "message": "testing bot call",
+      "timestamp": "2019-11-12T12:05:37-08:00",
+      "url": "https://github.com/craigrigdon/test/commit/1a7926c24118d67815f6d2bc899ad5103608078e"
+    },
+  "repository": {
+    "full_name": "craigrigdon/test",
+    "html_url": "https://github.com/craigrigdon/test"
+  }
+}
