@@ -153,7 +153,7 @@ class exports.OCAPI
             buildname = undefined
             oboeRequest = oboe(reqObj)
                 .node('*', (node, path) ->
-                    #console.log "path: #{path}, #{typeof path}, #{path.length}, #{Array.isArray(path)}"
+                    console.log "path: #{path}, #{typeof path}, #{path.length}, #{Array.isArray(path)}"
                     # extracting the required data from the stream
                     if ( path.length == 1) and path[0] == 'type'
                         # type is the first value of the object so putting 
