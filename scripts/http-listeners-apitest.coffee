@@ -16,20 +16,8 @@
 #   craigrigdon
 
 # get mattermost channel from env var passed to container on deployment
-mat_room = process.env.HUBOT_MATTERMOST_CHANNEL
+matRoom = process.env.HUBOT_MATTERMOST_CHANNEL
 route = '/hubot/apitest'
-
-forEachNested = (O, f, cur) ->
-  O = [ O ]
-  # ensure that f is called with the top-level object
-  while O.length
-    if !f(cur = O.pop()) and cur instanceof Object and [
-        Object
-        Array
-      ].includes(cur.constructor)
-      O.push.apply O, Object.values(cur)
-  #search all values deeper inside
-  return
 
 module.exports = (robot) ->
 
@@ -53,7 +41,7 @@ module.exports = (robot) ->
     console.log mesg
 
     # send message
-    robot.messageRoom mat_room, "#{mesg}"
+    robot.messageRoom matRoom, "#{mesg}"
 
     # ------------- Search Brain for Deployment ID----------------
     # Search for keys with id matching deployment id in all stages and update brian

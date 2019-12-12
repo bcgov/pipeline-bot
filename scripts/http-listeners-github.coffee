@@ -66,12 +66,12 @@ module.exports = (robot) ->
       console.log "Checking #{commitID} for #{repoName}"
 
 
-      #TODO check if pipeline is running then create if not, stop if so
+      #TODO check if pipeline exist if not create one.  currently set to create new
       check = null # set to null for testing
       if check == null
 
         # create entry in Brain
-        robot.brain.set("#{commitID}": {commit: commitID, status: null, pull: null, repo: null, entry: [], \
+        robot.brain.set("#{commitID}": {commit: commitID, status: null, pull: null, repo: null, env: envKey, entry: [], \
         stage: {dev: {deploy_uid: null, deploy_status: null, test_status: null, promote: false}, \
         test: {deploy_uid: null, deploy_status: null, test_status: null, promote: false}}})
 

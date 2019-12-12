@@ -28,9 +28,10 @@ module.exports = (robot) ->
       commitID = "abcdefg"
       dev_deploy_uid = "12345ABC"
       test_deploy_uid = "123456ABC"
-      deploy_status = "pending"
+      deploy_status = "success"
       status = "pending"
       entry = "testEntry"
+      env = "dev"
 
       switch arg
         when "add"
@@ -42,6 +43,7 @@ module.exports = (robot) ->
               status: status,
               pull: null,
               repo: null,
+              env: env,
               entry: [entry],
               stage: {
                 dev: {

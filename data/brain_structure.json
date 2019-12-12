@@ -4,6 +4,7 @@
     "status": null,
     "pull": null,
     "repo": null,
+    "env": null,
     "entry": [],
     "stage": {
       "dev": {
