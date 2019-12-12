@@ -2,7 +2,7 @@
   "pipelines": [
     {
       "name": "datapusher",
-      "repo": "craigrigdon/test",
+      "repo": "",
       "dev": {
         "build": {
           "buildconfig": "datapusher",
@@ -30,7 +30,7 @@
     },
     {
       "name": "ckan",
-      "repo": "",
+      "repo": "craigrigdon/test",
       "dev": {
         "build": {
           "buildconfig": "bcdc",
