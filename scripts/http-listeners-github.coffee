@@ -119,6 +119,7 @@ module.exports = (robot) ->
              #get event from brain
              event = robot.brain.get(commitID)
 
+
              switch envKey
                when "dev"
                  console.log "define vars for dev"
@@ -126,6 +127,7 @@ module.exports = (robot) ->
                  buildObj = pipe.dev.build
                  deployObj = pipe.dev.deploy
                  envObj = pipe.dev # may use this later
+                 console.log "#{JSON.stringify(event)}"
                  event.stage.dev.deploy_status.push "pending"
 
                when "test"
