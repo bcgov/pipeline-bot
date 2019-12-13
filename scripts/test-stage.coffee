@@ -130,7 +130,7 @@ module.exports = (robot) ->
 
             #hubot will now wait for test results recieved from another defined route in hubot.
           else
-            mesg = "Failed to Start Test #{reason}"
+            mesg = "Failed to Start API Test"
             console.log mesg
 
             # update brain
