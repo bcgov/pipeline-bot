@@ -1,8 +1,8 @@
 	{
   "pipelines": [
     {
-      "name": "datapusher",
-      "repo": "craigrigdon/test",
+      "name": "test",
+      "repo": "",
       "dev": {
         "build": {
           "buildconfig": "datapusher",
@@ -25,6 +25,20 @@
         "deploy": {
           "deployconfig": "pipeline-bot",
           "namespace": "databcdc"
+        }
+      }
+    },
+    {
+      "name": "bcdc",
+      "repo": "craigrigdon/test",
+      "dev": {
+        "build": {
+          "buildconfig": "bcdc",
+          "namespace": "dbc-bcdc-tools"
+        },
+        "deploy": {
+          "deployconfig": "bcdc-ckan-main",
+          "namespace": "dbc-bcdc-dev"
         }
       }
     }
