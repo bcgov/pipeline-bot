@@ -34,7 +34,6 @@ module.exports = (robot) ->
     base = obj.base
     body = "Autobot Pull request Test"
 
-
     data = {
         title: "PR to merge #{branch} into #{base}",
         head: branch,
