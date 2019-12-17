@@ -53,6 +53,8 @@ module.exports = (robot) ->
 
     github.post "repos/#{user}/#{repo}/pulls", data, (pr) ->
       mesg = "Success! Pull request created for #{head}. #{pr.html_url}"
+
+      console.log "Pull Request from github  : #{JSON.stringify(pr)}"
       console.log mesg
       msg.send mesg
 
