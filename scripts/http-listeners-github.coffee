@@ -59,9 +59,14 @@ module.exports = (robot) ->
 #      committer = data.head_commit.committer.username
 #      timestamp = data.head_commit.timestamp
 #      commitURL = data.head_commit.url
-      repoName = data.repository.full_name
+      repoFullName = data.repository.full_name
       repoURL = data.repository.html_url
-#      ref = data.ref
+      repo = data.repository.name
+      user = data.owner.name
+      base = data.repository.master_branch
+      ref = data.ref
+      branch = ref.split([^\/]+$)
+
 
       console.log "Checking #{commitID} for #{repoName}"
 
@@ -71,7 +76,8 @@ module.exports = (robot) ->
       if check == null
 
         # create entry in Brain
-        robot.brain.set("#{commitID}": {commit: commitID, status: null, pull: null, repo: null, env: envKey, entry: [], \
+        robot.brain.set("#{commitID}": {commit: commitID, status: null, pull: null, repo: repo, user: user, \
+        branch : branch, base: base, env: envKey, entry: [], \
         stage: {dev: {deploy_uid: null, deploy_status: null, test_status: null, promote: false}, \
         test: {deploy_uid: null, deploy_status: null, test_status: null, promote: false}}})
 

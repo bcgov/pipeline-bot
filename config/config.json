@@ -29,7 +29,7 @@
       }
     },
     {
-      "name": "bcdc",
+      "name": "ckan",
       "repo": "",
       "dev": {
         "build": {
