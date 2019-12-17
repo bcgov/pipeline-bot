@@ -25,6 +25,9 @@ module.exports = (robot) ->
   robot.on "github-pr", (obj) ->
     github = require('githubot')(robot)
 
+    console.log "called github-pr"
+    console.log "object passed is  : #{JSON.stringify(obj)}"
+
     user = obj.event.user
     repo = obj.event.repo
     branch = obj.event.branch
@@ -38,6 +41,7 @@ module.exports = (robot) ->
         base: base,
         body: body
       }
+    console.log "data to pass to github  : #{JSON.stringify(data)}"
 
     github.handleErrors (response) ->
       switch response.statusCode

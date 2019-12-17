@@ -32,6 +32,10 @@ module.exports = (robot) ->
       status = "pending"
       entry = "testEntry"
       env = "dev"
+      user = "craigrigdon"
+      repo = "test"
+      branch = "dev"
+      base = "master"
 
       switch arg
         when "add"
@@ -39,11 +43,14 @@ module.exports = (robot) ->
 #          robot.brain.set(key, {id: id, stage: stage, status: status, entry: [entry]})
 #                # create entry in Brain
           robot.brain.set("#{commitID}": {
-              commit: commitID,
-              status: status,
+              commit: null,
+              status: null,
               pull: null,
               repo: null,
-              env: env,
+              user: null,
+              branch :null,
+              base: null,
+              env: null,
               entry: [entry],
               stage: {
                 dev: {
