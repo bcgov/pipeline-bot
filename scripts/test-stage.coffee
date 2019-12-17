@@ -107,11 +107,19 @@ module.exports = (robot) ->
           if data.kind == "Status"
             status = data.status
             reason = data.message
-            console.log "#{status} #{reason} "
-            return
+            mesg "#{status} #{reason}"
+            mesg = "Failed to Start API Test #{status} #{reason}"
+            console.log mesg
 
-          if status == "success"
-            # continue and message back succesful resp details
+            # update brain
+            event = robot.brain.get(obj.commitID)
+            event.entry.push mesg
+            obj.eventStage.test_status = "failed"
+
+            # send message to chat
+            robot.messageRoom mat_room, "#{mesg}"
+
+          else if data.kind == "Job"
             kind = data.kind
             buildName = data.metadata.name
             namespace = data.metadata.namespace
@@ -129,14 +137,5 @@ module.exports = (robot) ->
             robot.messageRoom mat_room, "#{mesg}"
 
             #hubot will now wait for test results recieved from another defined route in hubot.
-          else
-            mesg = "Failed to Start API Test"
-            console.log mesg
 
-            # update brain
-            event = robot.brain.get(obj.commitID)
-            event.entry.push mesg
-            obj.eventStage.test_status = "failure"
 
-            # send message to chat
-            robot.messageRoom mat_room, "#{mesg}"

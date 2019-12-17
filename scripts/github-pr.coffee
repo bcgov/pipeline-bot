@@ -6,6 +6,7 @@
 #
 # Configuration:
 #   HUBOT_GITHUB_TOKEN
+#   HUBOT_MATTERMOST_CHANNEL
 #
 # Commands:
 #
@@ -19,6 +20,7 @@
 #  craigrigdon
 
 githubToken = process.env.HUBOT_GITHUB_TOKEN
+mat_room = process.env.HUBOT_MATTERMOST_CHANNEL
 
 module.exports = (robot) ->
 
@@ -42,21 +44,22 @@ module.exports = (robot) ->
       }
     console.log "data to pass to github  : #{JSON.stringify(data)}"
 
-#    github.handleErrors (response) ->
-#      switch response.statusCode
-#        when 404
-#          msg.send 'Error: failed to access repo.'
-#        when 422
-#          msg.send "Error: pull request has already been created or the branch does not exist."
-#        else
-#          msg.send 'Error: something is wrong with your request.'
+    github.handleErrors (response) ->
+      switch response.statusCode
+        when 404
+          robot.messageRoom mat_room, 'Error: failed to access repo.'
+        when 422
+          robot.messageRoom mat_room, "Error: pull request has already been created or the branch does not exist."
+        else
+          robot.messageRoom mat_room, 'Error: something is wrong with your pull request.'
 
     github.post "repos/#{user}/#{repo}/pulls", data, (pr) ->
       mesg = "Success! Pull request created for #{branch}. #{pr.html_url}"
 
       console.log "Pull Request from github  : #{JSON.stringify(pr)}"
       console.log mesg
-      msg.send mesg #TODO: fix msg and send to channel
+      robot.messageRoom mat_room, "#{mesg}"
+
 
 
 
