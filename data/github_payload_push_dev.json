@@ -1,0 +1,198 @@
+{ after: 'a6eb7ed8a0b2cf491798a3d1f2bf395d6235b2c2',
+  base_ref: null,
+  before: 'af157bb98e99b086b299711e87ec43f4712f0666',
+  commits:
+   [ { author: [Object],
+       committer: [Object],
+       distinct: false,
+       id: 'b50c48c2c577e9975e84fbe4a116569ca58edc57',
+       message: 'update workflow for dev branch',
+       timestamp: '2019-12-16T16:31:35-08:00',
+       tree_id: '77f7df8e6c702e999ba08a36732f9358209c02fd',
+       url:
+        'https://github.com/craigrigdon/test/commit/b50c48c2c577e9975e84fbe4a116569ca58edc57'  },
+     { author: [Object],
+       committer: [Object],
+       distinct: false,
+       id: '765d70848070e58bf1f7157e9ecbc725114fb693',
+       message: 'update workflow for dev branch',
+       timestamp: '2019-12-16T16:47:41-08:00',
+       tree_id: '41492ce7f34b198e22d61b3937c3160f947eefae',
+       url:
+        'https://github.com/craigrigdon/test/commit/765d70848070e58bf1f7157e9ecbc725114fb693'  },
+     { author: [Object],
+       committer: [Object],
+       distinct: true,
+       id: 'a6eb7ed8a0b2cf491798a3d1f2bf395d6235b2c2',
+       message: 'update workflow for dev branch',
+       timestamp: '2019-12-16T16:49:21-08:00',
+       tree_id: '9729dbef5d3f91854dd369d7f4ce8ef965e6efb4',
+       url:
+        'https://github.com/craigrigdon/test/commit/a6eb7ed8a0b2cf491798a3d1f2bf395d6235b2c2'  } ],
+  compare:
+   'https://github.com/craigrigdon/test/compare/af157bb98e99...a6eb7ed8a0b2' ,
+  created: false,
+  deleted: false,
+  forced: false,
+  head_commit:
+   { author:
+      { email: 'craig.rigdon@gov.bc.ca',
+        name: 'crigdon',
+        username: 'craigrigdon' },
+     committer:
+      { email: 'craig.rigdon@gov.bc.ca',
+        name: 'crigdon',
+        username: 'craigrigdon' },
+     distinct: true,
+     id: 'a6eb7ed8a0b2cf491798a3d1f2bf395d6235b2c2',
+     message: 'update workflow for dev branch',
+     timestamp: '2019-12-16T16:49:21-08:00',
+     tree_id: '9729dbef5d3f91854dd369d7f4ce8ef965e6efb4',
+     url:
+      'https://github.com/craigrigdon/test/commit/a6eb7ed8a0b2cf491798a3d1f2bf395d6235b2c2'  },
+  pusher:
+   { email: '50336120+craigrigdon@users.noreply.github.com',
+     name: 'craigrigdon' },
+  ref: 'refs/heads/dev',
+  repository:
+   { archive_url:
+      'https://api.github.com/repos/craigrigdon/test/{archive_format}{/ref}' ,
+     archived: false,
+     assignees_url:
+      'https://api.github.com/repos/craigrigdon/test/assignees{/user}' ,
+     blobs_url:
+      'https://api.github.com/repos/craigrigdon/test/git/blobs{/sha}' ,
+     branches_url:
+      'https://api.github.com/repos/craigrigdon/test/branches{/branch}' ,
+     clone_url: 'https://github.com/craigrigdon/test.git' ,
+     collaborators_url:
+      'https://api.github.com/repos/craigrigdon/test/collaborators{/collaborator}' ,
+     comments_url:
+      'https://api.github.com/repos/craigrigdon/test/comments{/number}' ,
+     commits_url:
+      'https://api.github.com/repos/craigrigdon/test/commits{/sha}' ,
+     compare_url:
+      'https://api.github.com/repos/craigrigdon/test/compare/{base}...{head}' ,
+     contents_url:
+      'https://api.github.com/repos/craigrigdon/test/contents/{+path}' ,
+     contributors_url: 'https://api.github.com/repos/craigrigdon/test/contributors' ,
+     created_at: 1568657703,
+     default_branch: 'master',
+     deployments_url: 'https://api.github.com/repos/craigrigdon/test/deployments' ,
+     description: 'test',
+     disabled: false,
+     downloads_url: 'https://api.github.com/repos/craigrigdon/test/downloads' ,
+     events_url: 'https://api.github.com/repos/craigrigdon/test/events' ,
+     fork: false,
+     forks: 0,
+     forks_count: 0,
+     forks_url: 'https://api.github.com/repos/craigrigdon/test/forks' ,
+     full_name: 'craigrigdon/test',
+     git_commits_url:
+      'https://api.github.com/repos/craigrigdon/test/git/commits{/sha}' ,
+     git_refs_url:
+      'https://api.github.com/repos/craigrigdon/test/git/refs{/sha}' ,
+     git_tags_url:
+      'https://api.github.com/repos/craigrigdon/test/git/tags{/sha}' ,
+     git_url: 'git://github.com/craigrigdon/test.git',
+     has_downloads: true,
+     has_issues: true,
+     has_pages: false,
+     has_projects: true,
+     has_wiki: true,
+     homepage: null,
+     hooks_url: 'https://api.github.com/repos/craigrigdon/test/hooks' ,
+     html_url: 'https://github.com/craigrigdon/test' ,
+     id: 208867000,
+     issue_comment_url:
+      'https://api.github.com/repos/craigrigdon/test/issues/comments{/number}' ,
+     issue_events_url:
+      'https://api.github.com/repos/craigrigdon/test/issues/events{/number}' ,
+     issues_url:
+      'https://api.github.com/repos/craigrigdon/test/issues{/number}' ,
+     keys_url:
+      'https://api.github.com/repos/craigrigdon/test/keys{/key_id}' ,
+     labels_url:
+      'https://api.github.com/repos/craigrigdon/test/labels{/name}' ,
+     language: 'Python',
+     languages_url: 'https://api.github.com/repos/craigrigdon/test/languages' ,
+     license: null,
+     master_branch: 'master',
+     merges_url: 'https://api.github.com/repos/craigrigdon/test/merges' ,
+     milestones_url:
+      'https://api.github.com/repos/craigrigdon/test/milestones{/number}' ,
+     mirror_url: null,
+     name: 'test',
+     node_id: 'MDEwOlJlcG9zaXRvcnkyMDg4NjcwMDA=',
+     notifications_url:
+      'https://api.github.com/repos/craigrigdon/test/notifications{?since,all,participating}' ,
+     open_issues: 0,
+     open_issues_count: 0,
+     owner:
+      { avatar_url: 'https://avatars2.githubusercontent.com/u/50336120?v=4' ,
+        email: '50336120+craigrigdon@users.noreply.github.com',
+        events_url: 'https://api.github.com/users/craigrigdon/events{/privacy}' ,
+        followers_url: 'https://api.github.com/users/craigrigdon/followers' ,
+        following_url:
+         'https://api.github.com/users/craigrigdon/following{/other_user}' ,
+        gists_url: 'https://api.github.com/users/craigrigdon/gists{/gist_id}' ,
+        gravatar_id: '',
+        html_url: 'https://github.com/craigrigdon' ,
+        id: 50336120,
+        login: 'craigrigdon',
+        name: 'craigrigdon',
+        node_id: 'MDQ6VXNlcjUwMzM2MTIw',
+        organizations_url: 'https://api.github.com/users/craigrigdon/orgs' ,
+        received_events_url: 'https://api.github.com/users/craigrigdon/received_events' ,
+        repos_url: 'https://api.github.com/users/craigrigdon/repos' ,
+        site_admin: false,
+        starred_url:
+         'https://api.github.com/users/craigrigdon/starred{/owner}{/repo}' ,
+        subscriptions_url: 'https://api.github.com/users/craigrigdon/subscriptions' ,
+        type: 'User',
+        url: 'https://api.github.com/users/craigrigdon'  },
+     private: false,
+     pulls_url:
+      'https://api.github.com/repos/craigrigdon/test/pulls{/number}' ,
+     pushed_at: 1576543769,
+     releases_url:
+      'https://api.github.com/repos/craigrigdon/test/releases{/id}' ,
+     size: 99,
+     ssh_url: 'git@github.com:craigrigdon/test.git',
+     stargazers: 0,
+     stargazers_count: 0,
+     stargazers_url: 'https://api.github.com/repos/craigrigdon/test/stargazers' ,
+     statuses_url:
+      'https://api.github.com/repos/craigrigdon/test/statuses/{sha}' ,
+     subscribers_url: 'https://api.github.com/repos/craigrigdon/test/subscribers' ,
+     subscription_url: 'https://api.github.com/repos/craigrigdon/test/subscription' ,
+     svn_url: 'https://github.com/craigrigdon/test' ,
+     tags_url: 'https://api.github.com/repos/craigrigdon/test/tags' ,
+     teams_url: 'https://api.github.com/repos/craigrigdon/test/teams' ,
+     trees_url:
+      'https://api.github.com/repos/craigrigdon/test/git/trees{/sha}' ,
+     updated_at: '2019-12-17T00:47:51Z',
+     url: 'https://github.com/craigrigdon/test' ,
+     watchers: 0,
+     watchers_count: 0 },
+  sender:
+   { avatar_url: 'https://avatars2.githubusercontent.com/u/50336120?v=4' ,
+     events_url: 'https://api.github.com/users/craigrigdon/events{/privacy}' ,
+     followers_url: 'https://api.github.com/users/craigrigdon/followers' ,
+     following_url:
+      'https://api.github.com/users/craigrigdon/following{/other_user}' ,
+     gists_url: 'https://api.github.com/users/craigrigdon/gists{/gist_id}' ,
+     gravatar_id: '',
+     html_url: 'https://github.com/craigrigdon' ,
+     id: 50336120,
+     login: 'craigrigdon',
+     node_id: 'MDQ6VXNlcjUwMzM2MTIw',
+     organizations_url: 'https://api.github.com/users/craigrigdon/orgs' ,
+     received_events_url: 'https://api.github.com/users/craigrigdon/received_events' ,
+     repos_url: 'https://api.github.com/users/craigrigdon/repos' ,
+     site_admin: false,
+     starred_url:
+      'https://api.github.com/users/craigrigdon/starred{/owner}{/repo}' ,
+     subscriptions_url: 'https://api.github.com/users/craigrigdon/subscriptions' ,
+     type: 'User',
+     url: 'https://api.github.com/users/craigrigdon'  } }
