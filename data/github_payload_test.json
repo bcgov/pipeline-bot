@@ -11,9 +11,9 @@
     "html_url": "https://github.com/craigrigdon/test",
     "master_branch": "master",
     "name": "test",
+    "owner": {
+      "name": "craigrigdon"
+    }
   },
-  "ref": "refs/heads/dev",
-  "owner": {
-    "name": "craigrigdon"
-  }
+  "ref": "refs/heads/dev"
 }
