@@ -59,13 +59,13 @@ module.exports = (robot) ->
 #      committer = data.head_commit.committer.username
 #      timestamp = data.head_commit.timestamp
 #      commitURL = data.head_commit.url
-      repoFullName = data.repository.full_name
+      repoName = data.repository.full_name
       repoURL = data.repository.html_url
       repo = data.repository.name
       user = data.repository.owner.name
       base = data.repository.master_branch
       ref = data.ref
-      branch = ref.split "[^\/]+$"
+      branch = ref.split("/").pop()
 
       console.log "Checking #{commitID} on #{branch} for #{repoName} "
 

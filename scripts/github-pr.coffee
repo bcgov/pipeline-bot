@@ -28,10 +28,10 @@ module.exports = (robot) ->
     console.log "called github-pr"
     console.log "object passed is  : #{JSON.stringify(obj)}"
 
-    user = obj.event.user
-    repo = obj.event.repo
-    branch = obj.event.branch
-    base = obj.base
+    user = obj.event.event.user
+    repo = obj.event.event.repo
+    branch = obj.event.event.branch
+    base = obj.event.event.base
     body = "Autobot Pull request Test"
 
     data = {
@@ -42,17 +42,17 @@ module.exports = (robot) ->
       }
     console.log "data to pass to github  : #{JSON.stringify(data)}"
 
-    github.handleErrors (response) ->
-      switch response.statusCode
-        when 404
-          msg.send 'Error: failed to access repo.'
-        when 422
-          msg.send "Error: pull request has already been created or the branch does not exist."
-        else
-          msg.send 'Error: something is wrong with your request.'
+#    github.handleErrors (response) ->
+#      switch response.statusCode
+#        when 404
+#          msg.send 'Error: failed to access repo.'
+#        when 422
+#          msg.send "Error: pull request has already been created or the branch does not exist."
+#        else
+#          msg.send 'Error: something is wrong with your request.'
 
     github.post "repos/#{user}/#{repo}/pulls", data, (pr) ->
-      mesg = "Success! Pull request created for #{head}. #{pr.html_url}"
+      mesg = "Success! Pull request created for #{branch}. #{pr.html_url}"
 
       console.log "Pull Request from github  : #{JSON.stringify(pr)}"
       console.log mesg
