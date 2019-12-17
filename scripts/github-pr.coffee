@@ -22,22 +22,22 @@ githubToken = process.env.HUBOT_GITHUB_TOKEN
 
 module.exports = (robot) ->
 
-  robot.on "github", (obj) ->
-  github = require('githubot')(robot)
+  robot.on "github-pr", (obj) ->
+    github = require('githubot')(robot)
 
-  user =
-  repo =
-  branch = # regex to capture past last slash ([^\/]+$)
-  base = # master
-  body = "Autobot Pull request Test"
+    user = obj.event.user
+    repo = obj.event.repo
+    branch = obj.event.branch
+    base = obj.base
+    body = "Autobot Pull request Test"
 
 
-  data = {
-      title: "PR to merge #{branch} into #{base}",
-      head: branch,
-      base: base,
-      body: body
-    }
+    data = {
+        title: "PR to merge #{branch} into #{base}",
+        head: branch,
+        base: base,
+        body: body
+      }
 
     github.handleErrors (response) ->
       switch response.statusCode

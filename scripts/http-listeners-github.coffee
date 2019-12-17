@@ -65,10 +65,9 @@ module.exports = (robot) ->
       user = data.owner.name
       base = data.repository.master_branch
       ref = data.ref
-      branch = ref.split([^\/]+$)
+      branch = ref.split "[^\/]+$"
 
-
-      console.log "Checking #{commitID} for #{repoName}"
+      console.log "Checking #{commitID} on #{branch} for #{repoName} "
 
 
       #TODO check if pipeline exist if not create one.  currently set to create new
