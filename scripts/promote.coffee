@@ -22,6 +22,7 @@ matRoom = process.env.HUBOT_MATTERMOST_CHANNEL
 module.exports = (robot) ->
 
   robot.on "promote", (obj) ->
+  #expecting obj as event from brain
 
     console.log "promote has been called"
     console.log "object passed is  : #{JSON.stringify(obj)}"
@@ -44,6 +45,10 @@ module.exports = (robot) ->
       entry = mesg
       obj.event.entry.push entry
       stage.promote = true
+
+      robot.emit "github-pr", {
+        event    : obj, #event object from brain
+      }
 
       return
     else

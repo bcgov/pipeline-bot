@@ -27,20 +27,6 @@
           "namespace": "databcdc"
         }
       }
-    },
-    {
-      "name": "ckan",
-      "repo": "",
-      "dev": {
-        "build": {
-          "buildconfig": "bcdc",
-          "namespace": "dbc-bcdc-tools"
-        },
-        "deploy": {
-          "deployconfig": "bcdc-ckan-main",
-          "namespace": "dbc-bcdc-dev"
-        }
-      }
     }
   ]
 }

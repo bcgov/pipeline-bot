@@ -4,6 +4,9 @@
     "status": null,
     "pull": null,
     "repo": null,
+    "user": null,
+    "branch" :null,
+    "base": null,
     "env": null,
     "entry": [],
     "stage": {
