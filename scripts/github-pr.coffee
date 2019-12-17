@@ -56,7 +56,7 @@ module.exports = (robot) ->
 
       console.log "Pull Request from github  : #{JSON.stringify(pr)}"
       console.log mesg
-      msg.send mesg
+      msg.send mesg #TODO: fix msg and send to channel
 
 
 
