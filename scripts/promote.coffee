@@ -33,7 +33,7 @@ module.exports = (robot) ->
     stage = obj.event.stage[env] #TODO... CHECK is being set
 
     console.log "object to promote : #{JSON.stringify(stage)}"
-    if stage.deploy_status == "success" && stage.test_status == "success" && stage.promote == false
+    if stage.deploy_status == "success" && stage.test_status == "Passed" && stage.promote == false
 
       mesg = "promoting #{obj.event.commit}"
       console.log mesg

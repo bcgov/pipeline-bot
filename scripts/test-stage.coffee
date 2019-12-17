@@ -108,7 +108,7 @@ module.exports = (robot) ->
             status = data.status
             reason = data.message
             console.log "#{status} #{reason} "
-
+            return
 
           if status == "success"
             # continue and message back succesful resp details
