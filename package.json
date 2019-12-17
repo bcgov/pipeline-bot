@@ -39,7 +39,8 @@
     "request-promise": "^4.2.5",
     "lodash": "^4.17.15",
     "oboe": "^2.1.5",
-    "coffeescript": "^2.4.1"
+    "coffeescript": "^2.4.1",
+    "githubot": "^1.0.1"
   },
   "engines": {
     "node": ">=8.x"
