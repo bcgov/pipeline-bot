@@ -144,7 +144,6 @@ module.exports = (robot) ->
            event.entry.push mesg
            console.log "#{JSON.stringify(event)}"
            event.status = 'pending'
-           event.repo = repoName
 
            # send message to chat
            robot.messageRoom matRoom, "#{mesg}"
