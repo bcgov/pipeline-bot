@@ -30,7 +30,7 @@ module.exports = (robot) ->
     # -------------- promote is the question ------------
 
     env = obj.event.env
-    stage = obj.event.stage[env] #TODO... CHECK is being set
+    stage = obj.event.stage[env]
 
     console.log "object to promote : #{JSON.stringify(stage)}"
     if stage.deploy_status == "success" && stage.test_status == "Passed" && stage.promote == false
