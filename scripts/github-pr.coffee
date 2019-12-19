@@ -147,22 +147,22 @@ module.exports = (robot) ->
                 console.log mesg
                 robot.messageRoom mat_room, "#{mesg}"
 
-    # update brain
-    obj.event.event.entry.push mesg
-    console.log "#{JSON.stringify(event)}"
-    obj.event.event.env = envKey #update with new env key
+            # update brain
+            obj.event.event.entry.push mesg
+            console.log "#{JSON.stringify(event)}"
+            obj.event.event.env = envKey #update with new env key
 
-    # send message to chat
-    robot.messageRoom matRoom, "#{mesg}"
+            # send message to chat
+            robot.messageRoom matRoom, "#{mesg}"
 
-    # sent to build deploy test script
-    robot.emit "build-deploy-stage", {
-        build    : buildObj, #build object from config file
-        deploy   : deployObj, #deploy object from config file
-        repoFullName    : repoFullName # repo name from github payload
-        eventStage : eventStage # stage object from memory to update
-        envKey : envKey # enviromnet key
-    }
+            # sent to build deploy test script
+            robot.emit "build-deploy-stage", {
+                build    : buildObj, #build object from config file
+                deploy   : deployObj, #deploy object from config file
+                repoFullName    : repoFullName # repo name from github payload
+                eventStage : eventStage # stage object from memory to update
+                envKey : envKey # enviromnet key
+            }
 
 
 
