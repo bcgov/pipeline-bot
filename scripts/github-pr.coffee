@@ -7,6 +7,7 @@
 # Configuration:
 #   HUBOT_GITHUB_TOKEN
 #   HUBOT_MATTERMOST_CHANNEL
+#   HUBOT_CONFIG_PATH
 #
 # Commands:
 #
@@ -21,6 +22,7 @@
 
 githubToken = process.env.HUBOT_GITHUB_TOKEN
 mat_room = process.env.HUBOT_MATTERMOST_CHANNEL
+configPath = process.env.HUBOT_CONFIG_PATH
 
 module.exports = (robot) ->
 
@@ -94,33 +96,56 @@ module.exports = (robot) ->
 
         robot.messageRoom mat_room, "#{mesg}"
 
+    # get config file from repo for pipeline mappings
+    robot.http(configPath)
+      .header('Accept', 'application/json')
+      .get() (err, httpres, body2) ->
 
-    # start build and deploy in next stage
-    env = obj.event.event.env
-    envKey = null #reset envKey
-    switch env
-      when "dev"
-        mesg =  "Promoting to TEST Environment"
-        robot.messageRoom mat_room, "#{mesg}"
-        console.log mesg
-        buildObj = obj.event.event.test.build
-        deployObj = obj.event.event.test.deploy
-        eventStage = obj.event.event.stage.test
-        envKey = "test"
+        # check for errs
+        if err
+          console.log "Encountered an error fetching config file :( #{err}"
+          body2 =  process.env.HUBOT_PIPELINE_MAP ? null  # hardcode for local testing only to be removed
 
-      when "test"
-        mesg =  "Promoting to PROD Environment"
-        robot.messageRoom mat_room, "#{mesg}"
-        console.log mesg
-        buildObj = obj.event.event.prod.build
-        deployObj = obj.event.event.prod.deploy
-        eventStage = obj.event.event.prod.test
-        envKey = "prod"
+        pipes = JSON.parse(body2)
+        console.log pipes
 
-      else
-        mesg = "Promotion Error Required env arguments dev|test"
-        console.log mesg
-        robot.messageRoom mat_room, "#{mesg}"
+        buildObj = null
+        deployObj = null
+
+        for pipe in pipes.pipelines
+          console.log "#{JSON.stringify(pipe.name)}"
+          if pipe.repo == obj.event.event.repoFullName
+            console.log "Repo found in conifg map: #{JSON.stringify(pipe.repo)}"
+
+            #get event from brain
+#            event = robot.brain.get(repoFullName)
+
+            # start build and deploy in next stage
+            env = obj.event.event.env
+            envKey = null #reset envKey
+            switch env
+              when "dev"
+                mesg =  "Promoting to TEST Environment"
+                robot.messageRoom mat_room, "#{mesg}"
+                console.log mesg
+                buildObj = pipe.test.build
+                deployObj = pipe.test.deploy
+                eventStage = obj.event.event.stage.test
+                envKey = "test"
+
+              when "test"
+                mesg =  "Promoting to PROD Environment"
+                robot.messageRoom mat_room, "#{mesg}"
+                console.log mesg
+                buildObj = pipe.prod.build
+                deployObj = pipe.prod.deploy
+                eventStage = obj.event.event.stage.prod
+                envKey = "prod"
+
+              else
+                mesg = "Promotion Error Required env arguments dev|test"
+                console.log mesg
+                robot.messageRoom mat_room, "#{mesg}"
 
     # update brain
     obj.event.event.entry.push mesg
