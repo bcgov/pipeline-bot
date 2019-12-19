@@ -116,7 +116,7 @@ module.exports = (robot) ->
                console.log "Repo found in conifg map: #{JSON.stringify(pipe.repo)}"
 
                #get event from brain
-               event = robot.brain.get(commitID)
+               event = robot.brain.get(repoFullName)
 
                switch envKey
                  when "dev"
