@@ -77,6 +77,7 @@ module.exports = (robot) ->
           status: null,
           pullSha: null,
           pullNumber: null,
+          repoFullName: repoFullName,
           repo: repo,
           user: user,
           branch : branch,
