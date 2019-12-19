@@ -56,10 +56,7 @@ module.exports = (robot) ->
 
       # define var from gitHub payload
       commitID = data.head_commit.id
-#      committer = data.head_commit.committer.username
-#      timestamp = data.head_commit.timestamp
-#      commitURL = data.head_commit.url
-      repoName = data.repository.full_name
+      repoFullName = data.repository.full_name
       repoURL = data.repository.html_url
       repo = data.repository.name
       user = data.repository.owner.name
@@ -67,7 +64,7 @@ module.exports = (robot) ->
       ref = data.ref
       branch = ref.split("/").pop()
 
-      console.log "Checking #{commitID} on #{branch} for #{repoName} "
+      console.log "Checking #{commitID} on #{branch} for #{repoFullName} "
 
 
       #TODO check if pipeline exist if not create one.  currently set to create new
@@ -75,12 +72,25 @@ module.exports = (robot) ->
       if check == null
 
         # create entry in Brain
-        robot.brain.set("#{commitID}": {commit: commitID, status: null, pull: null, repo: repo, user: user, \
-        branch : branch, base: base, env: envKey, entry: [], \
-        stage: {dev: {deploy_uid: null, deploy_status: null, test_status: null, promote: false}, \
-        test: {deploy_uid: null, deploy_status: null, test_status: null, promote: false}}})
+        robot.brain.set("#{repoFullName}": {
+          commit: commitID,
+          status: null,
+          pullSha: null,
+          pullNumber: null,
+          repo: repo,
+          user: user,
+          branch : branch,
+          base: base,
+          env: envKey,
+          entry: [],
+          stage: {
+            dev: {deploy_uid: null, deploy_status: null, test_status: null, promote: false},
+            test: {deploy_uid: null, deploy_status: null, test_status: null, promote: false},
+            prod: {deploy_uid: null, deploy_status: null, test_status: null, promote: false}
+            }
+          })
 
-        event = robot.brain.get(commitID)
+        event = robot.brain.get(repoFullName)
         console.log "Hubot Brain Has: #{JSON.stringify(event)}"
 
         # get config file from repo for pipeline mappings
@@ -102,7 +112,7 @@ module.exports = (robot) ->
 
            for pipe in pipes.pipelines
              console.log "#{JSON.stringify(pipe.name)}"
-             if pipe.repo == repoName
+             if pipe.repo == repoFullName
                console.log "Repo found in conifg map: #{JSON.stringify(pipe.repo)}"
 
                #get event from brain
@@ -136,11 +146,11 @@ module.exports = (robot) ->
            console.log "#{JSON.stringify(eventStage)}"
 
            # message
-           mesg = "Recieved Github Event [#{commitID}] on [#{repoName}](#{repoURL})"
+           mesg = "Recieved Github Event [#{commitID}] on [#{repoFullName}](#{repoURL})"
            console.log mesg
 
            # update brain
-           event = robot.brain.get(commitID)
+           event = robot.brain.get(repoFullName)
            event.entry.push mesg
            console.log "#{JSON.stringify(event)}"
            event.status = 'pending'
@@ -152,10 +162,9 @@ module.exports = (robot) ->
            robot.emit "build-deploy-stage", {
                build    : buildObj, #build object from config file
                deploy   : deployObj, #deploy object from config file
-               repoName    : repoName # repo name from github payload
-               commitID    : commitID # commit id form github payload
+               repoFullName    : repoFullName # repo name from github payload
                eventStage : eventStage # stage object from memory to update
-               envKey : envKey # enviromnet key from github action param
+               envKey : envKey # enviromnet key
            }
 
            # send source status
@@ -165,7 +174,7 @@ module.exports = (robot) ->
 
         if event.status == "pending"
           # STOP PIPELINE
-          mesg = "Pipeline for #{repoName} is in Progress, Hubot will Not Start new Pipeline"
+          mesg = "Pipeline for #{repoFullName} is in Progress, Hubot will Not Start new Pipeline"
           console.log mesg
 
           # send mesg to chat room

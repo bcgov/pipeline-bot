@@ -12,6 +12,26 @@
           "deployconfig": "datapusher",
           "namespace": "databcdc"
         }
+      },
+      "test": {
+        "build": {
+          "buildconfig": "datapusher",
+          "namespace": "databcdc"
+        },
+        "deploy": {
+          "deployconfig": "datapusher",
+          "namespace": "databcdc"
+        }
+      },
+      "prod": {
+        "build": {
+          "buildconfig": "datapusher",
+          "namespace": "databcdc"
+        },
+        "deploy": {
+          "deployconfig": "datapusher",
+          "namespace": "databcdc"
+        }
       }
     },
     {

@@ -70,7 +70,7 @@ module.exports = (robot) ->
           obj.test_status = status
 
           # to promote or not to promote that is the question.
-          console.log "Sending pipeline #{JSON.stringify(event.repo)} to promote logic"
+          console.log "Sending pipeline #{JSON.stringify(event.repoFullName)} to promote logic"
           robot.emit "promote", {
               event    : event, #event object from brain
           }
