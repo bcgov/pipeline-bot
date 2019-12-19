@@ -38,7 +38,7 @@ module.exports = (robot) ->
   robot.on "test-stage", (obj) ->
     # expecting the following from obj
 
-    # commitID # commit id form github payload
+    # repoFullName # repo name from github payload
     # eventStage # stage object from memory to update
     # envKey # enviromnet key from github action param
 
@@ -112,7 +112,7 @@ module.exports = (robot) ->
             console.log mesg
 
             # update brain
-            event = robot.brain.get(obj.commitID)
+            event = robot.brain.get(obj.repoFullName)
             event.entry.push mesg
             obj.eventStage.test_status = "failed"
 
@@ -129,7 +129,7 @@ module.exports = (robot) ->
             console.log mesg
 
             # update brain
-            event = robot.brain.get(obj.commitID)
+            event = robot.brain.get(obj.repoFullName)
             event.entry.push mesg
             obj.eventStage.test_status = "pending"
 

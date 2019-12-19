@@ -58,7 +58,6 @@ module.exports = (robot) ->
     # buildObj, #build object from config file
     # deployObj, #deploy object from config file
     # repoName # repo name from github payload
-    # commitID # commit id form github payload
     # eventStage # stage object from memory to update
     # envKey # enviromnet key from github action param
 
@@ -68,10 +67,10 @@ module.exports = (robot) ->
     # start build deploy watch
 
     # message
-    mesg = "Build and Deploy for #{obj.repoName} #{obj.commitID} " + getTimeStamp()
+    mesg = "Build and Deploy for #{obj.repoFullName} in  #{obj.envKey} " + getTimeStamp()
 
     # update brain
-    event = robot.brain.get(obj.commitID)
+    event = robot.brain.get(obj.repoFullName)
     event.entry.push mesg
     obj.eventStage.deploy_status = "pending"
 
@@ -95,7 +94,7 @@ module.exports = (robot) ->
     console.log mesg
 
     # update brain
-    event = robot.brain.get(obj.commitID)
+    event = robot.brain.get(obj.repoFullName)
     event.entry.push mesg
     obj.eventStage.deploy_status = deploydStatus
     obj.eventStage.deploy_uid = deployUID
@@ -105,7 +104,7 @@ module.exports = (robot) ->
 
     if deploydStatus == "success"
       robot.emit "test-stage", {
-         commitID    : obj.commitID # commit id form github payload
+         repoFullName    : obj.repoFullName # repo full name from github payload
          eventStage : obj.eventStage # stage object from memory to update
          envKey : obj.envKey # enviromnet key from github action param
       }
