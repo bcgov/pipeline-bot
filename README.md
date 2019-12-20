@@ -2,7 +2,7 @@
 
 A Hubot CI/CD Pipeline Bot for Openshift Container Platform (OCP) with Mattermost adapter.
 
-##Overview
+## Overview
 The goal of this project is to automate our CI/CD pipelines for Applications built 
 and deployed on Openshift Container Platform to increasing deployment velocity.  A ChatOps approach
 to increase visibility and give distributed developers more freedom to test and deploy.  
@@ -12,14 +12,14 @@ but could be adapted to any workflow.
 
 This document will break down the build config and deployment steps required to run pipeline-bot.
 
-##Work in Progress
+## Work in Progress
 * Currently expanding OCP api calls to include build from template and watch
 * jenkins api support
 * add responders to include git checkout and deploy to teardown environments in OCP
 * output formatting to mattermost
 
 
-##Automated Workflow Steps from DEV-to-PROD
+## Automated Workflow Steps from DEV-to-PROD
 1. Github Action - On push to DEV branch - send hubot payload with env param
 2. Hubot - receive github payload - verify pipeline has been defined
 3. Hubot - build deploy watch - start OCP build and watch then start deploy and watch for DEV
@@ -77,6 +77,7 @@ oc tag pipeline-bot pipeline-bot:latest
 oc new-build nodejs:10~https://github.com/bcgov/pipeline-bot.git -l app=bot
 ```
 ### 10. required env var in deployment config via secrets or config maps 
+```
 MATTERMOST_HOST= <url-to-mattermost> 
 MATTERMOST_GROUP= <mattermost-group>
 MATTERMOST_USER= <mattermost-username>
@@ -90,7 +91,7 @@ HUBOT_TEST_APITEST_TEMPLATE= <url-to-test-template.json>
 HUBOT_TEST_NAMESPACE= <ocp-namespace-to-run-test-in>
 HUBOT_CONFIG_PATH= <url-to-config-map> # see Pipeline Config
 HUBOT_GITHUB_TOKEN= <github token for repo access>
-
+```
 ### 11. first time deploy in OCP
 ```
 oc new-app pipeline-bot:latest
@@ -99,7 +100,7 @@ oc new-app pipeline-bot:latest
 #Access Control
 https://github.com/emptywee/acl-hubot
 
-defined from config map in OCP and injected as env var HUBOT_ACL
+define config map in OCP and injected as env var HUBOT_ACL
 required for scripts/acl.coffee 
 
 ```
@@ -167,17 +168,50 @@ and namespaces required to make the api calls to OCP.
 
 ```
 
-#Other Notes
-###Dockerfile
+# Other Notes
+### Dockerfile
 dockerfile in this repo is for local build development only and not to be used for production.
-###Test Dir
+### Test Dir
 currently used for test scripts and example test routes for local testing and examples only.
-###Data Dir
+### Data Dir
 payload examples for references from  github and OCP sources, includes readme with curl examples.  
 
-#Custom Responders
+# Custom Responders
 Hubot allows us to create custom responders to interact directly with the bot.
 
 defined in scripts/responders.coffee
 
 A list of cmds are available by running cmd <hubotname> help
+
+# Build and deploy from this repo as boilerplate
+* steps to deploy directly from fork of this repo
+
+### 1. fork this repo
+
+### 2. change bot name
+update -name argument in both files
+* /bin/hubot
+* /bin/hubot.cmd
+
+*example
+```
+exec node_modules/.bin/hubot --name "<my-bot-name>" "$@"
+```
+
+### 3. create new build using Source Build Strategy in OCP
+```
+oc new-build nodejs:10~https://github.com/<forked/repo>.git -l app=bot
+```
+### 4. define required env var in deployment config via secrets or config maps 
+ * as listed above
+
+### 5. define access control list as config map
+ * as listed above
+
+### 6. define pipeline config map
+ * as listed above
+
+### 7. first time deploy in OCP
+```
+oc new-app pipeline-bot:latest
+```
