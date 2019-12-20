@@ -97,6 +97,29 @@ HUBOT_GITHUB_TOKEN= <github token for repo access>
 oc new-app pipeline-bot:latest
 ```
 
+### 12 . github action on repo:
+* required github action to send to hubot
+
+```
+name: dev_push
+
+on:
+  push:
+    branches:
+      - dev
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@master
+      with:
+        ref: dev
+    - name: Send Payload
+      run: |
+        curl -X POST -H "Content-Type: application/json" -H "apikey: ${{ secrets.BOT_KEY }}" -d @$GITHUB_EVENT_PATH https://${{ secrets.BOT_URL }}/hubot/github/dev
+
+```
 #Access Control
 https://github.com/emptywee/acl-hubot
 
