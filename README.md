@@ -72,7 +72,7 @@ Step by step how to build Hubot instance from start
     MATTERMOST_GROUP= <mattermost-group>
     MATTERMOST_USER= <mattermost-username>
     MATTERMOST_PASSWORD= <mattermost-password>
-    HUBOT_MATTERMOST_CHANNEL= <url-to-mattermost>
+    HUBOT_MATTERMOST_CHANNEL= <mattermost-channel>
     HUBOT_OCPAPIKEY= <ocp-token>
     HUBOT_OCPDOMAIN= <ocp-domain>
     HUBOT_ACL= <conifg for access control list> # see Access Control
