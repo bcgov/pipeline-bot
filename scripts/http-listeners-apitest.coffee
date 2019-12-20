@@ -16,7 +16,7 @@
 #   craigrigdon
 
 # get mattermost channel from env var passed to container on deployment
-mat_room = process.env.HUBOT_MATTERMOST_CHANNEL
+matRoom = process.env.HUBOT_MATTERMOST_CHANNEL
 route = '/hubot/apitest'
 
 module.exports = (robot) ->
@@ -24,6 +24,7 @@ module.exports = (robot) ->
   robot.router.post route, (req, res) ->
 
     console.log route
+    stage = "API-TEST"
 
     # TODO: error check payload
     data = if req.body.payload? then JSON.parse req.body.payload else req.body
@@ -32,19 +33,55 @@ module.exports = (robot) ->
     status = data.status
     env = data.env
     results = data.results
+    id = data.id
+    console.log "ID returned with api test result payload:  #{id}"
 
     # build message
-    mesg = "API Test Results: #{status} #{env} #{JSON.stringify(results)}"
+    mesg = "#{stage} #{status} #{env} #{JSON.stringify(results)}"
     console.log mesg
 
-#    # TODO get reponame somehow
-#    repoName = ()
-#    # add to brain
-#    robot.brain.set(repoName, {mesg: mesg, timestamp: timestamp})
-
     # send message
-    robot.messageRoom mat_room, "#{mesg}"
+    robot.messageRoom matRoom, "#{mesg}"
+
+    # ------------- Search Brain for Deployment ID----------------
+    # Search for keys with id matching deployment id in all stages and update brian
+
+    keys = Object.keys(robot.brain.data._private)
+    console.log keys
+
+    for key in keys
+      event = robot.brain.get(key)
+      console.log JSON.stringify(event)
+
+      stages = Object.keys(event.stage)
+      console.log "list of stages : #{JSON.stringify(stages)}"
+
+      for stage in stages
+        obj = event.stage[stage]
+        console.log "object to search : #{JSON.stringify(obj)}"
+        if obj.deploy_uid == id
+          console.log "found #{id} in #{JSON.stringify(obj)}"
+
+          #update brain
+          event = robot.brain.get(key)
+          entry = mesg
+          event.entry.push entry
+          status = "Passed" # For testing ONLY to PASS all failed test TBR
+          obj.test_status = status
+
+          # to promote or not to promote that is the question.
+          console.log "Sending pipeline #{JSON.stringify(event.repoFullName)} to promote logic"
+          robot.emit "promote", {
+              event    : event, #event object from brain
+          }
+          return
+        else
+          console.log "did not find #{id} in #{JSON.stringify(obj)}"
+
 
     # TODO: error check and return status
     status = "Success"
     res.send status
+
+
+

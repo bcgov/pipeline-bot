@@ -1,0 +1,66 @@
+	{
+  "pipelines": [
+    {
+      "name": "test",
+      "repo": "craigrigdon/test",
+      "dev": {
+        "build": {
+          "buildconfig": "datapusher",
+          "namespace": "databcdc"
+        },
+        "deploy": {
+          "deployconfig": "datapusher",
+          "namespace": "databcdc"
+        }
+      },
+      "test": {
+        "build": {
+          "buildconfig": "datapusher",
+          "namespace": "databcdc"
+        },
+        "deploy": {
+          "deployconfig": "datapusher",
+          "namespace": "databcdc"
+        }
+      },
+      "prod": {
+        "build": {
+          "buildconfig": "datapusher",
+          "namespace": "databcdc"
+        },
+        "deploy": {
+          "deployconfig": "datapusher",
+          "namespace": "databcdc"
+        }
+      }
+    },
+    {
+      "name": "pipeline-bot",
+      "repo": "",
+      "dev": {
+        "build": {
+          "buildconfig": "pipeline-bot",
+          "namespace": "databcdc"
+        },
+        "deploy": {
+          "deployconfig": "pipeline-bot",
+          "namespace": "databcdc"
+        }
+      }
+    },
+    {
+      "name": "bcdc",
+      "repo": "",
+      "dev": {
+        "build": {
+          "buildconfig": "bcdc",
+          "namespace": "dbc-bcdc-tools"
+        },
+        "deploy": {
+          "deployconfig": "bcdc-ckan-main",
+          "namespace": "dbc-bcdc-dev"
+        }
+      }
+    }
+  ]
+}

@@ -1,5 +1,5 @@
 # Description:
-#   http listener srcipt to create endpoint to be used by exteral services to notify hubot of status
+#   test http listener srcipt
 #
 # Created by:
 #   craigrigdon
@@ -14,6 +14,8 @@
 # get mattermost channel from env var passed to container on deployment
 #mat_room = process.env.HUBOT_MATTERMOST_CHANNEL
 route = '/hubot/test'
+pipelineMap = process.env.HUBOT_PIPELINE_MAP
+configPath = process.env.HUBOT_CONFIG_PATH ? 'https://raw.githubusercontent.com/bcgov/pipeline-bot/EventEmitter/config/config.json' #testing only
 
 module.exports = (robot) ->
   # example how to use params
@@ -24,32 +26,46 @@ module.exports = (robot) ->
   robot.router.post route, (req, res) ->
     console.log route
     data   = if req.body.payload? then JSON.parse req.body.payload else req.body
-    status = data.status
-    stage = data.stage
-    console.log "#{stage} #{status}"
+    console.log "Payload is: #{JSON.stringify(data)}"
 
-
-   # testing brain functions
-   # add
-    robot.brain.set(stage, {status: status, timestamp: "sometimes"})
-    # add another
-    robot.brain.set("prod", {status: "failed", timestamp: "othertimes"})
-   # get
-    event = robot.brain.get(stage)
-
-   # remove
-#    robot.brain.remove key
-    robot.brain.save
-
-    # get all data in brain
-    data = robot.brain.data
-    console.log data
-
-    # get all keys in brain
-    keys = Object.keys(robot.brain.data._private)
-    console.log keys
-
-    console.log "My Brain has: #{JSON.stringify(event)}"
-#    robot.messageRoom mat_room, "#{env} #{stage} #{status}"
     status = "Success"
     res.send status
+
+    robot.http(configPath)
+       .header('Accept', 'application/json')
+       .get() (err, httpres, body2) ->
+
+       # check for errs
+         if err
+           res.reply "Encountered an error fetching config file :( #{err}"
+           return
+
+         pipes = JSON.parse(body2)
+         console.log pipes
+
+         buildObj = null
+         deployObj = null
+
+         env = "dev"
+
+         for pipe in pipes.pipelines
+           console.log "#{JSON.stringify(pipe.name)}"
+           if pipe.name == "datapusher"
+             console.log "Repo found in conifg map: #{JSON.stringify(pipe.name)}"
+
+             switch env
+               when "dev"
+                 console.log "define vars for dev"
+                 console.log "#{JSON.stringify(pipe.dev)}"
+                 buildObj = pipe.dev.build
+                 deployObj = pipe.dev.deploy
+
+               when "test"
+                 console.log "define vars for test"
+                 console.log "#{JSON.stringify(pipe.test)}"
+                 buildObj = pipe.test.build
+                 deployObj = pipe.test.deploy
+
+         console.log "#{JSON.stringify(buildObj)}"
+         console.log "#{JSON.stringify(deployObj)}"
+

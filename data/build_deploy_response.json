@@ -1,0 +1,236 @@
+{
+  "statuses": {
+    "build": {
+      "status": "Complete",
+      "payload": {
+        "kind": "Build",
+        "apiVersion": "v1",
+        "metadata": {
+          "name": "datapusher-23",
+          "namespace": "databcdc",
+          "selfLink": "/oapi/v1/namespaces/databcdc/builds/datapusher-23",
+          "uid": "f87352f0-0fb9-11ea-a72d-005056832285",
+          "resourceVersion": 1171432071,
+          "creationTimestamp": "2019-11-25T19:29:59Z",
+          "labels": {
+            "build": "datapusher",
+            "buildconfig": "datapusher",
+            "openshift.io/build-config.name": "datapusher",
+            "openshift.io/build.start-policy": "Serial"
+          },
+          "annotations": {
+            "openshift.io/build-config.name": "datapusher",
+            "openshift.io/build.number": 23,
+            "openshift.io/build.pod-name": "datapusher-23-build"
+          },
+          "ownerReferences": [
+            {
+              "apiVersion": "build.openshift.io/v1",
+              "kind": "BuildConfig",
+              "name": "datapusher",
+              "uid": "b4501cdc-0bd2-11ea-a81b-0050568379a2",
+              "controller": true
+            }
+          ]
+        },
+        "spec": {
+          "serviceAccount": "builder",
+          "source": {
+            "type": "Dockerfile",
+            "dockerfile": "FROM python:2.7.17-slim\nENV APP_DIR=/app \\\n SRC_DIR=/app/src \\\n CKAN_INI=${APP_DIR}/conf/production.ini \\\n PIP_SRC=${SRC_DIR} \\\n EXREA_PY_MODULE=${PY_EXTRA}\n\nWORKDIR ${APP_DIR}      \nRUN  \\\n python -m ensurepip && \\\n pip install --no-cache-dir ${EXREA_PY_MODULE} && \\\n pip install datapusher==${DP_GIT_BRANCH} "
+          },
+          "strategy": {
+            "type": "Docker",
+            "dockerStrategy": {
+              "from": {
+                "kind": "DockerImage",
+                "name": "python:2.7.17-slim"
+              },
+              "env": [
+                {
+                  "name": "DP_GIT_URL",
+                  "value": "https://github.com/ckan/datapusher.git"
+                },
+                {
+                  "name": "DP_GIT_BRANCH",
+                  "value": "0.0.15"
+                },
+                {
+                  "name": "PY_EXTRA",
+                  "value": "gunicorn  gevent"
+                }
+              ]
+            }
+          },
+          "output": {
+            "to": {
+              "kind": "ImageStreamTag",
+              "name": "datapusher:latest"
+            },
+            "pushSecret": {
+              "name": "builder-dockercfg-kzv6s"
+            }
+          },
+          "resources": {},
+          "postCommit": {},
+          "nodeSelector": null,
+          "triggeredBy": [
+            {
+              "message": "Triggered with coffee"
+            }
+          ]
+        },
+        "status": {
+          "phase": "Complete",
+          "startTimestamp": "2019-11-25T19:30:00Z",
+          "completionTimestamp": "2019-11-25T19:31:40Z",
+          "duration": 100000000000,
+          "outputDockerImageReference": "docker-registry.default.svc:5000/databcdc/datapusher:latest",
+          "config": {
+            "kind": "BuildConfig",
+            "namespace": "databcdc",
+            "name": "datapusher"
+          },
+          "output": {
+            "to": {
+              "imageDigest": "sha256:c0b142a19f522602c85e0b6d171f228159921ddb140ac699ba8fca6dae04f6bc"
+            }
+          },
+          "stages": [
+            {
+              "name": "PullImages",
+              "startTime": "2019-11-25T19:30:41Z",
+              "durationMilliseconds": 7204,
+              "steps": [
+                {
+                  "name": "PullBaseImage",
+                  "startTime": "2019-11-25T19:30:41Z",
+                  "durationMilliseconds": 7204
+                }
+              ]
+            },
+            {
+              "name": "Build",
+              "startTime": "2019-11-25T19:30:49Z",
+              "durationMilliseconds": 35666,
+              "steps": [
+                {
+                  "name": "DockerBuild",
+                  "startTime": "2019-11-25T19:30:49Z",
+                  "durationMilliseconds": 35666
+                }
+              ]
+            },
+            {
+              "name": "PushImage",
+              "startTime": "2019-11-25T19:31:24Z",
+              "durationMilliseconds": 14602,
+              "steps": [
+                {
+                  "name": "PushDockerImage",
+                  "startTime": "2019-11-25T19:31:24Z",
+                  "durationMilliseconds": 14602
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "deploy": {
+      "status": "success",
+      "payload": {
+        "kind": "ReplicationController",
+        "apiVersion": "v1",
+        "metadata": {
+          "name": "datapusher-31",
+          "namespace": "databcdc",
+          "selfLink": "/api/v1/namespaces/databcdc/replicationcontrollers/datapusher-31",
+          "uid": "33c3a4f7-0fba-11ea-abeb-0050568348cc",
+          "resourceVersion": 1171432015,
+          "generation": 1,
+          "creationTimestamp": "2019-11-25T19:31:39Z",
+          "labels": {
+            "app": "datapusher",
+            "openshift.io/deployment-config.name": "datapusher"
+          },
+          "annotations": {
+            "kubectl.kubernetes.io/desired-replicas": 1,
+            "openshift.io/deployer-pod.created-at": "2019-11-25 11:31:39 -0800 PST",
+            "openshift.io/deployer-pod.name": "datapusher-31-deploy",
+            "openshift.io/deployment-config.latest-version": 31,
+            "openshift.io/deployment-config.name": "datapusher",
+            "openshift.io/deployment.phase": "Pending",
+            "openshift.io/deployment.replicas": 0,
+            "openshift.io/deployment.status-reason": "image change",
+            "openshift.io/encoded-deployment-config": "{\"kind\":\"DeploymentConfig\",\"apiVersion\":\"apps.openshift.io/v1\",\"metadata\":{\"name\":\"datapusher\",\"namespace\":\"databcdc\",\"selfLink\":\"/apis/apps.openshift.io/v1/namespaces/databcdc/deploymentconfigs/datapusher\",\"uid\":\"67ffb496-7e61-11e9-8dc7-0050568348cc\",\"resourceVersion\":\"1171432000\",\"generation\":38,\"creationTimestamp\":\"2019-05-24T20:20:43Z\",\"labels\":{\"app\":\"datapusher\"},\"annotations\":{\"openshift.io/generated-by\":\"OpenShiftWebConsole\"}},\"spec\":{\"strategy\":{\"type\":\"Rolling\",\"rollingParams\":{\"updatePeriodSeconds\":1,\"intervalSeconds\":1,\"timeoutSeconds\":600,\"maxUnavailable\":\"25%\",\"maxSurge\":\"25%\"},\"resources\":{},\"activeDeadlineSeconds\":21600},\"triggers\":[{\"type\":\"ImageChange\",\"imageChangeParams\":{\"automatic\":true,\"containerNames\":[\"datapusher\"],\"from\":{\"kind\":\"ImageStreamTag\",\"namespace\":\"databcdc\",\"name\":\"datapusher:latest\"},\"lastTriggeredImage\":\"docker-registry.default.svc:5000/databcdc/datapusher@sha256:c0b142a19f522602c85e0b6d171f228159921ddb140ac699ba8fca6dae04f6bc\"}},{\"type\":\"ConfigChange\"}],\"replicas\":1,\"test\":false,\"selector\":{\"deploymentconfig\":\"datapusher\"},\"template\":{\"metadata\":{\"creationTimestamp\":null,\"labels\":{\"app\":\"datapusher\",\"deploymentconfig\":\"datapusher\"}},\"spec\":{\"containers\":[{\"name\":\"datapusher\",\"image\":\"docker-registry.default.svc:5000/databcdc/datapusher@sha256:c0b142a19f522602c85e0b6d171f228159921ddb140ac699ba8fca6dae04f6bc\",\"command\":[\"python\",\"datapusher/main.py\",\"deployment/datapusher_settings.py\"],\"ports\":[{\"containerPort\":8080,\"protocol\":\"TCP\"}],\"resources\":{},\"terminationMessagePath\":\"/dev/termination-log\",\"terminationMessagePolicy\":\"File\",\"imagePullPolicy\":\"Always\"}],\"restartPolicy\":\"Always\",\"terminationGracePeriodSeconds\":30,\"dnsPolicy\":\"ClusterFirst\",\"securityContext\":{},\"schedulerName\":\"default-scheduler\"}}},\"status\":{\"latestVersion\":31,\"observedGeneration\":37,\"replicas\":1,\"updatedReplicas\":1,\"availableReplicas\":0,\"unavailableReplicas\":1,\"details\":{\"message\":\"image change\",\"causes\":[{\"type\":\"ImageChange\",\"imageTrigger\":{\"from\":{\"kind\":\"DockerImage\",\"name\":\"docker-registry.default.svc:5000/databcdc/datapusher@sha256:c0b142a19f522602c85e0b6d171f228159921ddb140ac699ba8fca6dae04f6bc\"}}}]},\"conditions\":[{\"type\":\"Progressing\",\"status\":\"True\",\"lastUpdateTime\":\"2019-11-23T00:33:01Z\",\"lastTransitionTime\":\"2019-11-23T00:32:58Z\",\"reason\":\"NewReplicationControllerAvailable\",\"message\":\"replication controller \\\"datapusher-30\\\" successfully rolled out\"},{\"type\":\"Available\",\"status\":\"False\",\"lastUpdateTime\":\"2019-11-25T19:28:15Z\",\"lastTransitionTime\":\"2019-11-25T19:28:15Z\",\"message\":\"Deployment config does not have minimum availability.\"}]}}\n"
+          },
+          "ownerReferences": [
+            {
+              "apiVersion": "apps.openshift.io/v1",
+              "kind": "DeploymentConfig",
+              "name": "datapusher",
+              "uid": "67ffb496-7e61-11e9-8dc7-0050568348cc",
+              "controller": true,
+              "blockOwnerDeletion": true
+            }
+          ]
+        },
+        "spec": {
+          "replicas": 0,
+          "selector": {
+            "deployment": "datapusher-31",
+            "deploymentconfig": "datapusher"
+          },
+          "template": {
+            "metadata": {
+              "creationTimestamp": null,
+              "labels": {
+                "app": "datapusher",
+                "deployment": "datapusher-31",
+                "deploymentconfig": "datapusher"
+              },
+              "annotations": {
+                "openshift.io/deployment-config.latest-version": 31,
+                "openshift.io/deployment-config.name": "datapusher",
+                "openshift.io/deployment.name": "datapusher-31"
+              }
+            },
+            "spec": {
+              "containers": [
+                {
+                  "name": "datapusher",
+                  "image": "docker-registry.default.svc:5000/databcdc/datapusher@sha256:c0b142a19f522602c85e0b6d171f228159921ddb140ac699ba8fca6dae04f6bc",
+                  "command": [
+                    "python",
+                    "datapusher/main.py",
+                    "deployment/datapusher_settings.py"
+                  ],
+                  "ports": [
+                    {
+                      "containerPort": 8080,
+                      "protocol": "TCP"
+                    }
+                  ],
+                  "resources": {},
+                  "terminationMessagePath": "/dev/termination-log",
+                  "terminationMessagePolicy": "File",
+                  "imagePullPolicy": "Always"
+                }
+              ],
+              "restartPolicy": "Always",
+              "terminationGracePeriodSeconds": 30,
+              "dnsPolicy": "ClusterFirst",
+              "securityContext": {},
+              "schedulerName": "default-scheduler"
+            }
+          }
+        },
+        "status": {
+          "replicas": 0,
+          "observedGeneration": 1
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,155 @@
+{
+  "kind": "ReplicationController",
+  "apiVersion": "v1",
+  "metadata": {
+    "name": "pipeline-bot-78",
+    "namespace": "databcdc",
+    "selfLink": "/api/v1/namespaces/databcdc/replicationcontrollers/pipeline-bot-78",
+    "uid": "bc988129-0744-11ea-acdf-0050568379a2",
+    "resourceVersion": "1128750417",
+    "generation": 2,
+    "creationTimestamp": "2019-11-15T01:10:39Z",
+    "labels": {
+      "app": "pipeline-bot",
+      "openshift.io/deployment-config.name": "pipeline-bot"
+    },
+    "annotations": {
+      "openshift.io/deployer-pod.completed-at": "2019-11-14 17:11:03 -0800 PST",
+      "openshift.io/deployer-pod.created-at": "2019-11-14 17:10:39 -0800 PST",
+      "openshift.io/deployer-pod.name": "pipeline-bot-78-deploy",
+      "openshift.io/deployment-config.latest-version": "78",
+      "openshift.io/deployment-config.name": "pipeline-bot",
+      "openshift.io/deployment.phase": "Complete",
+      "openshift.io/deployment.replicas": "",
+      "openshift.io/deployment.status-reason": "manual change",
+      "openshift.io/encoded-deployment-config": "{\"kind\":\"DeploymentConfig\",\"apiVersion\":\"apps.openshift.io/v1\",\"metadata\":{\"name\":\"pipeline-bot\",\"namespace\":\"databcdc\",\"selfLink\":\"/apis/apps.openshift.io/v1/namespaces/databcdc/deploymentconfigs/pipeline-bot\",\"uid\":\"5c85c83d-fa67-11e9-a9a8-0050568348cc\",\"resourceVersion\":\"1128749005\",\"generation\":89,\"creationTimestamp\":\"2019-10-29T16:15:45Z\",\"labels\":{\"app\":\"pipeline-bot\"},\"annotations\":{\"openshift.io/generated-by\":\"OpenShiftNewApp\"}},\"spec\":{\"strategy\":{\"type\":\"Rolling\",\"rollingParams\":{\"updatePeriodSeconds\":1,\"intervalSeconds\":1,\"timeoutSeconds\":600,\"maxUnavailable\":\"25%\",\"maxSurge\":\"25%\"},\"resources\":{},\"activeDeadlineSeconds\":21600},\"triggers\":[{\"type\":\"ImageChange\",\"imageChangeParams\":{\"containerNames\":[\"pipeline-bot\"],\"from\":{\"kind\":\"ImageStreamTag\",\"namespace\":\"databcdc\",\"name\":\"pipeline-bot:latest\"},\"lastTriggeredImage\":\"docker-registry.default.svc:5000/databcdc/pipeline-bot@sha256:2ac1e453971516d77fca25fb85541aaa0cb02b82178945b536f7f1d270cd950f\"}},{\"type\":\"ConfigChange\"}],\"replicas\":1,\"revisionHistoryLimit\":10,\"test\":false,\"selector\":{\"app\":\"pipeline-bot\",\"deploymentconfig\":\"pipeline-bot\"},\"template\":{\"metadata\":{\"creationTimestamp\":null,\"labels\":{\"app\":\"pipeline-bot\",\"deploymentconfig\":\"pipeline-bot\"},\"annotations\":{\"openshift.io/generated-by\":\"OpenShiftNewApp\"}},\"spec\":{\"containers\":[{\"name\":\"pipeline-bot\",\"image\":\"docker-registry.default.svc:5000/databcdc/pipeline-bot@sha256:2ac1e453971516d77fca25fb85541aaa0cb02b82178945b536f7f1d270cd950f\",\"ports\":[{\"containerPort\":8080,\"protocol\":\"TCP\"}],\"env\":[{\"name\":\"MATTERMOST_HOST\",\"valueFrom\":{\"secretKeyRef\":{\"name\":\"hubot-mm-access\",\"key\":\"host\"}}},{\"name\":\"MATTERMOST_USER\",\"valueFrom\":{\"secretKeyRef\":{\"name\":\"hubot-mm-access\",\"key\":\"user\"}}},{\"name\":\"MATTERMOST_GROUP\",\"value\":\"dss\"},{\"name\":\"MATTERMOST_HTTP_PORT\",\"value\":\"443\"},{\"name\":\"MATTERMOST_PASSWORD\",\"valueFrom\":{\"secretKeyRef\":{\"name\":\"hubot-mm-access\",\"key\":\"pwd\"}}},{\"name\":\"HUBOT_MATTERMOST_CHANNEL\",\"value\":\"bot-pipeline\"},{\"name\":\"HUBOT_OCPAPIKEY\",\"valueFrom\":{\"secretKeyRef\":{\"name\":\"default-token-8kzhp\",\"key\":\"token\"}}},{\"name\":\"HUBOT_OCPDOMAIN\",\"valueFrom\":{\"secretKeyRef\":{\"name\":\"ocp-domain-port\",\"key\":\"domain-port\"}}}],\"resources\":{},\"terminationMessagePath\":\"/dev/termination-log\",\"terminationMessagePolicy\":\"File\",\"imagePullPolicy\":\"Always\"}],\"restartPolicy\":\"Always\",\"terminationGracePeriodSeconds\":30,\"dnsPolicy\":\"ClusterFirst\",\"securityContext\":{},\"schedulerName\":\"default-scheduler\"}}},\"status\":{\"latestVersion\":78,\"observedGeneration\":88,\"replicas\":1,\"updatedReplicas\":1,\"availableReplicas\":1,\"unavailableReplicas\":0,\"details\":{\"message\":\"manual change\",\"causes\":[{\"type\":\"Manual\"}]},\"conditions\":[{\"type\":\"Available\",\"status\":\"True\",\"lastUpdateTime\":\"2019-11-07T09:23:55Z\",\"lastTransitionTime\":\"2019-11-07T09:23:55Z\",\"message\":\"Deployment config has minimum availability.\"},{\"type\":\"Progressing\",\"status\":\"True\",\"lastUpdateTime\":\"2019-11-14T23:44:33Z\",\"lastTransitionTime\":\"2019-11-14T23:44:30Z\",\"reason\":\"NewReplicationControllerAvailable\",\"message\":\"replication controller \\\"pipeline-bot-77\\\" successfully rolled out\"}],\"readyReplicas\":1}}\n"
+    },
+    "ownerReferences": [
+      {
+        "apiVersion": "apps.openshift.io/v1",
+        "kind": "DeploymentConfig",
+        "name": "pipeline-bot",
+        "uid": "5c85c83d-fa67-11e9-a9a8-0050568348cc",
+        "controller": true,
+        "blockOwnerDeletion": true
+      }
+    ]
+  },
+  "spec": {
+    "replicas": 1,
+    "selector": {
+      "app": "pipeline-bot",
+      "deployment": "pipeline-bot-78",
+      "deploymentconfig": "pipeline-bot"
+    },
+    "template": {
+      "metadata": {
+        "creationTimestamp": null,
+        "labels": {
+          "app": "pipeline-bot",
+          "deployment": "pipeline-bot-78",
+          "deploymentconfig": "pipeline-bot"
+        },
+        "annotations": {
+          "openshift.io/deployment-config.latest-version": "78",
+          "openshift.io/deployment-config.name": "pipeline-bot",
+          "openshift.io/deployment.name": "pipeline-bot-78",
+          "openshift.io/generated-by": "OpenShiftNewApp"
+        }
+      },
+      "spec": {
+        "containers": [
+          {
+            "name": "pipeline-bot",
+            "image": "docker-registry.default.svc:5000/databcdc/pipeline-bot@sha256:2ac1e453971516d77fca25fb85541aaa0cb02b82178945b536f7f1d270cd950f",
+            "ports": [
+              {
+                "containerPort": 8080,
+                "protocol": "TCP"
+              }
+            ],
+            "env": [
+              {
+                "name": "MATTERMOST_HOST",
+                "valueFrom": {
+                  "secretKeyRef": {
+                    "name": "hubot-mm-access",
+                    "key": "host"
+                  }
+                }
+              },
+              {
+                "name": "MATTERMOST_USER",
+                "valueFrom": {
+                  "secretKeyRef": {
+                    "name": "hubot-mm-access",
+                    "key": "user"
+                  }
+                }
+              },
+              {
+                "name": "MATTERMOST_GROUP",
+                "value": "dss"
+              },
+              {
+                "name": "MATTERMOST_HTTP_PORT",
+                "value": "443"
+              },
+              {
+                "name": "MATTERMOST_PASSWORD",
+                "valueFrom": {
+                  "secretKeyRef": {
+                    "name": "hubot-mm-access",
+                    "key": "pwd"
+                  }
+                }
+              },
+              {
+                "name": "HUBOT_MATTERMOST_CHANNEL",
+                "value": "bot-pipeline"
+              },
+              {
+                "name": "HUBOT_OCPAPIKEY",
+                "valueFrom": {
+                  "secretKeyRef": {
+                    "name": "default-token-8kzhp",
+                    "key": "token"
+                  }
+                }
+              },
+              {
+                "name": "HUBOT_OCPDOMAIN",
+                "valueFrom": {
+                  "secretKeyRef": {
+                    "name": "ocp-domain-port",
+                    "key": "domain-port"
+                  }
+                }
+              }
+            ],
+            "resources": {
+              
+            },
+            "terminationMessagePath": "/dev/termination-log",
+            "terminationMessagePolicy": "File",
+            "imagePullPolicy": "Always"
+          }
+        ],
+        "restartPolicy": "Always",
+        "terminationGracePeriodSeconds": 30,
+        "dnsPolicy": "ClusterFirst",
+        "securityContext": {
+          
+        },
+        "schedulerName": "default-scheduler"
+      }
+    }
+  },
+  "status": {
+    "replicas": 1,
+    "fullyLabeledReplicas": 1,
+    "readyReplicas": 1,
+    "availableReplicas": 1,
+    "observedGeneration": 2
+  }
+}

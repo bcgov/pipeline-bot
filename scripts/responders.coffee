@@ -8,13 +8,13 @@
 #
 #
 # Commands:
-#   pipeline-bot deploy <configName> <project> - start deployment config in OCP project space
-#   pipeline-bot build <configName> <project> - start buildconfig in OCP project space
-#   pipeline-bot mission - get pipeline-bots mission in life
-#   pipeline-bot status <repo/name> - get status of pipeline
-#   pipeline-bot list - get list of repos in pipeline
-#   pipeline-bot test <[cati|cadi]> - run api test against cati/cadi
-#
+#   hubot deploy <configName> <project> - start deployment config in OCP project space
+#   hubot build <configName> <project> - start buildconfig in OCP project space
+#   hubot mission - get pipeline-bots mission in life
+#   hubot status <repo/name> - get status of pipeline
+#   hubot list - get list of repos in pipeline
+#   hubot test (<dev>|<test>)  <project> - run api test against dev/test in OCP projectspace
+#   hubot buildanddeploy <buildConfig> <project> - start OCP build/deploy and watch
 #
 # Notes:
 #
@@ -25,6 +25,39 @@
 mat_room = process.env.HUBOT_MATTERMOST_CHANNEL
 apikey = process.env.HUBOT_OCPAPIKEY
 domain = process.env.HUBOT_OCPDOMAIN
+devApiTestTemplate = process.env.HUBOT_DEV_APITEST_TEMPLATE
+testApiTestTemplate = process.env.HUBOT_TEST_APITEST_TEMPLATE
+
+request = require('./request.coffee')
+
+api = new request.OCAPI(domain, apikey)
+
+buildSync = (project, buildConfig) ->
+    console.log("project: #{project}")
+    retVal = await api.buildSync(project, buildConfig) # returns promise
+    # what you want to do with the build sync
+    console.log('---complete---')
+    console.log("#{JSON.stringify(retVal)}")
+    console.log("#{typeof retVal}")
+    await return retVal
+
+
+buildDeploySync = (project, buildConfig, deployConfig) ->
+
+    console.log("project: #{project}")
+
+    retVal = await api.buildSync(project, buildConfig) # returns promise
+    # what you want to do with the build sync
+    console.log('---complete---')
+    console.log("#{JSON.stringify(retVal)}")
+    console.log("#{typeof retVal}")
+
+    console.log("----- running deploy now -----")
+    deployStatus =  await api.deployLatest(project, buildConfig, deployConfig)
+    console.log "DEPLY STATUS: #{deployStatus}"
+    console.log JSON.stringify(deployStatus)
+    await return deployStatus
+
 
 
 module.exports = (robot) ->
@@ -60,7 +93,7 @@ module.exports = (robot) ->
 
      res.reply mesg
 
-   # Deploy example
+   # Deploy no watch
    robot.respond /deploy (.*) (.*)/i, (res) ->
      # pipeline-bot deploy <configName> <project>
      config = res.match[1]
@@ -99,55 +132,23 @@ module.exports = (robot) ->
         console.log mesg
         res.reply mesg
 
-
-   # Build example
-   robot.respond /build (.*) (.*)/i, (res) ->
-     # pipeline-bot build <configName> <project>
-     config = res.match[1]
-     project = res.match[2]
-     console.log "#{config} #{project}"
-
-     robot.http("https://#{domain}/apis/build.openshift.io/v1/namespaces/#{project}/buildconfigs/#{config}/instantiate")
-       .header('Accept', 'application/json')
-       .header("Authorization", "Bearer #{apikey}")
-       .post(JSON.stringify({
-        kind: "BuildRequest", apiVersion: "build.openshift.io/v1", metadata: {name:"#{config}", creationTimestamp: null}, triggeredBy: [{message: "Triggered by Bot"}], dockerStrategyOptions: {}, sourceStrategyOptions: {}
-      })) (err, httpRes, body) ->
-        # check for errs
-        if err
-          res.reply "Encountered an error :( #{err}"
-          return
-
-        data = JSON.parse body
-        console.log data
-
-        # check for ocp returned status responses.
-        if data.kind == "Status"
-          status = data.status
-          reason = data.message
-          res.reply "#{status} #{reason} "
-          return
-
-        #continue and message back succesful resp details
-        kind = data.kind
-        buildName = data.metadata.name
-        namespace = data.metadata.namespace
-        time = data.metadata.creationTimestamp
-        phase = data.status.phase
-
-        mesg = "Starting #{phase} #{kind} #{buildName} in #{namespace} at #{time}"
-        console.log mesg
-        res.reply mesg
-
    # start OCP job from template - api-test
-   robot.respond /test/i, (res) ->
-#   /test (.*) (.*)/i
-     # pipeline-bot test <[cati|cadi]> - run api test against cati/cadi
-     env = res.match[1]
-     project = "databcdc"
-     console.log env
+   robot.respond /test (.*) (.*)/i, (res) ->
+     # pipeline-bot test <[dev|test]>  <project> - run api test against dev/test in OCP projectspace
+     env = res.match[1].toLowerCase() ? null
+     project = res.match[2].toLowerCase() ? null
 
-     templateUrl = 'https://raw.githubusercontent.com/bcgov/bcdc-test/dev/k8s/test-dwelf-job-template-dev.yaml'
+     if env == 'dev'
+        templateUrl = devApiTestTemplate
+     else if env == 'test'
+        templateUrl = testApiTestTemplate
+     else
+        templateUrl = null
+        console.log "failed to set templateURL"
+        res.reply "please provide envrioment option dev|test"
+        return
+     #TODO: err check args and exit
+     console.log env
 
      robot.http(templateUrl)
        .header('Accept', 'application/json')
@@ -160,22 +161,34 @@ module.exports = (robot) ->
 
          fs = require('fs')
          yaml = require('js-yaml')
-         payload = yaml.safeLoad(fs.readFileSync('./test-dwelf-job-dev.yaml', 'utf8'))
-         console.log payload
 
+         data = yaml.load(body)
+         jsonString = JSON.stringify(data)
+         jsonParsed = JSON.parse(jsonString)
+         # get job object from template
+         # TODO: check if kind is of job type
+         job = jsonParsed.objects[0]
+         console.log job
 
+         #add env var with ID of deployment for tracking
+         data =  {"name": "DEPLOY_UID","value": "deployUID"}
+         console.log "#{JSON.stringify(data)}"
+         console.log "add new data to job yaml"
+         job.spec.template.spec.containers[0].env.push data
+         console.log "#{JSON.stringify(job)}#"
 
+         # send job to ocp api jobs endpoint
          robot.http("https://#{domain}/apis/batch/v1/namespaces/#{project}/jobs")
           .header('Accept', 'application/json')
           .header('Authorization', "Bearer #{apikey}")
-          .post(JSON.stringify(payload)) (err, httpRes, body2) ->
+          .post(JSON.stringify(job)) (err, httpRes, body2) ->
            # check for errs
            if err
              res.reply "Encountered an error :( #{err}"
              return
 
            data = JSON.parse body2
-           console.log "jobs"
+           console.log "returning jobs response"
            console.log data
 
            # check for ocp returned status responses.
@@ -190,4 +203,83 @@ module.exports = (robot) ->
            buildName = data.metadata.name
            namespace = data.metadata.namespace
            time = data.metadata.creationTimestamp
+
+           mesg = "Starting #{kind} #{buildName} in #{namespace} at #{time}"
+           console.log mesg
+           res.reply mesg
+
+
+   # build and watch
+   robot.respond /build (.*) (.*)/i, (res) ->
+     # pipeline-bot build <buildConfig> <project> - start OCP build and watch
+     buildConfig = res.match[1].toLowerCase()
+     project = res.match[2].toLowerCase()
+     res.reply "Lets start building #{buildConfig}"
+     resp = await buildSync(project, buildConfig)
+     console.log "your response is : #{JSON.stringify(resp)}"
+
+     console.log resp.statuses
+     status = resp.statuses.build.status
+     kind = resp.statuses.build.payload.kind
+     name = resp.statuses.build.payload.metadata.name
+     creationTimestamp = resp.statuses.build.payload.metadata.creationTimestamp
+     commit = resp.statuses.build.payload.spec.revision.git.commit
+     mesg = "Commit #{commit} #{status} #{kind} #{name} #{creationTimestamp}"
+     console.log mesg
+     res.reply mesg
+
+
+   #build and deploy watch
+   robot.respond /buildanddeploy (.*) (.*)/i, (res) ->
+     # pipeline-bot buildanddeploy <buildConfig> <project> - start OCP build/deploy and watch
+     buildConfig = res.match[1].toLowerCase()
+     project = res.match[2].toLowerCase()
+     deployConfig = buildConfig  # hardcoded for testing at this time.
+
+     # message
+     mesg = "Start build and deploy for #{buildConfig}"
+
+     # send mesg
+     res.reply mesg
+
+     # add to brain
+     robot.brain.set('BuildandDeploy', { entry: [mesg]})
+
+     # call build/deploy watch
+     resp = await buildDeploySync(project, buildConfig, deployConfig)
+     console.log "your response is : #{JSON.stringify(resp)}"
+
+     buildStatus = resp.statuses.build.status
+     buildKind = resp.statuses.build.payload.kind
+     buildName = resp.statuses.build.payload.metadata.name
+     buildCreationTimestamp = resp.statuses.build.payload.metadata.creationTimestamp
+     buildUID = resp.statuses.deploy.payload.metadata.uid
+
+     # message
+     mesg = "#{buildKind} #{buildStatus} #{buildName} #{buildCreationTimestamp} #{buildUID} "
+     console.log mesg
+
+     # add to brain
+     event = robot.brain.get('BuildandDeploy')
+     event.entry.push mesg
+
+     # send message to chat
+     res.reply mesg
+
+     deploydStatus = resp.statuses.deploy.status
+     deployKind = resp.statuses.deploy.payload.kind
+     deployName = resp.statuses.deploy.payload.metadata.name
+     deployCreationTimestamp = resp.statuses.deploy.payload.metadata.creationTimestamp
+     deployUID = resp.statuses.deploy.payload.metadata.uid
+
+     # message
+     mesg = "#{deployKind} #{deploydStatus} #{deployName} #{deployCreationTimestamp} #{deployUID}"
+     console.log mesg
+
+     # add to brain
+     event = robot.brain.get('BuildandDeploy')
+     event.entry.push mesg
+
+     # send message to chat
+     res.reply mesg
 
