@@ -50,7 +50,7 @@ module.exports = (robot) ->
     data = {
         commit_title: "Autobot Merg pull request Test Title",
         sha: pullSha,
-        commit_message: "Autobot Merg pull request Test Message"
+        commit_message: "Autobot Merg pull request Test Message",
         merge_method: "merge"
     }
     console.log "data to pass to github  : #{JSON.stringify(data)}"
@@ -68,21 +68,17 @@ module.exports = (robot) ->
           robot.messageRoom mat_room, "Error: #{response.message}"
 
     # call github pr merge api
-    github.post "repos/#{user}/#{repo}/pulls/#{pullNumber}/merge", data, (pr) ->
-      mesg = "Success! Merged Pull request for #{branch}. #{pr.html_url}"
+    #TODO: 404 on merge call..... must run test locally
+#    /repos/:owner/:repo/pulls/:pull_number/merge
+    github.put "repos/#{user}/#{repo}/pulls/#{pullNumber}/merge", data, (pr) ->
+      mesg = "Success! Merged Pull request for #{branch}."
 
       console.log "Merged Pull Request from github  : #{JSON.stringify(pr)}"
       console.log mesg
 
-      robot.messageRoom mat_room, "#{mesg}"
-
-      # update brain
-      obj.event.event.entry.push mesg
-
       # update brain
       obj.event.event.entry.push mesg
       console.log "#{JSON.stringify(obj.event)}"
-      obj.event.event.env = envKey #update with new env key
 
       # send message to chat
       robot.messageRoom mat_room, "#{mesg}"

@@ -31,7 +31,7 @@ module.exports = (robot) ->
       deploy_status = "success"
       status = "pending"
       entry = "testEntry"
-      env = "dev"
+      env = "test"
       user = "craigrigdon"
       repo = "test"
       branch = "dev"
@@ -46,8 +46,8 @@ module.exports = (robot) ->
           robot.brain.set("#{repoFullName}": {
               commit: 12345678,
               status: null,
-              pullSha: null,
-              pullNumber: null,
+              pullSha: "ccd55a08263c146364e7cc2169f869633030430f",
+              pullNumber: "18",
               repoFullName: repoFullName,
               repo: repo,
               user: user,
@@ -65,7 +65,7 @@ module.exports = (robot) ->
                 test: {
                   deploy_uid: test_deploy_uid,
                   deploy_status: deploy_status,
-                  test_status: null,
+                  test_status: "Passed",
                   promote: false
                 },
                 prod: {
