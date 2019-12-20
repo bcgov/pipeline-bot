@@ -1,3 +1,24 @@
+# Description:
+#   access control for hubot
+#
+# Dependencies:
+#
+#
+# Configuration:
+#
+#
+# Commands:
+#   hubot brain (<add>|<show>|<clear>)  - add test entry, show all keys and values, clear all keys
+#
+#
+# Notes:
+#   includes examples of crud operations to hubot brain
+#
+# Author:
+#
+
+
+
 underscore = require "underscore"
 util = require "util"
 #config = require "../acl.config.json"
