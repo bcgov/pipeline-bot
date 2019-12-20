@@ -68,7 +68,7 @@ module.exports = (robot) ->
           robot.messageRoom mat_room, "Error: #{response.message}"
 
     # call github pr merge api
-    github.post "repos/#{user}/#{repo}/pulls/#{pullNumber}/merges", data, (pr) ->
+    github.post "repos/#{user}/#{repo}/pulls/#{pullNumber}/merge", data, (pr) ->
       mesg = "Success! Merged Pull request for #{branch}. #{pr.html_url}"
 
       console.log "Merged Pull Request from github  : #{JSON.stringify(pr)}"
