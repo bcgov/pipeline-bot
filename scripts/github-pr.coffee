@@ -54,7 +54,6 @@ module.exports = (robot) ->
     }
 
 
-
     github.handleErrors (response) ->
       switch response.statusCode
         when 409
@@ -68,26 +67,27 @@ module.exports = (robot) ->
 
 
     # Submit pull request or merg based on event
-
+    pullSuccess = false
     if obj.event.event.pull != null
       console.log "data to pass to github  : #{JSON.stringify(pullRequestData)}"
-      # call gitbub pr api
+
+      # call github pr api
       github.post "repos/#{user}/#{repo}/pulls", pullRequestData, (pr) ->
         mesg = "Success! Pull request created for #{branch}. #{pr.html_url}"
-
+        pullSuccess = true
         console.log "Pull Request from github  : #{JSON.stringify(pr)}"
         console.log mesg
 
         robot.messageRoom mat_room, "#{mesg}"
 
         # update brain
-
         obj.event.event.entry.push mesg
         obj.event.event.pullSha = pr.head.sha
         obj.event.event.pullNumber = pr.number
     else
       console.log "data to pass to github  : #{JSON.stringify(mergRequestData)}"
-
+      pullSuccess = true
+      # call github pr merge api
       github.post "repos/#{user}/#{repo}/pulls/#{pullNumber}/merges", mergRequestData, (pr) ->
         mesg = "Success! Pull request Merged for #{branch}. #{pr.html_url}"
 
@@ -96,73 +96,81 @@ module.exports = (robot) ->
 
         robot.messageRoom mat_room, "#{mesg}"
 
-    # get config file from repo for pipeline mappings
-    robot.http(configPath)
-      .header('Accept', 'application/json')
-      .get() (err, httpres, body2) ->
+        # update brain
+        obj.event.event.entry.push mesg
 
-        # check for errs
-        if err
-          console.log "Encountered an error fetching config file :( #{err}"
-          body2 =  process.env.HUBOT_PIPELINE_MAP ? null  # hardcode for local testing only to be removed
 
-        pipes = JSON.parse(body2)
-        console.log pipes
+#-------------------MUST WAIT FOR GITHUB API RETURN----------------
+#TODO: figure out a way to await on fuction
 
-        buildObj = null
-        deployObj = null
+    if pullSuccess = true
+      # get config file from repo for pipeline mappings
+      robot.http(configPath)
+        .header('Accept', 'application/json')
+        .get() (err, httpres, body2) ->
 
-        for pipe in pipes.pipelines
-          console.log "#{JSON.stringify(pipe.name)}"
-          if pipe.repo == obj.event.event.repoFullName
-            console.log "Repo found in conifg map: #{JSON.stringify(pipe.repo)}"
+          # check for errs
+          if err
+            console.log "Encountered an error fetching config file :( #{err}"
+            body2 =  process.env.HUBOT_PIPELINE_MAP ? null  # hardcode for local testing only to be removed
 
-            #get event from brain
-#            event = robot.brain.get(repoFullName)
+          pipes = JSON.parse(body2)
+          console.log pipes
 
-            # start build and deploy in next stage
-            env = obj.event.event.env
-            envKey = null #reset envKey
-            switch env
-              when "dev"
-                mesg =  "Promoting to TEST Environment"
-                robot.messageRoom mat_room, "#{mesg}"
-                console.log mesg
-                buildObj = pipe.test.build
-                deployObj = pipe.test.deploy
-                eventStage = obj.event.event.stage.test
-                envKey = "test"
+          buildObj = null
+          deployObj = null
 
-              when "test"
-                mesg =  "Promoting to PROD Environment"
-                robot.messageRoom mat_room, "#{mesg}"
-                console.log mesg
-                buildObj = pipe.prod.build
-                deployObj = pipe.prod.deploy
-                eventStage = obj.event.event.stage.prod
-                envKey = "prod"
+          for pipe in pipes.pipelines
+            console.log "#{JSON.stringify(pipe.name)}"
+            if pipe.repo == obj.event.event.repoFullName
+              console.log "Repo found in conifg map: #{JSON.stringify(pipe.repo)}"
 
-              else
-                mesg = "Promotion Error Required env arguments dev|test"
-                console.log mesg
-                robot.messageRoom mat_room, "#{mesg}"
+              #get event from brain
+  #            event = robot.brain.get(repoFullName)
 
-            # update brain
-            obj.event.event.entry.push mesg
-            console.log "#{JSON.stringify(event)}"
-            obj.event.event.env = envKey #update with new env key
+              # start build and deploy in next stage
+              env = obj.event.event.env
+              envKey = null #reset envKey
+              switch env
+                when "dev"
+                  mesg =  "Promoting to TEST Environment"
+                  robot.messageRoom mat_room, "#{mesg}"
+                  console.log mesg
+                  buildObj = pipe.test.build
+                  deployObj = pipe.test.deploy
+                  eventStage = obj.event.event.stage.test
+                  envKey = "test"
 
-            # send message to chat
-            robot.messageRoom matRoom, "#{mesg}"
+                when "test"
+                  mesg =  "Promoting to PROD Environment"
+                  robot.messageRoom mat_room, "#{mesg}"
+                  console.log mesg
+                  buildObj = pipe.prod.build
+                  deployObj = pipe.prod.deploy
+                  eventStage = obj.event.event.stage.prod
+                  envKey = "prod"
 
-            # sent to build deploy test script
-            robot.emit "build-deploy-stage", {
-                build    : buildObj, #build object from config file
-                deploy   : deployObj, #deploy object from config file
-                repoFullName    : repoFullName # repo name from github payload
-                eventStage : eventStage # stage object from memory to update
-                envKey : envKey # enviromnet key
-            }
+                else
+                  mesg = "Promotion Error Required env arguments dev|test"
+                  console.log mesg
+                  robot.messageRoom mat_room, "#{mesg}"
+
+              # update brain
+              obj.event.event.entry.push mesg
+              console.log "#{JSON.stringify(obj.event)}"
+              obj.event.event.env = envKey #update with new env key
+
+              # send message to chat
+              robot.messageRoom mat_room, "#{mesg}"
+
+              # sent to build deploy test script
+              robot.emit "build-deploy-stage", {
+                  build    : buildObj, #build object from config file
+                  deploy   : deployObj, #deploy object from config file
+                  repoFullName    : obj.event.event.repoFullName # repo name from github payload
+                  eventStage : eventStage # stage object from memory to update
+                  envKey : envKey # enviromnet key
+              }
 
 
 

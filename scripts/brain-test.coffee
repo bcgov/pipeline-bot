@@ -36,16 +36,19 @@ module.exports = (robot) ->
       repo = "test"
       branch = "dev"
       base = "master"
+      repoFullName = "craigrigdon/test"
 
       switch arg
         when "add"
           console.log "adding"
 #          robot.brain.set(key, {id: id, stage: stage, status: status, entry: [entry]})
 #                # create entry in Brain
-          robot.brain.set("#{commitID}": {
+          robot.brain.set("#{repoFullName}": {
               commit: 12345678,
               status: null,
-              pull: null,
+              pullSha: null,
+              pullNumber: null,
+              repoFullName: repoFullName,
               repo: repo,
               user: user,
               branch :branch,
@@ -60,6 +63,12 @@ module.exports = (robot) ->
                   promote: false
                 },
                 test: {
+                  deploy_uid: test_deploy_uid,
+                  deploy_status: deploy_status,
+                  test_status: null,
+                  promote: false
+                },
+                prod: {
                   deploy_uid: test_deploy_uid,
                   deploy_status: deploy_status,
                   test_status: null,
