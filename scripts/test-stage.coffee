@@ -54,7 +54,6 @@ module.exports = (robot) ->
       when 'test'
        templateUrl = testApiTestTemplate
       else
-       templateUrl = null
        console.log "failed to set templateURL"
        return
 

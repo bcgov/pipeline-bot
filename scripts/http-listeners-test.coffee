@@ -1,6 +1,5 @@
 # Description:
-#   test http listener srcipt to create endpoint to be used by exteral services to notify hubot of status,
-#   will print payload to console and send success back.
+#   test http listener srcipt
 #
 # Created by:
 #   craigrigdon
@@ -29,10 +28,8 @@ module.exports = (robot) ->
     data   = if req.body.payload? then JSON.parse req.body.payload else req.body
     console.log "Payload is: #{JSON.stringify(data)}"
 
-
     status = "Success"
     res.send status
-
 
     robot.http(configPath)
        .header('Accept', 'application/json')

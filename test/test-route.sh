@@ -6,12 +6,12 @@
 #curl -X POST -H "Content-Type: application/json" \
 #-d '{"status":"success", "stage":"test"}' http://127.0.0.1:32768/hubot/test
 
-#curl -X POST -H "Content-Type: application/json" \
-#-d '{"status":"success", "env":"cadi", "results":"results", "id":"12345ABC"}' http://127.0.0.1:32768/hubot/apitest
-
-payload='/Users/crigdon/PycharmProjects/pipeline-bot/data/github_payload_test.json'
 curl -X POST -H "Content-Type: application/json" \
--d @$payload http://127.0.0.1:32768/hubot/github/dev
+-d '{"status":"success", "env":"cadi", "results":"results", "id":"12345ABC"}' http://127.0.0.1:32768/hubot/apitest
+
+#payload='/Users/crigdon/PycharmProjects/pipeline-bot/data/github_payload_test.json'
+#curl -X POST -H "Content-Type: application/json" \
+#-d @$payload http://127.0.0.1:32768/hubot/github/dev
 
 #curl -X POST -H "Content-Type: application/json"  -d "$payload" http://127.0.0.1:32768/hubot/github/dev
 

@@ -1,5 +1,5 @@
 # Description:
-#   Create Github Pull Requests with Hubot.
+#   Create Github Merge Pull Requests with Hubot.
 #
 # Dependencies:
 #   "githubot": "^1.0.1"
@@ -26,7 +26,7 @@ configPath = process.env.HUBOT_CONFIG_PATH
 
 module.exports = (robot) ->
 
-  robot.on "github-pr", (obj) ->
+  robot.on "github-pr-merge", (obj) ->
 
     # expecting from obj
     # event    : event, #event object from brain
@@ -37,19 +37,21 @@ module.exports = (robot) ->
 
     github = require('githubot')(robot)
 
-    console.log "called github-pr"
+    console.log "called github-pr-merge"
     console.log "object passed is  : #{JSON.stringify(obj)}"
 
     user = obj.event.event.user
     repo = obj.event.event.repo
     branch = obj.event.event.branch
     base = obj.event.event.base
+    pullSha = obj.event.event.pullSha
+    pullNumber = obj.event.event.pullNumber
 
     data = {
-        title: "PR to merge #{branch} into #{base}",
-        head: branch,
-        base: base,
-        body: "Autobot Pull Request Test"
+        commit_title: "Autobot Merg pull request Test Title",
+        sha: pullSha,
+        commit_message: "Autobot Merg pull request Test Message",
+        merge_method: "merge"
     }
     console.log "data to pass to github  : #{JSON.stringify(data)}"
 
@@ -66,16 +68,17 @@ module.exports = (robot) ->
           robot.messageRoom mat_room, "Error: #{response.message}"
 
     # call github pr merge api
-    github.post "repos/#{user}/#{repo}/pulls", data, (pr) ->
-      mesg = "Success! Pull request created for #{branch}. #{pr.html_url}"
+    #TODO: 404 on merge call..... must run test locally
+#    /repos/:owner/:repo/pulls/:pull_number/merge
+    github.put "repos/#{user}/#{repo}/pulls/#{pullNumber}/merge", data, (pr) ->
+      mesg = "Success! Merged Pull request for #{branch}."
 
-      console.log "Pull Request from github  : #{JSON.stringify(pr)}"
+      console.log "Merged Pull Request from github  : #{JSON.stringify(pr)}"
       console.log mesg
 
       # update brain
       obj.event.event.entry.push mesg
-      obj.event.event.pullSha = pr.head.sha
-      obj.event.event.pullNumber = pr.number
+      console.log "#{JSON.stringify(obj.event)}"
 
       # send message to chat
       robot.messageRoom mat_room, "#{mesg}"
@@ -88,3 +91,7 @@ module.exports = (robot) ->
           eventStage : obj.eventStage # stage object from memory to update
           envKey : obj.envKey # environment key
       }
+
+
+
+
