@@ -57,7 +57,7 @@ module.exports = (robot) ->
     # expecting the following from obj
     # buildObj, #build object from config file
     # deployObj, #deploy object from config file
-    # repoName # repo name from github payload
+    # repoFullName # repo name from github payload
     # eventStage # stage object from memory to update
     # envKey # enviromnet key from github action param
 
@@ -104,7 +104,7 @@ module.exports = (robot) ->
 
     if deploydStatus == "success"
       robot.emit "test-stage", {
-         repoFullName    : obj.repoFullName # repo full name from github payload
-         eventStage : obj.eventStage # stage object from memory to update
-         envKey : obj.envKey # enviromnet key from github action param
+         repoFullName    : obj.repoFullName, # repo full name from github payload
+         eventStage : obj.eventStage, # stage object from memory to update
+         envKey : obj.envKey, # enviromnet key from github action param
       }
