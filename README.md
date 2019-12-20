@@ -12,17 +12,24 @@ but could be adapted to any workflow.
 
 This document will break down the build config and deployment steps required to run pipeline-bot.
 
+##Work in Progress
+* Currently expanding OCP api calls to include build from template and watch
+* jenkins api support
+* add responders to include git checkout and deploy to teardown environments in OCP
+* output formatting to mattermost
+
+
 ##Automated Workflow Steps from DEV-to-PROD
 1. Github Action - On push to DEV branch - send hubot payload with env param
 2. Hubot - receive github payload - verify pipeline has been defined
 3. Hubot - build deploy watch - start OCP build and watch then start deploy and watch for DEV
-4. Hubot - start test - start tests as OCP job
+4. Hubot - start test - start tests as OCP template job
 5. Hubot - receive test payload - associate test results with pipeline
 6. Hubot - promote - if conditions pass then promote to next environment TEST
 7. Hubot - pull request - pull request to github repo
 8. Hubot - build deploy watch - start OCP build and watch then start deploy and watch for TEST
 9. Hubot - data migration - migration and sanitize PROD data to TEST
-10. Hubot - start test - start test as OCP job
+10. Hubot - start test - start test as OCP template job
 11. Hubot - receive test payload - associate test results with pipeline
 12. Hubot - promote - if conditions pass then promote to next environment PROD
 13. Hubot - merge pull request - merge pull request in github repo
@@ -69,20 +76,108 @@ oc tag pipeline-bot pipeline-bot:latest
 ```
 oc new-build nodejs:10~https://github.com/bcgov/pipeline-bot.git -l app=bot
 ```
-### 10. Define required env var in deployment config via secrets or config maps 
-  * MATTERMOST_HOST= <url-to-mattermost> 
-  * MATTERMOST_GROUP= <mattermost-group>
-  * MATTERMOST_USER= <mattermost-username>
-  * MATTERMOST_PASSWORD= <mattermost-password>
+### 10. required env var in deployment config via secrets or config maps 
+MATTERMOST_HOST= <url-to-mattermost> 
+MATTERMOST_GROUP= <mattermost-group>
+MATTERMOST_USER= <mattermost-username>
+MATTERMOST_PASSWORD= <mattermost-password>
+HUBOT_MATTERMOST_CHANNEL= <url-to-mattermost>
+HUBOT_OCPAPIKEY= <ocp-token>
+HUBOT_OCPDOMAIN= <ocp-domain>
+HUBOT_ACL= <conifg for access control list> # see Access Control
+HUBOT_DEV_APITEST_TEMPLATE= <url-to-test-template.json>
+HUBOT_TEST_APITEST_TEMPLATE= <url-to-test-template.json>
+HUBOT_TEST_NAMESPACE= <ocp-namespace-to-run-test-in>
+HUBOT_CONFIG_PATH= <url-to-config-map> # see Pipeline Config
+HUBOT_GITHUB_TOKEN= <github token for repo access>
 
 ### 11. first time deploy in OCP
 ```
 oc new-app pipeline-bot:latest
 ```
-#Other Notes:
+
+#Access Control
+https://github.com/emptywee/acl-hubot
+
+defined from config map in OCP and injected as env var HUBOT_ACL
+required for scripts/acl.coffee 
+
+```
+{
+        "groups":
+        {
+                "admins": [ "<mattermost-username-1>", "mattermost-username-2", "mattermost-username-3"]
+        },
+  "commands":
+  {
+    "restricted":
+    {
+      "build": [ "admins" ],
+      "deploy": [ "admins" ],
+      "brain": [ "admins" ],
+      "buildanddeploy": [ "admins" ]
+    }
+  }
+}
+```
+#Pipeline Config
+Hubot will reference this file to lookup buildconfig and deployment configs,
+and namespaces required to make the api calls to OCP.
+
+/config/config.json
+```
+{
+  "pipelines": [
+    {
+      "name": "<appName>",
+      "repo": "<user/repo>",
+      "dev": {
+        "build": {
+          "buildconfig": "<ocp-bc-name>",
+          "namespace": "<ocp-bc-namespace>"
+        },
+        "deploy": {
+          "deployconfig": "<ocp-dc-name>",
+          "namespace": "<ocp-dc-namespace>"
+        }
+      },
+      "test": {
+        "build": {
+          "buildconfig": "<ocp-bc-name>",
+          "namespace": "<ocp-bc-namespace>"
+        },
+        "deploy": {
+          "deployconfig": "<ocp-dc-name>",
+          "namespace": "<ocp-dc-namespace>"
+        }
+      },
+      "prod": {
+        "build": {
+          "buildconfig": "<ocp-bc-name>",
+          "namespace": "<ocp-bc-namespace>"
+        },
+        "deploy": {
+          "deployconfig": "<ocp-dc-name>",
+          "namespace": "<ocp-dc-namespace>"
+        }
+      }
+    }
+  ]
+}
+
+```
+
+#Other Notes
 ###Dockerfile
 dockerfile in this repo is for local build development only and not to be used for production.
 ###Test Dir
 currently used for test scripts and example test routes for local testing and examples only.
 ###Data Dir
 payload examples for references from  github and OCP sources, includes readme with curl examples.  
+
+#Custom Responders
+Hubot allows us to create custom responders to interact directly with the bot.
+
+defined in scripts/responders.coffee
+
+A list of cmds are available by running cmd <hubotname> help
