@@ -34,7 +34,7 @@ module.exports = (robot) ->
     console.log "object to promote : #{JSON.stringify(stage)}"
     if stage.deploy_status == "success" && stage.test_status == "Passed" && stage.promote == false
 
-      mesg = "promoting #{obj.event.repoFullName}"
+      mesg = "Promoting #{obj.event.repoFullName}"
       console.log mesg
 
       # message room
@@ -75,7 +75,6 @@ module.exports = (robot) ->
                 switch env
                   when "dev"
                     mesg =  "Promoting to TEST Environment"
-                    robot.messageRoom mat_room, "#{mesg}"
                     console.log mesg
                     buildObj = pipe.test.build
                     deployObj = pipe.test.deploy
@@ -84,7 +83,6 @@ module.exports = (robot) ->
 
                   when "test"
                     mesg =  "Promoting to PROD Environment"
-                    robot.messageRoom mat_room, "#{mesg}"
                     console.log mesg
                     buildObj = pipe.prod.build
                     deployObj = pipe.prod.deploy
@@ -94,7 +92,6 @@ module.exports = (robot) ->
                   else
                     mesg = "Promotion Error Required env arguments dev|test"
                     console.log mesg
-                    robot.messageRoom mat_room, "#{mesg}"
 
                 # check if event has pull request pending
                 if obj.event.pullNumber == null
