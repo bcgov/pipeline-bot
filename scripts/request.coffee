@@ -535,7 +535,7 @@ class exports.OCAPI
                 console.log "instantiating a deploy..."
                 this.statuses.updateStatus('deploy', 'initiated')
                 deployObj = await this.deploy(ocDeployProject, deployConfig)
-                replicationController = "#{deplovyObj.metadata.name}-#{deployObj.status.latestVersion}"
+                replicationController = "#{deployObj.metadata.name}-#{deployObj.status.latestVersion}"
                 this.statuses.updateStatus('deploy', 'initiated', deployObj)
             if replicationController == undefined
                 # Getting the name of the replication controller that is doing
