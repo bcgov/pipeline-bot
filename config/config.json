@@ -53,7 +53,7 @@
       "repo": "craigrigdon/test",
       "dev": {
         "build": {
-          "buildconfig": "td-bcdc-main",
+          "buildconfig": "bcdc-ckan",
           "namespace": "dbc-bcdc-dev"
         },
         "deploy": {
