@@ -24,7 +24,7 @@ class exports.OCAPI
     buildStatus = 'NOT STARTED'
     deployStatus = 'NOT STARTED'
     # ckan build taks around 10 minutes.. making timeout 20 should be adequate
-    requestTimeoutSeconds = 60 * 20
+    requestTimeoutSeconds = 60 * 30
     ###*
     # @param {string} domain - The domain to use in the url when communicating with 
     #                           openshift.
