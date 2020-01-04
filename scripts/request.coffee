@@ -24,7 +24,7 @@ class exports.OCAPI
     buildStatus = 'NOT STARTED'
     deployStatus = 'NOT STARTED'
     # ckan build taks around 10 minutes.. making timeout 20 should be adequate
-    requestTimeoutSeconds = 60 * 20
+    requestTimeoutSeconds = 60 * 30
     ###*
     # @param {string} domain - The domain to use in the url when communicating with 
     #                           openshift.
@@ -535,7 +535,7 @@ class exports.OCAPI
                 console.log "instantiating a deploy..."
                 this.statuses.updateStatus('deploy', 'initiated')
                 deployObj = await this.deploy(ocDeployProject, deployConfig)
-                replicationController = "#{deplovyObj.metadata.name}-#{deployObj.status.latestVersion}"
+                replicationController = "#{deployObj.metadata.name}-#{deployObj.status.latestVersion}"
                 this.statuses.updateStatus('deploy', 'initiated', deployObj)
             if replicationController == undefined
                 # Getting the name of the replication controller that is doing

@@ -22,16 +22,6 @@
           "deployconfig": "datapusher",
           "namespace": "databcdc"
         }
-      },
-      "prod": {
-        "build": {
-          "buildconfig": "datapusher",
-          "namespace": "databcdc"
-        },
-        "deploy": {
-          "deployconfig": "datapusher",
-          "namespace": "databcdc"
-        }
       }
     },
     {
@@ -53,8 +43,8 @@
       "repo": "",
       "dev": {
         "build": {
-          "buildconfig": "bcdc",
-          "namespace": "dbc-bcdc-tools"
+          "buildconfig": "bcdc-ckan",
+          "namespace": "dbc-bcdc-dev"
         },
         "deploy": {
           "deployconfig": "bcdc-ckan-main",

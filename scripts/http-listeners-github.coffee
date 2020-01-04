@@ -110,71 +110,93 @@ module.exports = (robot) ->
 
            buildObj = null
            deployObj = null
+           exhasted = false
 
-           for pipe in pipes.pipelines
-             console.log "#{JSON.stringify(pipe.name)}"
-             if pipe.repo == repoFullName
-               console.log "Repo found in conifg map: #{JSON.stringify(pipe.repo)}"
+           # check if repo is in config file
+           results = pipes.pipelines.where repo: "#{repoFullName}"
+           console.log results
+           # process first result only
+           pipe = results[0]
 
-               #get event from brain
-               event = robot.brain.get(repoFullName)
+           if pipe?
+            console.log "Repo found in conifg map: #{JSON.stringify(pipe.repo)}"
 
-               switch envKey
-                 when "dev"
-                   console.log "define vars for dev"
-                   console.log "#{JSON.stringify(pipe.dev)}"
-                   buildObj = pipe.dev.build
-                   deployObj = pipe.dev.deploy
-                   envObj = pipe.dev # may use this later
-                   # get Stage object from brain
-                   eventStage = event.stage.dev
+            #get event from brain
+            event = robot.brain.get(repoFullName)
 
-                 when "test"
-                   console.log "define vars for test"
-                   console.log "#{JSON.stringify(pipe.test)}"
-                   buildObj = pipe.test.build
-                   deployObj = pipe.test.deploy
-                   envObj = pipe.test # may use this later
-                   # get Stage object from brain
-                   eventStage = event.stage.test
+            switch envKey
+              when "dev"
+                console.log "define vars for dev"
+                console.log "#{JSON.stringify(pipe.dev)}"
+                buildObj = pipe.dev.build
+                deployObj = pipe.dev.deploy
+                envObj = pipe.dev # may use this later
+                # get Stage object from brain
+                eventStage = event.stage.dev
 
-                 else
-                   console.log "Error Required env arguments dev|test|prod"
-                   # TODO: exit and message error to chatroom and log to brain
+              when "test"
+                console.log "define vars for test"
+                console.log "#{JSON.stringify(pipe.test)}"
+                buildObj = pipe.test.build
+                deployObj = pipe.test.deploy
+                envObj = pipe.test # may use this later
+                # get Stage object from brain
+                eventStage = event.stage.test
+
+              else
+                mesg = "Pipeline has been exhasted"
+                console.log mesg
+                exhasted = true
+
 
            console.log "#{JSON.stringify(buildObj)}"
            console.log "#{JSON.stringify(deployObj)}"
            console.log "#{JSON.stringify(eventStage)}"
 
-           # message
-           mesg = "Recieved Github Event [#{commitID}] on [#{repoFullName}](#{repoURL})"
-           console.log mesg
+           if exhasted == false
 
-           # update brain
-           event = robot.brain.get(repoFullName)
-           event.entry.push mesg
-           console.log "#{JSON.stringify(event)}"
-           event.status = 'pending'
+             # message
+             mesg = "Recieved Github Event [#{commitID}] on [#{repoFullName}](#{repoURL})"
+             console.log mesg
 
-           # send message to chat
-           robot.messageRoom matRoom, "#{mesg}"
+             # update brain
+             event = robot.brain.get(repoFullName)
+             event.entry.push mesg
+             console.log "#{JSON.stringify(event)}"
+             event.status = 'pending'
 
-           # sent to build deploy test script
-           robot.emit "build-deploy-stage", {
-               build    : buildObj, #build object from config file
-               deploy   : deployObj, #deploy object from config file
-               repoFullName    : repoFullName # repo name from github payload
-               eventStage : eventStage # stage object from memory to update
-               envKey : envKey # enviromnet key
-           }
+             # send message to chat
+             robot.messageRoom matRoom, "#{mesg}"
 
-           # send source status
-           res.send status
+             # sent to build deploy test script
+             robot.emit "build-deploy-stage", {
+                 build    : buildObj, #build object from config file
+                 deploy   : deployObj, #deploy object from config file
+                 repoFullName    : repoFullName # repo name from github payload
+                 eventStage : eventStage # stage object from memory to update
+                 envKey : envKey # enviromnet key
+             }
+
+             # send source status
+             res.send status
+
+           else
+             mesg = "Pipeline has been exhasted for #{repoFullName}"
+             console.log mesg
+
+             # message room
+             robot.messageRoom matRoom, "#{mesg}"
+
+             # update brain
+             event = robot.brain.get(repoFullName)
+             event.entry.push mesg
+             console.log "#{JSON.stringify(event)}"
+             event.status = 'completed'
 
       else
-
+        #TODO: update and enable logic
         if event.status == "pending"
-          # STOP PIPELINE
+          # Stop pipeline
           mesg = "Pipeline for #{repoFullName} is in Progress, Hubot will Not Start new Pipeline"
           console.log mesg
 
@@ -190,7 +212,12 @@ module.exports = (robot) ->
 
     else
       # source failed to pass required param and payload
-      console.log "Hubot will Not Start new Pipeline"
+      mesg = "Hubot will Not Start new Pipeline Source Failed to pass requred param and payload"
+      console.log mesg
+
+      # send mesg to chat room
+      robot.messageRoom matRoom, "#{mesg}"
+
       # send status back to source with results
       status = mesg
       res.send status
