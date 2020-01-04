@@ -70,7 +70,7 @@ module.exports = (robot) ->
             # check if repo is in config file
             results = pipes.pipelines.where repo: "#{obj.event.repoFullName}"
             console.log results
-
+            #process first result only
             pipe = results[0]
 
             if pipe?
