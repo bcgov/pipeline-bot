@@ -8,11 +8,11 @@
 #
 #
 # Commands:
-#   hubot brain (<add>|<show>|<clear>)  - add test entry, show all keys and values, clear all keys
+#
 #
 #
 # Notes:
-#   includes examples of crud operations to hubot brain
+#
 #
 # Author:
 #
