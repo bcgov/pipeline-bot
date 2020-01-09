@@ -16,7 +16,7 @@ This document will break down the build config and deployment steps required to 
 * output formatting to Mattermost
 
 ## Automated Workflow Steps from DEV-to-PROD
-1. Github Action - On push to DEV branch - send Hubot payload with env param
+1. Github Action - On closed PR to DEV branch - send Hubot payload with env param
 2. Hubot - receive github payload - verify pipeline has been defined
 3. Hubot - build deploy watch - start OCP build and watch then start deploy and watch for DEV
 4. Hubot - start test - start tests as OCP template job
@@ -93,16 +93,14 @@ Step by step how to build Hubot instance from start
 
    Example: github action to send to Hubot
 
-
-
-
     ```
     name: dev_push
     
     on:
-      push:
+      pull_request:
         branches:
           - dev
+        types: [closed]
     
     jobs:
       build:
