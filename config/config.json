@@ -25,22 +25,8 @@
       }
     },
     {
-      "name": "pipeline-bot",
-      "repo": "",
-      "dev": {
-        "build": {
-          "buildconfig": "pipeline-bot",
-          "namespace": "databcdc"
-        },
-        "deploy": {
-          "deployconfig": "pipeline-bot",
-          "namespace": "databcdc"
-        }
-      }
-    },
-    {
       "name": "bcdc",
-      "repo": "",
+      "repo": "bcgov/ckanext-bcgov",
       "dev": {
         "build": {
           "buildconfig": "bcdc-ckan",
@@ -49,6 +35,16 @@
         "deploy": {
           "deployconfig": "bcdc-ckan-main",
           "namespace": "dbc-bcdc-dev"
+        }
+      },
+      "test": {
+        "build": {
+          "buildconfig": "bcdc-ckan",
+          "namespace": "dbc-bcdc-test"
+        },
+        "deploy": {
+          "deployconfig": "bcdc-ckan-main",
+          "namespace": "dbc-bcdc-test"
         }
       }
     }

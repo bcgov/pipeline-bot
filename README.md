@@ -16,25 +16,23 @@ This document will break down the build config and deployment steps required to 
 * output formatting to Mattermost
 
 ## Automated Workflow Steps from DEV-to-PROD
-1. Github Action - On push to DEV branch - send Hubot payload with env param
+1. Github Action - On closed PR to DEV branch - send Hubot payload with env param
 2. Hubot - receive github payload - verify pipeline has been defined
 3. Hubot - build deploy watch - start OCP build and watch then start deploy and watch for DEV
 4. Hubot - start test - start tests as OCP template job
 5. Hubot - receive test payload - associate test results with pipeline
 6. Hubot - promote - if conditions pass then promote to next environment TEST
-7. Hubot - pull request - pull request to github repo
 8. Hubot - build deploy watch - start OCP build and watch then start deploy and watch for TEST
-9. Hubot - data migration - migration and sanitize PROD data to TEST
+9. Hubot - data migration - migration and sanitize PROD data to TEST (in development)
 10. Hubot - start test - start test as OCP template job
 11. Hubot - receive test payload - associate test results with pipeline
 12. Hubot - promote - if conditions pass then promote to next environment PROD
-13. Hubot - merge pull request - merge pull request in github repo
 14. Hubot - build deploy watch - start OCP build and watch then start deploy and watch PROD
    
 # Build and Deploy Guide from Scratch
 Step by step how to build Hubot instance from start
 
-*HINT* see below for [build and deploy from this repo a boilerplate](#build-and-deploy-from-this-repo-as-boilerplate)
+*HINT* see below for [build and deploy from this repo as boilerplate](#build-and-deploy-from-this-repo-as-boilerplate)
 
 1. local install of project
     ```
@@ -87,16 +85,22 @@ Step by step how to build Hubot instance from start
     `oc new-app pipeline-bot:latest`
 
 12 . github action on repo:
+   ##### github secret requirements:
+   ```
+   BOT_KEY= <gateway token>
+   BOT_URL= <url to Bot instance>
+   ```
 
-Required github action to send to Hubot
+   Example: github action to send to Hubot
 
     ```
     name: dev_push
     
     on:
-      push:
+      pull_request:
         branches:
           - dev
+        types: [closed]
     
     jobs:
       build:
