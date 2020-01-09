@@ -55,15 +55,15 @@ module.exports = (robot) ->
     if status == "Success"
 
       # define var from gitHub payload
-      id = data.id
-      repoFullName = data.repo.full_name
-      repoURL = data.repo.html_url
-      repo = data.repo.name
-      user = data.head.repo.owner.login
+      id = data.pull_request.id
+      repoFullName = data.repository.full_name
+      repoURL = data.repository.html_url
+      repo = data.repository.name
+      user = data.repository.owner.login
       base = "master"
-      ref = data.head.ref
+      ref = data.pull_request.base.ref
       branch = ref.split("/").pop()
-      sha =
+      pullSha = data.pull_request.base.sha
       pullNumber = data.number
 
       console.log "Checking pull request #{pullNumber} on #{branch} for #{repoFullName} "
@@ -78,7 +78,7 @@ module.exports = (robot) ->
           commit: id,
           status: null,
           pullSha: null,
-          pullNumber: null,
+          pullNumber: pullNumber,
           repoFullName: repoFullName,
           repo: repo,
           user: user,
