@@ -55,16 +55,18 @@ module.exports = (robot) ->
     if status == "Success"
 
       # define var from gitHub payload
-      commitID = data.head_commit.id
-      repoFullName = data.repository.full_name
-      repoURL = data.repository.html_url
-      repo = data.repository.name
-      user = data.repository.owner.name
-      base = data.repository.master_branch
-      ref = data.ref
+      id = data.id
+      repoFullName = data.repo.full_name
+      repoURL = data.repo.html_url
+      repo = data.repo.name
+      user = data.head.repo.owner.login
+      base = "master"
+      ref = data.head.ref
       branch = ref.split("/").pop()
+      sha =
+      pullNumber = data.number
 
-      console.log "Checking #{commitID} on #{branch} for #{repoFullName} "
+      console.log "Checking pull request #{pullNumber} on #{branch} for #{repoFullName} "
 
 
       #TODO check if pipeline exist if not create one.  currently set to create new
@@ -73,7 +75,7 @@ module.exports = (robot) ->
 
         # create entry in Brain
         robot.brain.set("#{repoFullName}": {
-          commit: commitID,
+          commit: id,
           status: null,
           pullSha: null,
           pullNumber: null,
@@ -156,7 +158,7 @@ module.exports = (robot) ->
            if exhasted == false
 
              # message
-             mesg = "Recieved Github Event [#{commitID}] on [#{repoFullName}](#{repoURL})"
+             mesg = "Recieved Github Event [#{id}] on [#{repoFullName}](#{repoURL})"
              console.log mesg
 
              # update brain
