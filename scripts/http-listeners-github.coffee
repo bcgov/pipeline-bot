@@ -54,19 +54,29 @@ module.exports = (robot) ->
     # check and continue
     if status == "Success"
 
-      # define var from gitHub payload
-      id = data.pull_request.id
+      # define var from gitHub push payload
+      id = data.head_commit.id
       repoFullName = data.repository.full_name
       repoURL = data.repository.html_url
       repo = data.repository.name
-      user = data.repository.owner.login
-      base = "master"
-      ref = data.pull_request.base.ref
+      user = data.repository.owner.name
+      base = data.repository.master_branch
+      ref = data.ref
       branch = ref.split("/").pop()
-      pullSha = data.pull_request.base.sha
-      pullNumber = data.number
 
-      console.log "Checking pull request #{pullNumber} on #{branch} for #{repoFullName} "
+       # define var from gitHub pr payload
+#      id = data.pull_request.id
+#      repoFullName = data.repository.full_name
+#      repoURL = data.repository.html_url
+#      repo = data.repository.name
+#      user = data.repository.owner.login
+#      base = "master"
+#      ref = data.pull_request.base.ref
+#      branch = ref.split("/").pop()
+#      pullSha = data.pull_request.base.sha
+#      pullNumber = data.number
+
+      console.log "Checking pull request #{id} on #{branch} for #{repoFullName} "
 
 
       #TODO check if pipeline exist if not create one.  currently set to create new
@@ -78,7 +88,7 @@ module.exports = (robot) ->
           commit: id,
           status: null,
           pullSha: null,
-          pullNumber: pullNumber,
+          pullNumber: null,
           repoFullName: repoFullName,
           repo: repo,
           user: user,
