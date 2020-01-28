@@ -283,3 +283,18 @@ module.exports = (robot) ->
      # send message to chat
      res.reply mesg
 
+   #Jenkins Build
+   robot.respond /JenkinsBuild (.*)/i, (res) ->
+     # pipeline-bot JenkinsBuild <jobname>
+     job = res.match[1].toLowerCase()
+
+     # message
+     mesg = "Start Jenkins Build #{job}"
+
+     # send mesg
+     res.reply mesg
+
+     # send to jenkins script
+     robot.emit "jenkins-build", {
+        job    : job, #Jenkins job name
+     }
