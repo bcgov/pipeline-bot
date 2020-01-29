@@ -76,7 +76,7 @@ module.exports = (robot) ->
             if pipe?
               console.log "Repo found in conifg map: #{JSON.stringify(pipe.repo)}"
 
-              # setup for next stage
+              # setup vars for build and deploy
               env = obj.event.env
               envKey = null # reset envKey
               switch env
@@ -88,30 +88,50 @@ module.exports = (robot) ->
                   eventStage = obj.event.stage.test
                   envKey = "test"
 
-                  # remove promotion to prod at this time.
-#                when "test"
-#                  mesg =  "Promoting to PROD Environment"
-#                  console.log mesg
-#                  buildObj = pipe.prod.build
-#                  deployObj = pipe.prod.deploy
-#                  eventStage = obj.event.stage.prod
-#                  envKey = "prod"
+                when "test"
+                  mesg =  "Promoting to STAGE Environment"
+                  console.log mesg
+                  buildObj = pipe.stage.build
+                  deployObj = pipe.stage.deploy
+                  eventStage = obj.event.stage.stage
+                  envKey = "stage"
+
+                when "stage"
+                  mesg =  "Promoting to PROD Environment"
+                  console.log mesg
+                  buildObj = pipe.prod.build
+                  deployObj = pipe.prod.deploy
+                  eventStage = obj.event.stage.prod
+                  envKey = "prod"
 
                 else
                   mesg = "Pipeline has been exhasted"
                   console.log mesg
                   exhasted = true
 
+              # build and deploy if not exhasted
               if exhasted == false
 
-                # sent to build deploy script
-                robot.emit "build-deploy-stage", {
-                    build    : buildObj, #build object from config file
-                    deploy   : deployObj, #deploy object from config file
-                    repoFullName    : obj.event.repoFullName # repo name from github payload
-                    eventStage : eventStage # stage object from memory to update
-                    envKey : envKey # environment key
-                }
+                #Checking if Jenkins Job else send to OCP to build and deploy
+                if buildObj.jenkinsjob
+                  # sent to jenkins script
+                  robot.emit "jenkins-job", {
+                      job      : buildObj.jenkinsjob, # jenkins job name
+                      build    : buildObj, #build object from config file
+                      deploy   : deployObj, #deploy object from config file
+                      repoFullName    : obj.event.repoFullName #repo name from github payload
+                      eventStage : eventStage #stage object from memory to update
+                      envKey : envKey #environment key
+                  }
+                else
+                  # sent to build deploy script for OCP
+                  robot.emit "build-deploy-stage", {
+                      build    : buildObj, #build object from config file
+                      deploy   : deployObj, #deploy object from config file
+                      repoFullName    : obj.event.repoFullName #repo name from github payload
+                      eventStage : eventStage #stage object from memory to update
+                      envKey : envKey #environment key
+                  }
 
                 # message room
                 robot.messageRoom mat_room, "#{mesg}"

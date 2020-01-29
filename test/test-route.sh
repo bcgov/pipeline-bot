@@ -14,7 +14,7 @@
 ##### curl for github route
 payload='/Users/crigdon/PycharmProjects/pipeline-bot/data/github_payload_test.json'
 curl -X POST -H "Content-Type: application/json" \
--d @$payload http://127.0.0.1:32768/hubot/github/dev
+-d @$payload http://127.0.0.1:32768/hubot/github/test
 
 
 

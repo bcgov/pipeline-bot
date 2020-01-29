@@ -15,6 +15,7 @@
 #   hubot list - get list of repos in pipeline
 #   hubot test (<dev>|<test>)  <project> - run api test against dev/test in OCP projectspace
 #   hubot buildanddeploy <buildConfig> <project> - start OCP build/deploy and watch
+#   hubot jenkinsjob <jobname>
 #
 # Notes:
 #
@@ -284,17 +285,17 @@ module.exports = (robot) ->
      res.reply mesg
 
    #Jenkins Build
-   robot.respond /JenkinsBuild (.*)/i, (res) ->
-     # pipeline-bot JenkinsBuild <jobname>
+   robot.respond /jenkinsjob (.*)/i, (res) ->
+     # pipeline-bot JenkinsJob <jobname>
      job = res.match[1].toLowerCase()
 
      # message
-     mesg = "Start Jenkins Build #{job}"
+     mesg = "Start Jenkins Job #{job}"
 
      # send mesg
      res.reply mesg
 
      # send to jenkins script
-     robot.emit "jenkins-build", {
+     robot.emit "jenkins-job", {
         job    : job, #Jenkins job name
      }

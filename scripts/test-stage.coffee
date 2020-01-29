@@ -58,6 +58,7 @@ module.exports = (robot) ->
        return
 
     #TODO: err check args and exit , let chat room know
+
     console.log "Test against environment #{obj.envKey}"
 
     # get job template from repo
@@ -106,7 +107,6 @@ module.exports = (robot) ->
           if data.kind == "Status"
             status = data.status
             reason = data.message
-            mesg "#{status} #{reason}"
             mesg = "Failed to Start API Test #{status} #{reason}"
             console.log mesg
 

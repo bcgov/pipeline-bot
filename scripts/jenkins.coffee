@@ -15,20 +15,40 @@
 # Author:
 #   crigdon
 
+mat_room = process.env.HUBOT_MATTERMOST_CHANNEL
 
 module.exports = (robot) ->
 
-  robot.on "jenkins-build", (obj) ->
-
+  robot.on "jenkins-job", (obj) ->
     # expecting from obj
-    # job    : job, #jenkins job name
+    # job      : buildObj.jenkinsjob, # jenkins job name
+    # build    : buildObj, #build object from config file
+    # deploy   : deployObj, #deploy object from config file
+    # repoFullName    : obj.event.repoFullName #repo name from github payload
+    # eventStage : eventStage #stage object from memory to update
+    # envKey : envKey #environment key
 
+
+
+    # message
+    mesg = "Jenkins Build and Deploy for #{obj.repoFullName} in  #{obj.envKey}. Job #{obj.job}"
+
+    try
+      # update brain
+      event = robot.brain.get(obj.repoFullName)
+      event.entry.push mesg
+      obj.eventStage.deploy_status = "pending"
+    catch err
+      console.log err
+    finally
+    # send message to chat
+    robot.messageRoom mat_room, mesg
+
+    #build request
     url = process.env.HUBOT_JENKINS_URL
-
     command = "build"
     path = "#{url}/job/#{obj.job}/#{command}"
     console.log path
-
     req = robot.http(path)
 
     if process.env.HUBOT_JENKINS_AUTH
@@ -38,13 +58,24 @@ module.exports = (robot) ->
     req.header('Content-Length', 0)
     req.post() (err, res, body) ->
         if err
-          console.log "Jenkins says: #{err}"
-        else if 200 <= res.statusCode < 400 # Or, not an error code.
-          console.log "(#{res.statusCode}) Build started for #{obj.job} #{url}/job/#{obj.job}"
+          mesg = "Jenkins says: #{err}"
+        else if 200 <= res.statusCode < 400
+          mesg = "(#{res.statusCode}) Build started for #{obj.job} #{url}job/#{obj.job}"
         else if 400 == res.statusCode
           jenkinsBuild(msg, true)
         else if 404 == res.statusCode
-          console.log "Build not found, double check that it exists."
+          mesg = "Build not found, double check that it exists."
         else
-          console.log "Jenkins says: Status #{res.statusCode} #{body}"
+          mesg = "Jenkins says: Status #{res.statusCode} #{body}"
 
+        console.log mesg
+
+        try
+          # update brain
+          event.entry.push mesg
+          obj.eventStage.jenkins_job = obj.job
+        catch err
+          console.log err
+        finally
+        # send message to chat
+        robot.messageRoom mat_room, mesg

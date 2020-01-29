@@ -22,6 +22,16 @@
           "deployconfig": "datapusher",
           "namespace": "databcdc"
         }
+      },
+      "stage": {
+        "build": {
+          "jenkinsjob":"DEMO/job/bot-jenk-test/"
+        }
+      },
+      "prod": {
+        "build": {
+          "jenkinsjob": "DEMO/job/bot-jenk-test/"
+        }
       }
     },
     {

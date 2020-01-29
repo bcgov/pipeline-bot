@@ -97,9 +97,10 @@ module.exports = (robot) ->
           env: envKey,
           entry: [],
           stage: {
-            dev: {deploy_uid: null, deploy_status: null, test_status: null, promote: false},
-            test: {deploy_uid: null, deploy_status: null, test_status: null, promote: false},
-            prod: {deploy_uid: null, deploy_status: null, test_status: null, promote: false}
+            dev: {deploy_uid: null, deploy_status: null, jenkins_job: null, test_status: null, promote: false},
+            test: {deploy_uid: null, deploy_status: null, jenkins_job: null, test_status: null, promote: false},
+            stage: {deploy_uid: null, deploy_status: null, jenkins_job: null, test_status: null, promote: false},
+            prod: {deploy_uid: null, deploy_status: null, jenkins_job: null, test_status: null, promote: false}
             }
           })
 
