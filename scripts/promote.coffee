@@ -65,7 +65,7 @@ module.exports = (robot) ->
             buildObj = null
             deployObj = null
             eventStage = null
-            exhasted = false
+            exhausted = false
 
             # check if repo is in config file
             results = pipes.pipelines.where repo: "#{obj.event.repoFullName}"
@@ -107,10 +107,10 @@ module.exports = (robot) ->
                 else
                   mesg = "Pipeline has been exhasted"
                   console.log mesg
-                  exhasted = true
+                  exhausted = true
 
               # build and deploy if not exhasted
-              if exhasted == false
+              if exhausted == false
 
                 #Checking if Jenkins Job else send to OCP to build and deploy
                 if buildObj.jenkinsjob

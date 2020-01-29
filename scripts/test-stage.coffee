@@ -45,96 +45,121 @@ module.exports = (robot) ->
     console.log "object passed is  : #{JSON.stringify(obj)}"
 
     #----------------API TEST----------------------
-
-    # lets get template path and set deploy uid.. i dont like the feel of this.
-    # TODO: if running manualy as responder we will have to get the current deploy uid
+    exhasted = false
+    # exhaustive switch of test templates
     switch obj.envKey
       when "dev"
        templateUrl = devApiTestTemplate
       when 'test'
        templateUrl = testApiTestTemplate
+      when "stage"
+       templateUrl = null
+      when 'prod'
+       templateUrl = null
       else
        console.log "failed to set templateURL"
+       templateUrl = null
        return
 
-    #TODO: err check args and exit , let chat room know
+    # if templateURL has been set, call job to be created.
+    # TODO: migrate from template to jobs.yaml
+    if templateUrl
 
-    console.log "Test against environment #{obj.envKey}"
+      console.log "Test against environment #{obj.envKey}"
 
-    # get job template from repo
-    robot.http(templateUrl)
-      .header('Accept', 'application/json')
-      .get() (err, httpres, body) ->
+      # get job template from repo
+      robot.http(templateUrl)
+        .header('Accept', 'application/json')
+        .get() (err, httpres, body) ->
 
-        # check for errs
-        if err
-          console.log "Encountered an error :( #{err}"
-          return
-
-        fs = require('fs')
-        yaml = require('js-yaml')
-
-        data = yaml.load(body)
-        jsonString = JSON.stringify(data)
-        jsonParsed = JSON.parse(jsonString)
-        # get job object from template
-        # TODO: check if kind is of job type
-        job = jsonParsed.objects[0]
-        console.log job
-
-        #add env var with ID of deployment for tracking
-        data =  {"name": "DEPLOY_UID","value": obj.eventStage.deploy_uid}
-        console.log "#{JSON.stringify(data)}"
-        console.log "add new data to job yaml"
-        job.spec.template.spec.containers[0].env.push data
-        console.log "#{JSON.stringify(job)}#"
-
-        # send job to ocp api jobs endpoint in test frame work namespace
-        robot.http("https://#{domain}/apis/batch/v1/namespaces/#{ocTestNamespace}/jobs")
-         .header('Accept', 'application/json')
-         .header('Authorization', "Bearer #{apikey}")
-         .post(JSON.stringify(job)) (err, httpRes, body2) ->
           # check for errs
           if err
-            console.log "Encountered an error sending job to ocp :( #{err}"
+            console.log "Encountered an error :( #{err}"
             return
 
-          data = JSON.parse body2
-          console.log "returning ocp jobs response"
-          console.log data
+          fs = require('fs')
+          yaml = require('js-yaml')
 
-          # check for ocp returned status responses.
-          if data.kind == "Status"
-            status = data.status
-            reason = data.message
-            mesg = "Failed to Start API Test #{status} #{reason}"
-            console.log mesg
+          data = yaml.load(body)
+          jsonString = JSON.stringify(data)
+          jsonParsed = JSON.parse(jsonString)
+          # get job object from template
+          # TODO: check if kind is of job type
+          job = jsonParsed.objects[0]
+          console.log job
 
-            # update brain
-            event = robot.brain.get(obj.repoFullName)
-            event.entry.push mesg
-            obj.eventStage.test_status = "failed"
+          #add env var with ID of deployment for tracking
+          data =  {"name": "DEPLOY_UID","value": obj.eventStage.deploy_uid}
+          console.log "#{JSON.stringify(data)}"
+          console.log "add new data to job yaml"
+          job.spec.template.spec.containers[0].env.push data
+          console.log "#{JSON.stringify(job)}#"
 
-            # send message to chat
-            robot.messageRoom mat_room, "#{mesg}"
+          # send job to ocp api jobs endpoint in test frame work namespace
+          robot.http("https://#{domain}/apis/batch/v1/namespaces/#{ocTestNamespace}/jobs")
+           .header('Accept', 'application/json')
+           .header('Authorization', "Bearer #{apikey}")
+           .post(JSON.stringify(job)) (err, httpRes, body2) ->
+            # check for errs
+            if err
+              console.log "Encountered an error sending job to ocp :( #{err}"
+              return
 
-          else if data.kind == "Job"
-            kind = data.kind
-            buildName = data.metadata.name
-            namespace = data.metadata.namespace
-            time = data.metadata.creationTimestamp
+            data = JSON.parse body2
+            console.log "returning ocp jobs response"
+            console.log data
 
-            mesg = "Starting #{kind} #{buildName} in #{namespace} at #{time}"
-            console.log mesg
+            # check for ocp returned status responses.
+            if data.kind == "Status"
+              status = data.status
+              reason = data.message
+              mesg = "Failed to Start API Test #{status} #{reason}"
+              console.log mesg
 
-            # update brain
-            event = robot.brain.get(obj.repoFullName)
-            event.entry.push mesg
-            obj.eventStage.test_status = "pending"
+              # update brain
+              event = robot.brain.get(obj.repoFullName)
+              event.entry.push mesg
+              obj.eventStage.test_status = "failed"
 
-            # send message to chat
-            robot.messageRoom mat_room, "#{mesg}"
+              # send message to chat
+              robot.messageRoom mat_room, "#{mesg}"
 
-            #hubot will now wait for test results recieved from another defined route in hubot.
+            else if data.kind == "Job"
+              kind = data.kind
+              buildName = data.metadata.name
+              namespace = data.metadata.namespace
+              time = data.metadata.creationTimestamp
 
+              mesg = "Starting #{kind} #{buildName} in #{namespace} at #{time}"
+              console.log mesg
+
+              # update brain
+              event = robot.brain.get(obj.repoFullName)
+              event.entry.push mesg
+              obj.eventStage.test_status = "pending"
+
+              # send message to chat
+              robot.messageRoom mat_room, "#{mesg}"
+
+              #hubot will now wait for test results recieved from another defined route in hubot.
+
+    else
+      mesg = "No Test have been defined for this environment."
+      console.log mesg
+
+      # update brain
+      event = robot.brain.get(obj.repoFullName)
+      event.entry.push mesg
+      obj.eventStage.test_status = "Passed"
+
+      # send message to chat
+      robot.messageRoom mat_room, "#{mesg}"
+
+      #hubot will now continue on with promote.
+
+      # to promote or not to promote that is the question.
+      console.log "Sending pipeline #{JSON.stringify(event.repoFullName)} to promote logic"
+      robot.emit "promote", {
+          event    : event, #event object from brain
+      }
 
