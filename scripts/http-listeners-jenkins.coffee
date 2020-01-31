@@ -47,52 +47,56 @@ module.exports = (robot) ->
     # ------------- Search Brain for jenkins job name ----------------
     # Search for keys with id matching deployment id in all stages and update brian
 
-    keys = Object.keys(robot.brain.data._private)
-    console.log keys
+    try
+      keys = Object.keys(robot.brain.data._private)
+      console.log keys
 
-    for key in keys
-      event = robot.brain.get(key)
-      console.log JSON.stringify(event)
+      for key in keys
+        event = robot.brain.get(key)
+        console.log JSON.stringify(event)
 
-      stages = Object.keys(event.stage)
-      console.log "list of stages : #{JSON.stringify(stages)}"
+        stages = Object.keys(event.stage)
+        console.log "list of stages : #{JSON.stringify(stages)}"
 
-      for stage in stages
-        eventStage = event.stage[stage]
-        console.log "object to search : #{JSON.stringify(eventStage)}"
-        if eventStage.jenkinsjob == id
-          console.log "found #{id} in #{JSON.stringify(eventStage)}"
+        for stage in stages
+          eventStage = event.stage[stage]
+          console.log "object to search : #{JSON.stringify(eventStage)}"
+          if eventStage.jenkinsjob == id
+            console.log "found #{id} in #{JSON.stringify(eventStage)}"
 
-          #update brain
-          event = robot.brain.get(key)
-          entry = mesg
-          event.entry.push entry
-          eventStage.jenkinsjob = status
-          eventStage.deploy_status = status
+            #update brain
+            event = robot.brain.get(key)
+            entry = mesg
+            event.entry.push entry
+            eventStage.jenkinsjob = status
+            eventStage.deploy_status = status
 
 
-          #check status and send to test-stage
-          if status == "success"
-            mesg "Sending pipeline #{JSON.stringify(event.repoFullName)} to Test Stage"
-            robot.emit "post-deploy-stage", {
-               repoFullName    : event.repoFullName, # repo full name from github payload
-               eventStage : eventStage, # stage object from memory to update
-               envKey : event.envKey, # enviromnet key
-            }
+            #check status and send to test-stage
+            if status == "success"
+              mesg "Sending pipeline #{JSON.stringify(event.repoFullName)} to Test Stage"
+              robot.emit "post-deploy-stage", {
+                 repoFullName    : event.repoFullName, # repo full name from github payload
+                 eventStage : eventStage, # stage object from memory to update
+                 envKey : event.envKey, # enviromnet key
+              }
+            else
+              mesg "#{stage} #{status} for #{JSON.stringify(event.repoFullName)}. Pipeline has Stopped"
+
+            #update brain
+            entry = mesg
+            event.entry.push entry
+
           else
-            mesg "#{stage} #{status} for #{JSON.stringify(event.repoFullName)}. Pipeline has Stopped"
-
-          #update brain
-          entry = mesg
-          event.entry.push entry
-
-        else
-          console.log "did not find #{id} in #{JSON.stringify(eventStage)}"
+            console.log "did not find #{id} in #{JSON.stringify(eventStage)}"
 
 
-    # TODO: error check and return status
-    status = "Success"
-    res.send status
-
+      # TODO: error check and return status
+      status = "Success"
+      res.send status
+    catch err
+      console.log err
+       # send message to chat
+      robot.messageRoom mat_room, "Error: See Pipeline-bot Logs in OCP. Have a Great Day!"
 
 

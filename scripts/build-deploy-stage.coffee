@@ -78,34 +78,39 @@ module.exports = (robot) ->
     # send message to chat
     robot.messageRoom mat_room, mesg
 
-    # call build/deploy watch
-    resp = await buildDeploySync(obj.build.namespace, obj.build.buildconfig, obj.deploy.namespace, obj.deploy.deployconfig)
+    try
+      # call build/deploy watch
+      resp = await buildDeploySync(obj.build.namespace, obj.build.buildconfig, obj.deploy.namespace, obj.deploy.deployconfig)
 
-    console.log "build and deploy response is : #{JSON.stringify(resp)}"
-    console.log resp.statuses
+      console.log "build and deploy response is : #{JSON.stringify(resp)}"
+      console.log resp.statuses
 
-    deploydStatus = resp.statuses.deploy.status
-    deployKind = resp.statuses.deploy.payload.kind
-    deployName = resp.statuses.deploy.payload.metadata.name
-    deployCreationTimestamp = resp.statuses.deploy.payload.metadata.creationTimestamp
-    deployUID = resp.statuses.deploy.payload.metadata.uid
+      deploydStatus = resp.statuses.deploy.status
+      deployKind = resp.statuses.deploy.payload.kind
+      deployName = resp.statuses.deploy.payload.metadata.name
+      deployCreationTimestamp = resp.statuses.deploy.payload.metadata.creationTimestamp
+      deployUID = resp.statuses.deploy.payload.metadata.uid
 
-    # message
-    mesg = "#{deployKind} #{deploydStatus} #{deployName} #{deployCreationTimestamp} #{deployUID}"
-    console.log mesg
+      # message
+      mesg = "#{deployKind} #{deploydStatus} #{deployName} #{deployCreationTimestamp} #{deployUID}"
+      console.log mesg
 
-    # update brain
-    event = robot.brain.get(obj.repoFullName)
-    event.entry.push mesg
-    obj.eventStage.deploy_status = deploydStatus
-    obj.eventStage.deploy_uid = deployUID
+      # update brain
+      event = robot.brain.get(obj.repoFullName)
+      event.entry.push mesg
+      obj.eventStage.deploy_status = deploydStatus
+      obj.eventStage.deploy_uid = deployUID
 
-    # send message to chat
-    robot.messageRoom mat_room, "#{mesg}"
+      # send message to chat
+      robot.messageRoom mat_room, "#{mesg}"
 
-    if deploydStatus == "success"
-      robot.emit "post-deploy-stage", {
-         repoFullName    : obj.repoFullName, # repo full name from github payload
-         eventStage : obj.eventStage, # stage object from memory to update
-         envKey : obj.envKey, # enviromnet key from github action param
-      }
+      if deploydStatus == "success"
+        robot.emit "post-deploy-stage", {
+           repoFullName    : obj.repoFullName, # repo full name from github payload
+           eventStage : obj.eventStage, # stage object from memory to update
+           envKey : obj.envKey, # enviromnet key from github action param
+        }
+    catch err
+      console.log err
+       # send message to chat
+      robot.messageRoom mat_room, "Error: See Pipeline-bot Logs in OCP. Have a Great Day!"

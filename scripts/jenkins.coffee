@@ -52,33 +52,38 @@ module.exports = (robot) ->
     console.log path
     req = robot.http(path)
 
-    if process.env.HUBOT_JENKINS_AUTH
-      auth = new Buffer(process.env.HUBOT_JENKINS_AUTH).toString('base64')
-      req.headers Authorization: "Basic #{auth}"
+    try
+      if process.env.HUBOT_JENKINS_AUTH
+        auth = new Buffer(process.env.HUBOT_JENKINS_AUTH).toString('base64')
+        req.headers Authorization: "Basic #{auth}"
 
-    req.header('Content-Length', 0)
-    req.post() (err, res, body) ->
-        if err
-          mesg = "Jenkins says: #{err}"
-        else if 200 <= res.statusCode < 400
-          mesg = "(#{res.statusCode}) Build started for #{url}job/#{obj.job}"
-        else if 400 == res.statusCode
-          jenkinsBuild(msg, true)
-        else if 404 == res.statusCode
-          mesg = "Build not found, double check that it exists."
-        else
-          mesg = "Jenkins says: Status #{res.statusCode} #{body}"
+      req.header('Content-Length', 0)
+      req.post() (err, res, body) ->
+          if err
+            mesg = "Jenkins says: #{err}"
+          else if 200 <= res.statusCode < 400
+            mesg = "(#{res.statusCode}) Build started for #{url}job/#{obj.job}"
+          else if 400 == res.statusCode
+            jenkinsBuild(msg, true)
+          else if 404 == res.statusCode
+            mesg = "Build not found, double check that it exists."
+          else
+            mesg = "Jenkins says: Status #{res.statusCode} #{body}"
 
-        console.log mesg
+          console.log mesg
 
-        try
-          # update brain
-          event.entry.push mesg
-          obj.eventStage.jenkins_job = obj.job
-          obj.eventStage.deploy_status = "pending"
-          obj.eventStage.deploy_uid = obj.job
-        catch err
-          console.log err
-        finally
-        # send message to chat
-        robot.messageRoom mat_room, mesg
+          try
+            # update brain
+            event.entry.push mesg
+            obj.eventStage.jenkins_job = obj.job
+            obj.eventStage.deploy_status = "pending"
+            obj.eventStage.deploy_uid = obj.job
+          catch err
+            console.log err
+          finally
+          # send message to chat
+          robot.messageRoom mat_room, mesg
+    catch err
+      console.log err
+       # send message to chat
+      robot.messageRoom mat_room, "Error: See Pipeline-bot Logs in OCP. Have a Great Day!"
