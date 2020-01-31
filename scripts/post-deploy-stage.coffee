@@ -150,12 +150,9 @@ module.exports = (robot) ->
       # send message to chat
       robot.messageRoom mat_room, "#{mesg}"
 
-      #hubot will now continue on with promote.
-
-      # to promote or not to promote that is the question.
       robot.emit "test-stage", {
-          repoFullName    : event.repoFullName, #repo name from github payload
-          eventStage      : event.eventStage, # stage object from memory to update
-          envKey          : event.envKey, # environment key from github action param
+          repoFullName    : obj.repoFullName, #repo name from github payload
+          eventStage      : obj.eventStage, # stage object from memory to update
+          envKey          : obj.envKey, # environment key from github action param
       }
 
