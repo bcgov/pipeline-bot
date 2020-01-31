@@ -47,7 +47,7 @@ module.exports = (robot) ->
     #build request
     url = process.env.HUBOT_JENKINS_URL
     command = "build"
-    path = "#{url}/job/#{obj.job}/#{command}"
+    path = "#{url}/#{obj.job}/#{command}"
     console.log path
     req = robot.http(path)
 
@@ -60,7 +60,7 @@ module.exports = (robot) ->
         if err
           mesg = "Jenkins says: #{err}"
         else if 200 <= res.statusCode < 400
-          mesg = "(#{res.statusCode}) Build started for #{obj.job} #{url}job/#{obj.job}"
+          mesg = "(#{res.statusCode}) Build started for #{url}job/#{obj.job}"
         else if 400 == res.statusCode
           jenkinsBuild(msg, true)
         else if 404 == res.statusCode
@@ -74,6 +74,8 @@ module.exports = (robot) ->
           # update brain
           event.entry.push mesg
           obj.eventStage.jenkins_job = obj.job
+          obj.eventStage.deploy_status = "pending"
+          obj.eventStage.deploy_uid = obj.job
         catch err
           console.log err
         finally

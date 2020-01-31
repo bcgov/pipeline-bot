@@ -1,5 +1,5 @@
 # Description:
-#   http listener for bcdc-api test payload
+#   http listener for post deployment task payload
 #
 # Dependencies:
 #
@@ -17,15 +17,15 @@
 
 # get mattermost channel from env var passed to container on deployment
 matRoom = process.env.HUBOT_MATTERMOST_CHANNEL
-route = '/hubot/apitest'
+route = '/hubot/postdeploy'
 
 module.exports = (robot) ->
 
   robot.router.post route, (req, res) ->
 
-    # expecting payload of example: {"status":"success", "env":"cadi", "results":"results", "id":"123456"}'
+    # expecting example payload of {"status":"success", "env":"cadi", "results":"results", "id":"12345ABC"}'
     console.log route
-    stage = "API-TEST"
+    stage = "Post-Deployment"
 
     # TODO: error check payload
     data = if req.body.payload? then JSON.parse req.body.payload else req.body
@@ -35,7 +35,7 @@ module.exports = (robot) ->
     env = data.env
     results = data.results
     id = data.id
-    console.log "ID returned with api test result payload:  #{id}"
+    console.log "ID returned with #{stage} payload: #{id}"
 
     # build message
     mesg = "#{stage} #{status} #{env} #{JSON.stringify(results)}"
@@ -67,15 +67,22 @@ module.exports = (robot) ->
           event = robot.brain.get(key)
           entry = mesg
           event.entry.push entry
-#          status = "Passed" # For testing ONLY to PASS all failed test TBR
-          obj.test_status = status
+          obj.postdeploy_status = status
 
-          # to promote or not to promote that is the question.
-          console.log "Sending pipeline #{JSON.stringify(event.repoFullName)} to promote logic"
-          robot.emit "promote", {
-              event    : event, #event object from brain
-          }
-          return
+          if postdeploy_status == "success"
+            mesg "Sending pipeline #{JSON.stringify(event.repoFullName)} to Test Stage"
+            robot.emit "test-stage", {
+               repoFullName    : obj.repoFullName, # repo full name from github payload
+               eventStage : obj.eventStage, # stage object from memory to update
+               envKey : obj.envKey, # enviromnet key from github action param
+            }
+          else
+            mesg "#{stage} #{status} for #{JSON.stringify(event.repoFullName)}. Pipeline has Stopped"
+
+          #update brain
+          entry = mesg
+          event.entry.push entry
+
         else
           console.log "did not find #{id} in #{JSON.stringify(obj)}"
 

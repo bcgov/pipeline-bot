@@ -25,12 +25,12 @@
       },
       "stage": {
         "build": {
-          "jenkinsjob":"DEMO/job/bot-jenk-test/"
+          "jenkinsjob":"job/DEMO/job/bot-jenk-stage-test/"
         }
       },
       "prod": {
         "build": {
-          "jenkinsjob": "DEMO/job/bot-jenk-test/"
+          "jenkinsjob": "job/DEMO/job/bot-jenk-prod-test/"
         }
       }
     },

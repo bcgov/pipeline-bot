@@ -44,7 +44,7 @@ module.exports = (robot) ->
 
     console.log "object to promote : #{JSON.stringify(stage)}"
     # logic to promote or not to promote
-    if stage.deploy_status == "success" && stage.test_status == "Passed" && stage.promote == false
+    if stage.deploy_status == "success" && stage.postdeploy_status == "success" && stage.test_status == "success" && stage.promote == false
 
       console.log mesg
 

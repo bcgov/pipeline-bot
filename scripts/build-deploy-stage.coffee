@@ -103,7 +103,7 @@ module.exports = (robot) ->
     robot.messageRoom mat_room, "#{mesg}"
 
     if deploydStatus == "success"
-      robot.emit "test-stage", {
+      robot.emit "post-deploy-stage", {
          repoFullName    : obj.repoFullName, # repo full name from github payload
          eventStage : obj.eventStage, # stage object from memory to update
          envKey : obj.envKey, # enviromnet key from github action param

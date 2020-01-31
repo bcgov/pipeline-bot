@@ -97,10 +97,10 @@ module.exports = (robot) ->
           env: envKey,
           entry: [],
           stage: {
-            dev: {deploy_uid: null, deploy_status: null, jenkins_job: null, test_status: null, promote: false},
-            test: {deploy_uid: null, deploy_status: null, jenkins_job: null, test_status: null, promote: false},
-            stage: {deploy_uid: null, deploy_status: null, jenkins_job: null, test_status: null, promote: false},
-            prod: {deploy_uid: null, deploy_status: null, jenkins_job: null, test_status: null, promote: false}
+            dev: {deploy_uid: null, deploy_status: null, postdeploy_status: null, jenkins_job: null, test_status: null, promote: false},
+            test: {deploy_uid: null, deploy_status: null, postdeploy_status: null, jenkins_job: null, test_status: null, promote: false},
+            stage: {deploy_uid: null, deploy_status: null, postdeploy_status: null, jenkins_job: null, test_status: null, promote: false},
+            prod: {deploy_uid: null, deploy_status: null, postdeploy_status: null, jenkins_job: null, test_status: null, promote: false}
             }
           })
 
@@ -181,14 +181,26 @@ module.exports = (robot) ->
              # send message to chat
              robot.messageRoom matRoom, "#{mesg}"
 
-             # sent to build deploy test script
-             robot.emit "build-deploy-stage", {
-                 build    : buildObj, #build object from config file
-                 deploy   : deployObj, #deploy object from config file
-                 repoFullName    : repoFullName # repo name from github payload
-                 eventStage : eventStage # stage object from memory to update
-                 envKey : envKey # enviromnet key
-             }
+             #Checking if Jenkins Job else send to OCP to build and deploy
+             if buildObj.jenkinsjob
+               # sent to jenkins script
+               robot.emit "jenkins-job", {
+                   job      : buildObj.jenkinsjob, # jenkins job name
+                   build    : buildObj, #build object from config file
+                   deploy   : deployObj, #deploy object from config file
+                   repoFullName    : obj.event.repoFullName #repo name from github payload
+                   eventStage : eventStage #stage object from memory to update
+                   envKey : envKey #environment key
+               }
+             else
+               # sent to build deploy script for OCP
+               robot.emit "build-deploy-stage", {
+                   build    : buildObj, #build object from config file
+                   deploy   : deployObj, #deploy object from config file
+                   repoFullName    : obj.event.repoFullName #repo name from github payload
+                   eventStage : eventStage #stage object from memory to update
+                   envKey : envKey #environment key
+               }
 
              # send source status
              res.send status
