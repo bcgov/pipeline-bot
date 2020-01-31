@@ -24,6 +24,7 @@ module.exports = (robot) ->
   robot.router.post route, (req, res) ->
 
     console.log route
+    console.log "Called http-listeners-jenkins script"
     stage = "Jenkins"
 
     #expecting Jenkins Payload

@@ -25,6 +25,8 @@ module.exports = (robot) ->
 
     # expecting example payload of {"status":"success", "env":"cadi", "results":"results", "id":"12345ABC"}'
     console.log route
+    console.log "Called http-listeners-postdeploy script"
+
     stage = "Post-Deployment"
 
     # TODO: error check payload

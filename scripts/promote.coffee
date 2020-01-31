@@ -36,7 +36,7 @@ module.exports = (robot) ->
     # expecting from obj
     # event : event # event object from brain
 
-    console.log "promote has been called"
+    console.log "Called promote script"
     console.log "object passed is  : #{JSON.stringify(obj)}"
 
     env = obj.event.env

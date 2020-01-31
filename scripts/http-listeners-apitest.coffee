@@ -25,6 +25,7 @@ module.exports = (robot) ->
 
     # expecting payload of example: {"status":"success", "env":"cadi", "results":"results", "id":"123456"}'
     console.log route
+    console.log "Called http-listeners-apitest script"
     stage = "API-TEST"
 
     # TODO: error check payload

@@ -35,6 +35,7 @@ module.exports = (robot) ->
 
   robot.router.post route, (req, res) ->
     console.log route
+    console.log "Called http-listeners-github script"
     # param
     envKey = req.params.envkey ? null
     console.log envKey

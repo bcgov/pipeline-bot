@@ -61,6 +61,7 @@ module.exports = (robot) ->
     # eventStage # stage object from memory to update
     # envKey # enviromnet key from github action param
 
+    console.log "called build-deploy-stage script"
     console.log "object passed is  : #{JSON.stringify(obj)}"
 
     # -------------- STAGE Build/Deploy ------------

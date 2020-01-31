@@ -41,7 +41,7 @@ module.exports = (robot) ->
     # repoFullName # repo name from github payload
     # eventStage # stage object from memory to update
     # envKey # enviromnet key from github action param
-
+    console.log "Called test-stage script"
     console.log "object passed is  : #{JSON.stringify(obj)}"
 
     #----------------API TEST----------------------

@@ -28,7 +28,8 @@ module.exports = (robot) ->
     # eventStage : eventStage #stage object from memory to update
     # envKey : envKey #environment key
 
-
+    console.log "Called jenkins script"
+    console.log "object passed is  : #{JSON.stringify(obj)}"
 
     # message
     mesg = "Jenkins Build and Deploy for #{obj.repoFullName} in  #{obj.envKey}. Job #{obj.job}"

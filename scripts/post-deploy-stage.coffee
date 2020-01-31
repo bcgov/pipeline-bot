@@ -36,6 +36,7 @@ module.exports = (robot) ->
     # eventStage # stage object from memory to update
     # envKey # enviromnet key from github action param
 
+    console.log "Called promote script"
     console.log "object passed is  : #{JSON.stringify(obj)}"
 
     #----------------Post Deployment Jobs----------------------
@@ -153,7 +154,9 @@ module.exports = (robot) ->
 
       # to promote or not to promote that is the question.
       console.log "Sending pipeline #{JSON.stringify(event.repoFullName)} to promote logic"
-      robot.emit "promote", {
-          event    : event, #event object from brain
+      robot.emit "test-stage", {
+          repoFullName    : event.repoFullName, #repo name from github payload
+          eventStage      : obj.eventStage, # stage object from memory to update
+          envKey          : event.envKey # enviromnet key from github action param
       }
 
