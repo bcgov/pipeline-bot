@@ -57,7 +57,7 @@ module.exports = (robot) ->
       when 'prod'
        templateUrl = null
       else
-       console.log "failed to set templateURL"
+       console.log "failed to set api test templateURL"
        templateUrl = null
        return
 
@@ -158,7 +158,6 @@ module.exports = (robot) ->
       #hubot will now continue on with promote.
 
       # to promote or not to promote that is the question.
-      console.log "Sending pipeline #{JSON.stringify(event.repoFullName)} to promote logic"
       robot.emit "promote", {
           event    : event, #event object from brain
       }

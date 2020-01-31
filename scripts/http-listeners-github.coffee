@@ -198,9 +198,9 @@ module.exports = (robot) ->
                robot.emit "build-deploy-stage", {
                    build    : buildObj, #build object from config file
                    deploy   : deployObj, #deploy object from config file
-                   repoFullName    : event.repoFullName #repo name from github payload
-                   eventStage : eventStage #stage object from memory to update
-                   envKey : envKey #environment key
+                   repoFullName    : event.repoFullName, #repo name from github payload
+                   eventStage : eventStage, #stage object from memory to update
+                   envKey : envKey, #environment key
                }
 
              # send source status

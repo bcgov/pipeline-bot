@@ -36,7 +36,7 @@ module.exports = (robot) ->
     # eventStage # stage object from memory to update
     # envKey # enviromnet key from github action param
 
-    console.log "Called promote script"
+    console.log "Called post-deploy-stage script"
     console.log "object passed is  : #{JSON.stringify(obj)}"
 
     #----------------Post Deployment Jobs----------------------
@@ -145,7 +145,7 @@ module.exports = (robot) ->
       # update brain
       event = robot.brain.get(obj.repoFullName)
       event.entry.push mesg
-      obj.eventStage.postdeploy_status = "success"
+      event.eventStage.postdeploy_status = "success"
 
       # send message to chat
       robot.messageRoom mat_room, "#{mesg}"
@@ -153,10 +153,9 @@ module.exports = (robot) ->
       #hubot will now continue on with promote.
 
       # to promote or not to promote that is the question.
-      console.log "Sending pipeline #{JSON.stringify(event.repoFullName)} to promote logic"
       robot.emit "test-stage", {
           repoFullName    : event.repoFullName, #repo name from github payload
-          eventStage      : obj.eventStage, # stage object from memory to update
-          envKey          : event.envKey # enviromnet key from github action param
+          eventStage      : event.eventStage, # stage object from memory to update
+          envKey          : event.envKey, # environment key from github action param
       }
 
