@@ -74,14 +74,14 @@ module.exports = (robot) ->
 
             #check status and send to test-stage
             if status == "success"
-              mesg "Sending pipeline #{JSON.stringify(event.repoFullName)} to Test Stage"
+              mesg = "Sending pipeline #{JSON.stringify(event.repoFullName)} to Test Stage"
               robot.emit "post-deploy-stage", {
                  repoFullName    : event.repoFullName, # repo full name from github payload
                  eventStage : eventStage, # stage object from memory to update
                  envKey : event.envKey, # enviromnet key
               }
             else
-              mesg "#{stage} #{status} for #{JSON.stringify(event.repoFullName)}. Pipeline has Stopped"
+              mesg = "#{stage} #{status} for #{JSON.stringify(event.repoFullName)}. Pipeline has Stopped"
 
             #update brain
             entry = mesg
