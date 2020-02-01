@@ -15,7 +15,7 @@
 # Author:
 #   craigrigdon
 
-mat_room = process.env.HUBOT_MATTERMOST_CHANNEL
+matroom = process.env.HUBOT_MATTERMOST_CHANNEL
 
 module.exports = (robot) ->
 

@@ -97,6 +97,6 @@ module.exports = (robot) ->
     catch err
       console.log err
        # send message to chat
-      robot.messageRoom mat_room, "Error: See Pipeline-bot Logs in OCP. Have a Great Day!"
+      robot.messageRoom matRoom, "Error: See Pipeline-bot Logs in OCP. Have a Great Day!"
 
 

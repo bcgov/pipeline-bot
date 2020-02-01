@@ -14,7 +14,7 @@
 # Author:
 #   craigrigdon
 
-mat_room = process.env.HUBOT_MATTERMOST_CHANNEL
+matroom = process.env.HUBOT_MATTERMOST_CHANNEL
 apikey = process.env.HUBOT_OCPAPIKEY
 domain = process.env.HUBOT_OCPDOMAIN
 #devApiTestTemplate = process.env.HUBOT_DEV_APITEST_TEMPLATE
@@ -76,7 +76,7 @@ module.exports = (robot) ->
     obj.eventStage.deploy_status = "pending"
 
     # send message to chat
-    robot.messageRoom mat_room, mesg
+    robot.messageRoom matroom, mesg
 
     try
       # call build/deploy watch
@@ -102,7 +102,7 @@ module.exports = (robot) ->
       obj.eventStage.deploy_uid = deployUID
 
       # send message to chat
-      robot.messageRoom mat_room, "#{mesg}"
+      robot.messageRoom matroom, "#{mesg}"
 
       if deploydStatus == "success"
         robot.emit "post-deploy-stage", {
@@ -113,4 +113,4 @@ module.exports = (robot) ->
     catch err
       console.log err
        # send message to chat
-      robot.messageRoom mat_room, "Error: See Pipeline-bot Logs in OCP. Have a Great Day!"
+      robot.messageRoom matroom, "Error: See Pipeline-bot Logs in OCP. Have a Great Day!"

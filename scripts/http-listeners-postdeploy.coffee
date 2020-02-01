@@ -16,7 +16,7 @@
 #   craigrigdon
 
 # get mattermost channel from env var passed to container on deployment
-matRoom = process.env.HUBOT_MATTERMOST_CHANNEL
+matroom = process.env.HUBOT_MATTERMOST_CHANNEL
 route = '/hubot/postdeploy'
 
 module.exports = (robot) ->
@@ -44,7 +44,7 @@ module.exports = (robot) ->
     console.log mesg
 
     # send message
-    robot.messageRoom matRoom, "#{mesg}"
+    robot.messageRoom matroom, "#{mesg}"
 
     # ------------- Search Brain for Deployment ID----------------
     # Search for keys with id matching deployment id in all stages and update brian
@@ -95,6 +95,6 @@ module.exports = (robot) ->
     catch err
       console.log err
        # send message to chat
-      robot.messageRoom matRoom, "Error: See Pipeline-bot Logs in OCP. Have a Great Day!"
+      robot.messageRoom matroom, "Error: See Pipeline-bot Logs in OCP. Have a Great Day!"
 
 

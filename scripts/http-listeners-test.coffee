@@ -12,7 +12,7 @@
 #   It can automatically serve static files by setting EXPRESS_STATIC.
 
 # get mattermost channel from env var passed to container on deployment
-#mat_room = process.env.HUBOT_MATTERMOST_CHANNEL
+
 route = '/hubot/test'
 pipelineMap = process.env.HUBOT_PIPELINE_MAP
 configPath = process.env.HUBOT_CONFIG_PATH

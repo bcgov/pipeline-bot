@@ -14,7 +14,7 @@
 # Author:
 #   craigrigdon
 
-mat_room = process.env.HUBOT_MATTERMOST_CHANNEL
+matroom = process.env.HUBOT_MATTERMOST_CHANNEL
 apikey = process.env.HUBOT_OCPAPIKEY
 domain = process.env.HUBOT_OCPDOMAIN
 
@@ -119,7 +119,7 @@ module.exports = (robot) ->
                 obj.eventStage.test_status = "failed"
 
                 # send message to chat
-                robot.messageRoom mat_room, "#{mesg}"
+                robot.messageRoom matroom, "#{mesg}"
 
               else if data.kind == "Job"
                 kind = data.kind
@@ -136,7 +136,7 @@ module.exports = (robot) ->
                 obj.eventStage.test_status = "pending"
 
                 # send message to chat
-                robot.messageRoom mat_room, "#{mesg}"
+                robot.messageRoom matroom, "#{mesg}"
 
                 #hubot will now wait for test results recieved from another defined route in hubot.
 
@@ -150,7 +150,7 @@ module.exports = (robot) ->
         obj.eventStage.postdeploy_status = "success"
 
         # send message to chat
-        robot.messageRoom mat_room, "#{mesg}"
+        robot.messageRoom matroom, "#{mesg}"
 
         robot.emit "test-stage", {
             repoFullName    : obj.repoFullName, #repo name from github payload
@@ -160,4 +160,4 @@ module.exports = (robot) ->
     catch err
       console.log err
        # send message to chat
-      robot.messageRoom mat_room, "Error: See Pipeline-bot Logs in OCP. Have a Great Day!"
+      robot.messageRoom matroom, "Error: See Pipeline-bot Logs in OCP. Have a Great Day!"

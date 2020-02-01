@@ -23,7 +23,7 @@
 # Author:
 #   craigrigdon
 
-mat_room = process.env.HUBOT_MATTERMOST_CHANNEL
+matroom = process.env.HUBOT_MATTERMOST_CHANNEL
 apikey = process.env.HUBOT_OCPAPIKEY
 domain = process.env.HUBOT_OCPDOMAIN
 devApiTestTemplate = process.env.HUBOT_DEV_APITEST_TEMPLATE

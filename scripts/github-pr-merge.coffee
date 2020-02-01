@@ -21,7 +21,7 @@
 #  craigrigdon
 
 githubToken = process.env.HUBOT_GITHUB_TOKEN
-mat_room = process.env.HUBOT_MATTERMOST_CHANNEL
+matroom = process.env.HUBOT_MATTERMOST_CHANNEL
 configPath = process.env.HUBOT_CONFIG_PATH
 
 module.exports = (robot) ->
@@ -59,13 +59,13 @@ module.exports = (robot) ->
     github.handleErrors (response) ->
       switch response.statusCode
         when 409
-          robot.messageRoom mat_room, "Error: merge conflict. #{response.message}"
+          robot.messageRoom matroom, "Error: merge conflict. #{response.message}"
         when 404
-          robot.messageRoom mat_room, "Error: failed to access repo. #{response.message}"
+          robot.messageRoom matroom, "Error: failed to access repo. #{response.message}"
         when 422
-          robot.messageRoom mat_room, "Error: pull request has already been created or the branch does not exist. #{response.message}"
+          robot.messageRoom matroom, "Error: pull request has already been created or the branch does not exist. #{response.message}"
         else
-          robot.messageRoom mat_room, "Error: #{response.message}"
+          robot.messageRoom matroom, "Error: #{response.message}"
 
     # call github pr merge api
     #TODO: 404 on merge call..... must run test locally
@@ -81,7 +81,7 @@ module.exports = (robot) ->
       console.log "#{JSON.stringify(obj.event)}"
 
       # send message to chat
-      robot.messageRoom mat_room, "#{mesg}"
+      robot.messageRoom matroom, "#{mesg}"
 
       # sent to build deploy test script
       robot.emit "build-deploy-stage", {
