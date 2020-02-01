@@ -77,7 +77,7 @@ module.exports = (robot) ->
               robot.emit "test-stage", {
                  repoFullName    : event.repoFullName, # repo full name from github payload
                  eventStage : obj, # stage object from memory to update
-                 envKey : event.envKey, # enviromnet key from github action param
+                 envKey : event.env, # enviromnet key from github action param
               }
             else
               mesg = "#{stage} #{status} for #{JSON.stringify(event.repoFullName)}. Pipeline has Stopped"
