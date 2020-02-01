@@ -71,7 +71,7 @@ module.exports = (robot) ->
             event.entry.push entry
             obj.postdeploy_status = status
 
-            if postdeploy_status == "success"
+            if status == "success"
               mesg "Sending pipeline #{JSON.stringify(event.repoFullName)} to Test Stage"
               robot.emit "test-stage", {
                  repoFullName    : obj.repoFullName, # repo full name from github payload
@@ -95,6 +95,6 @@ module.exports = (robot) ->
     catch err
       console.log err
        # send message to chat
-      robot.messageRoom mat_room, "Error: See Pipeline-bot Logs in OCP. Have a Great Day!"
+      robot.messageRoom matRoom, "Error: See Pipeline-bot Logs in OCP. Have a Great Day!"
 
 
