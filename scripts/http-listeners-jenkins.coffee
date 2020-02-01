@@ -33,7 +33,7 @@ module.exports = (robot) ->
     console.log data
 
     status = data.build.status.toLowerCase()
-    results = data.results
+    results = data.build.phase
     id = data.url
     console.log "ID returned with #{stage} payload: #{id}"
 
@@ -68,7 +68,6 @@ module.exports = (robot) ->
             event = robot.brain.get(key)
             entry = mesg
             event.entry.push entry
-            eventStage.jenkinsjob = status
             eventStage.deploy_status = status
 
 
