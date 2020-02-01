@@ -151,7 +151,7 @@ module.exports = (robot) ->
         # update brain
         event = robot.brain.get(obj.repoFullName)
         event.entry.push mesg
-        obj.eventStage.test_status = "Passed"
+        obj.eventStage.test_status = "success"
 
         # send message to chat
         robot.messageRoom matroom, "#{mesg}"
