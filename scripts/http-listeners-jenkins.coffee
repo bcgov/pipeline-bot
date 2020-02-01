@@ -34,7 +34,7 @@ module.exports = (robot) ->
 
     status = data.build.status.toLowerCase()
     results = data.results
-    id = data.name
+    id = data.url
     console.log "ID returned with #{stage} payload: #{id}"
 
     # build message
