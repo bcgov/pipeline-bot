@@ -73,9 +73,10 @@ module.exports = (robot) ->
 
             if status == "success"
               console.log "Sending pipeline #{JSON.stringify(event.repoFullName)} to Test Stage"
+              #TODO: MUST FIX not passsing requried objects
               robot.emit "test-stage", {
                  repoFullName    : event.repoFullName, # repo full name from github payload
-                 eventStage : event.eventStage, # stage object from memory to update
+                 eventStage : obj, # stage object from memory to update
                  envKey : event.envKey, # enviromnet key from github action param
               }
             else
