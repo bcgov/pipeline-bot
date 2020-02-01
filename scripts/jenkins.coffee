@@ -62,7 +62,7 @@ module.exports = (robot) ->
           if err
             mesg = "Jenkins says: #{err}"
           else if 200 <= res.statusCode < 400
-            mesg = "(#{res.statusCode}) Build started for #{url}job/#{obj.job}"
+            mesg = "(#{res.statusCode}) Build started for #{url}#{obj.job}"
           else if 400 == res.statusCode
             jenkinsBuild(msg, true)
           else if 404 == res.statusCode
