@@ -45,7 +45,7 @@ module.exports = (robot) ->
     robot.messageRoom matRoom, "#{mesg}"
 
     # ------------- Search Brain for jenkins job name ----------------
-    # Search for keys with id matching deployment id in all stages and update brian
+    # Search for keys with id matching jenkins_job in all stages and update brian
 
     try
       keys = Object.keys(robot.brain.data._private)
@@ -61,7 +61,7 @@ module.exports = (robot) ->
         for stage in stages
           eventStage = event.stage[stage]
           console.log "object to search : #{JSON.stringify(eventStage)}"
-          if eventStage.jenkinsjob == id
+          if eventStage.jenkins_job == id
             console.log "found #{id} in #{JSON.stringify(eventStage)}"
 
             #update brain
