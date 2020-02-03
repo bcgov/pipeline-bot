@@ -1,3 +1,5 @@
+![Pipeline-bot Architecture](docs/pipelinebotarchitecture.png)
+
 # Pipeline-bot
 
 A Hubot CI/CD Pipeline Bot for Openshift Container Platform (OCP) with Mattermost adapter.
@@ -24,12 +26,12 @@ This document will break down the build config and deployment steps required to 
 7. Hubot - promote - if conditions pass then promote to next environment 
 
 # Post Deployment Stage
-Currently defined in [post deploy script](post-deploy-stage.coffee)
+Currently defined in [post deploy script](scripts/post-deploy-stage.coffee)
 This script will define any ocp jobs that are required to run post deployment.
 OCP jobs are defined as Env Var from config map. 
 
 # Test Stage
-Currently defined in [post deploy script](test-stage.coffee)
+Currently defined in [test script](scripts/test-stage.coffee)
 This script will define any ocp jobs that are required to run test.
 OCP jobs are defined as Env Var from config map. 
    
@@ -88,7 +90,8 @@ Step by step how to build Hubot instance from start
 
     `oc new-app pipeline-bot:latest`
 
-12 . github action on repo:
+12 . set up github action on repo:
+   ![Pipeline-bot Architecture](docs/githubworkflow.png)
    ##### github secret requirements:
    ```
    BOT_KEY= <gateway token>
@@ -146,7 +149,7 @@ define config map in OCP and injected as env var `HUBOT_ACL` required for script
 Hubot will reference this file to lookup buildconfig and deployment configs, 
 and namespaces required to make the api calls to OCP or Jenkins Job Name.
 
-Please see [Reference Config File](config.json)
+Please see [Reference Config File](conifg/config.json)
 
 Example:
 ```
@@ -155,6 +158,7 @@ Example:
     {
       "name": "<appName>",
       "repo": "<user/repo>",
+      "prToMasterAfter": "test",
       "dev": {
         "build": {
           "buildconfig": "<ocp-bc-name>",
