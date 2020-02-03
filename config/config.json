@@ -3,6 +3,7 @@
     {
       "name": "test",
       "repo": "craigrigdon/test",
+      "prToMasterAfter": "test",
       "dev": {
         "build": {
           "buildconfig": "datapusher",

@@ -82,24 +82,18 @@ module.exports = (robot) ->
                 envKey = null # reset envKey
                 switch env
                   when "dev"
-                    mesg =  "Promoting to TEST Environment"
-                    console.log mesg
                     buildObj = pipe.test.build
                     deployObj = pipe.test.deploy
                     eventStage = obj.event.stage.test
                     envKey = "test"
 
                   when "test"
-                    mesg =  "Promoting to STAGE Environment"
-                    console.log mesg
                     buildObj = pipe.stage.build
                     deployObj = pipe.stage.deploy
                     eventStage = obj.event.stage.stage
                     envKey = "stage"
 
                   when "stage"
-                    mesg =  "Promoting to PROD Environment"
-                    console.log mesg
                     buildObj = pipe.prod.build
                     deployObj = pipe.prod.deploy
                     eventStage = obj.event.stage.prod
@@ -110,32 +104,47 @@ module.exports = (robot) ->
                     console.log mesg
                     exhausted = true
 
-                # build and deploy if not exhasted
+                # build and deploy or create PR if not exhasted
                 if exhausted == false
+                  mesg =  "Promoting to #{envKey} Environment"
 
-                  #Checking if Jenkins Job else send to OCP to build and deploy
-                  if buildObj.jenkinsjob
-                    # sent to jenkins script
-                    robot.emit "jenkins-job", {
-                        job      : buildObj.jenkinsjob, # jenkins job name
+                  # check config map when we need to open pr to master
+                  if pipe.prToMasterAfter == env
+
+                    # sent to github to open PR
+                    robot.emit "github-pr-open", {
                         build    : buildObj, #build object from config file
                         deploy   : deployObj, #deploy object from config file
-                        repoFullName    : obj.event.repoFullName, #repo name from github payload
-                        eventStage : eventStage, #stage object from memory to update
-                        envKey : envKey #environment key
+                        repoFullName    : obj.event.repoFullName, # repo name from github payload
+                        eventStage : eventStage # stage object from memory to update
+                        envKey : envKey, # environment key
                     }
                   else
-                    # sent to build deploy script for OCP
-                    robot.emit "build-deploy-stage", {
-                        build    : buildObj, #build object from config file
-                        deploy   : deployObj, #deploy object from config file
-                        repoFullName    : obj.event.repoFullName, #repo name from github payload
-                        eventStage : eventStage, #stage object from memory to update
-                        envKey : envKey, #environment key
-                    }
+
+                    #Checking if Jenkins Job else send to OCP to build and deploy
+                    if buildObj.jenkinsjob
+                      # sent to jenkins script
+                      robot.emit "jenkins-job", {
+                          job      : buildObj.jenkinsjob, # jenkins job name
+                          build    : buildObj, #build object from config file
+                          deploy   : deployObj, #deploy object from config file
+                          repoFullName    : obj.event.repoFullName, #repo name from github payload
+                          eventStage : eventStage, #stage object from memory to update
+                          envKey : envKey #environment key
+                      }
+                    else
+                      # sent to build deploy script for OCP
+                      robot.emit "build-deploy-stage", {
+                          build    : buildObj, #build object from config file
+                          deploy   : deployObj, #deploy object from config file
+                          repoFullName    : obj.event.repoFullName, #repo name from github payload
+                          eventStage : eventStage, #stage object from memory to update
+                          envKey : envKey, #environment key
+                      }
 
                   # message room
                   robot.messageRoom matroom, "#{mesg}"
+                  console.log mesg
 
                   #update brain
                   entry = mesg
