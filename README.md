@@ -5,29 +5,33 @@ A Hubot CI/CD Pipeline Bot for Openshift Container Platform (OCP) with Mattermos
 ## Overview
 The goal of this project is to automate our CI/CD pipelines for Applications built and deployed on Openshift Container Platform in order to increase deployment velocity. A ChatOps approach increases visibility and gives distributed developers more freedom to test and deploy.  
 
-This project is based on a Dev, Test, Prod deployment model to meet our needs, but could be adapted to any workflow. 
+This project is based on a Dev, Test, Stage, Prod deployment model to meet our needs, but could be adapted to any workflow. 
 
 This document will break down the build config and deployment steps required to run pipeline-bot.
 
 ## Work in Progress
 * Currently expanding OCP api calls to include build from template and watch
-* jenkins api support
 * add responders to include git checkout and deploy to teardown environments in OCP
 * output formatting to Mattermost
 
-## Automated Workflow Steps from DEV-to-PROD
-1. Github Action - On closed PR to DEV branch - send Hubot payload with env param
+## Automated Workflow Steps 
+1. Github Action - On closed PR (github action "Push")to DEV branch - send Hubot payload with env param
 2. Hubot - receive github payload - verify pipeline has been defined
-3. Hubot - build deploy watch - start OCP build and watch then start deploy and watch for DEV
-4. Hubot - start test - start tests as OCP template job
-5. Hubot - receive test payload - associate test results with pipeline
-6. Hubot - promote - if conditions pass then promote to next environment TEST
-8. Hubot - build deploy watch - start OCP build and watch then start deploy and watch for TEST
-9. Hubot - data migration - migration and sanitize PROD data to TEST (in development)
-10. Hubot - start test - start test as OCP template job
-11. Hubot - receive test payload - associate test results with pipeline
-12. Hubot - promote - if conditions pass then promote to next environment PROD
-14. Hubot - build deploy watch - start OCP build and watch then start deploy and watch PROD
+3. Hubot - build and deploy - Openshift or jenkins 
+4. Hubot - start post deploy - post deployment tasks as OCP template job
+5. Hubot - start test - start tests as OCP template job
+6. Hubot - receive test payload - associate test results with pipeline
+7. Hubot - promote - if conditions pass then promote to next environment 
+
+# Post Deployment Stage
+Currently defined in [post deploy script](post-deploy-stage.coffee)
+This script will define any ocp jobs that are required to run post deployment.
+OCP jobs are defined as Env Var from config map. 
+
+# Test Stage
+Currently defined in [post deploy script](test-stage.coffee)
+This script will define any ocp jobs that are required to run test.
+OCP jobs are defined as Env Var from config map. 
    
 # Build and Deploy Guide from Scratch
 Step by step how to build Hubot instance from start
@@ -95,12 +99,11 @@ Step by step how to build Hubot instance from start
 
     ```
     name: dev_push
-    
+
     on:
-      pull_request:
+      push:
         branches:
           - dev
-        types: [closed]
     
     jobs:
       build:
@@ -112,7 +115,7 @@ Step by step how to build Hubot instance from start
         - name: Send Payload
           run: |
             curl -X POST -H "Content-Type: application/json" -H "apikey: ${{ secrets.BOT_KEY }}" -d @$GITHUB_EVENT_PATH https://${{ secrets.BOT_URL }}/hubot/github/dev
-    
+        
     ```
 
 # Access Control
@@ -140,9 +143,12 @@ define config map in OCP and injected as env var `HUBOT_ACL` required for script
 ```
 
 # Pipeline Config
-Hubot will reference this file to lookup buildconfig and deployment configs, and namespaces required to make the api calls to OCP.
+Hubot will reference this file to lookup buildconfig and deployment configs, 
+and namespaces required to make the api calls to OCP or Jenkins Job Name.
 
-/config/config.json
+Please see [Reference Config File](config.json)
+
+Example:
 ```
 {
   "pipelines": [
@@ -171,12 +177,7 @@ Hubot will reference this file to lookup buildconfig and deployment configs, and
       },
       "prod": {
         "build": {
-          "buildconfig": "<ocp-bc-name>",
-          "namespace": "<ocp-bc-namespace>"
-        },
-        "deploy": {
-          "deployconfig": "<ocp-dc-name>",
-          "namespace": "<ocp-dc-namespace>"
+          "jenkinsjob":"job/jenkins-job-path/"
         }
       }
     }
