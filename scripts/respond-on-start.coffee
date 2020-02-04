@@ -9,8 +9,8 @@
 # Author:
 #   craigrigdon
 #
-mat_room = process.env.HUBOT_MATTERMOST_CHANNEL
+matroom = process.env.HUBOT_MATTERMOST_CHANNEL
 
 module.exports = (robot) ->
   mesg = "#{robot.name} is now Ready #{new Date()}!"
-  robot.messageRoom mat_room, "#{mesg}"
+  robot.messageRoom matroom, "#{mesg}"

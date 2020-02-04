@@ -37,6 +37,7 @@ module.exports = (robot) ->
       branch = "dev"
       base = "master"
       repoFullName = "craigrigdon/test"
+      jenkins_job = "demo/job/bot-jenk-test"
 
       switch arg
         when "add"
@@ -59,18 +60,28 @@ module.exports = (robot) ->
                 dev: {
                   deploy_uid: dev_deploy_uid,
                   deploy_status: deploy_status,
+                  jenkins_job: null,
                   test_status: null,
                   promote: false
                 },
                 test: {
                   deploy_uid: test_deploy_uid,
                   deploy_status: deploy_status,
-                  test_status: "Passed",
+                  jenkins_job: null,
+                  test_status: null,
                   promote: false
                 },
+                stage: {
+                  deploy_uid: null,
+                  deploy_status: null,
+                  jenkins_job: null,
+                  test_status: null,
+                  promote: false
+                }
                 prod: {
-                  deploy_uid: test_deploy_uid,
-                  deploy_status: deploy_status,
+                  deploy_uid: null,
+                  deploy_status: null,
+                  jenkins_job: null,
                   test_status: null,
                   promote: false
                 }

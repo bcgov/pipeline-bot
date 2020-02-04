@@ -17,56 +17,52 @@
 matroom = process.env.HUBOT_MATTERMOST_CHANNEL
 apikey = process.env.HUBOT_OCPAPIKEY
 domain = process.env.HUBOT_OCPDOMAIN
-devApiTestTemplate = process.env.HUBOT_DEV_APITEST_TEMPLATE
-testApiTestTemplate = process.env.HUBOT_TEST_APITEST_TEMPLATE
+
+#TODO: convert to job yamls only and reference paths in config map in ocp
+
+testPostDeployTemplate = process.env.HUBOT_TEST_POSTDEPLOY_TEMPLATE
+stagePostDeployTemplate = process.env.HUBOT_STAGE_POSTDEPLOY_TEMPLATE
+
 ocTestNamespace = process.env.HUBOT_TEST_NAMESPACE # TODO: need to define this else where
-
-
-#---------------Supporting Functions-------------------
-
-getTimeStamp = ->
-  date = new Date()
-  timeStamp = date.getFullYear() + "/" + (date.getMonth() + 1) + "/" + date.getDate() + " " + date.getHours() + ":" +  date.getMinutes() + ":" + date.getSeconds()
-  RE_findSingleDigits = /\b(\d)\b/g
-  # Places a `0` in front of single digit numbers.
-  timeStamp = timeStamp.replace( RE_findSingleDigits, "0$1" )
 
 #----------------Robot-------------------------------
 
 module.exports = (robot) ->
 
-  robot.on "test-stage", (obj) ->
+  robot.on "post-deploy-stage", (obj) ->
     # expecting the following from obj
 
     # repoFullName # repo name from github payload
     # eventStage # stage object from memory to update
     # envKey # enviromnet key from github action param
-    console.log "Called test-stage script"
+
+    console.log "Called post-deploy-stage script"
     console.log "object passed is  : #{JSON.stringify(obj)}"
 
-    #----------------API TEST----------------------
+    #----------------Post Deployment Jobs----------------------
 
     # exhaustive switch of test templates
     switch obj.envKey
       when "dev"
-       templateUrl = devApiTestTemplate
-      when 'test'
-       templateUrl = testApiTestTemplate
-      when "stage"
        templateUrl = null
+      when 'test'
+       templateUrl = testPostDeployTemplate
+      when "stage"
+       templateUrl = stagePostDeployTemplate
       when 'prod'
        templateUrl = null
       else
-       console.log "failed to set api test templateURL"
+       console.log "failed to set post deploy templateURL"
        templateUrl = null
        return
 
+    # if templateURL has been set, call job to be created.
+    # TODO: migrate from template to jobs.yaml
+
     try
-      # if templateURL has been set, call job to be created.
-      # TODO: migrate from template to jobs.yaml
       if templateUrl
 
-        console.log "Test against environment #{obj.envKey}"
+        console.log "Post Deployment Job against environment #{obj.envKey}"
 
         # get job template from repo
         robot.http(templateUrl)
@@ -145,22 +141,21 @@ module.exports = (robot) ->
                 #hubot will now wait for test results recieved from another defined route in hubot.
 
       else
-        mesg = "No Test have been defined for this environment."
+        mesg = "No Post Deployment Jobs have been defined for this environment."
         console.log mesg
 
         # update brain
         event = robot.brain.get(obj.repoFullName)
         event.entry.push mesg
-        obj.eventStage.test_status = "success"
+        obj.eventStage.postdeploy_status = "success"
 
         # send message to chat
         robot.messageRoom matroom, "#{mesg}"
 
-        #hubot will now continue on with promote.
-
-        # to promote or not to promote that is the question.
-        robot.emit "promote", {
-            event    : event, #event object from brain
+        robot.emit "test-stage", {
+            repoFullName    : obj.repoFullName, #repo name from github payload
+            eventStage      : obj.eventStage, # stage object from memory to update
+            envKey          : obj.envKey, # environment key from github action param
         }
     catch err
       console.log err

@@ -15,6 +15,7 @@
 #   hubot list - get list of repos in pipeline
 #   hubot test (<dev>|<test>)  <project> - run api test against dev/test in OCP projectspace
 #   hubot buildanddeploy <buildConfig> <project> - start OCP build/deploy and watch
+#   hubot jenkinsjob <jobname>
 #
 # Notes:
 #
@@ -22,7 +23,7 @@
 # Author:
 #   craigrigdon
 
-mat_room = process.env.HUBOT_MATTERMOST_CHANNEL
+matroom = process.env.HUBOT_MATTERMOST_CHANNEL
 apikey = process.env.HUBOT_OCPAPIKEY
 domain = process.env.HUBOT_OCPDOMAIN
 devApiTestTemplate = process.env.HUBOT_DEV_APITEST_TEMPLATE
@@ -283,3 +284,18 @@ module.exports = (robot) ->
      # send message to chat
      res.reply mesg
 
+   #Jenkins Build
+   robot.respond /jenkinsjob (.*)/i, (res) ->
+     # pipeline-bot JenkinsJob <jobname>
+     job = res.match[1].toLowerCase()
+
+     # message
+     mesg = "Start Jenkins Job #{job}"
+
+     # send mesg
+     res.reply mesg
+
+     # send to jenkins script
+     robot.emit "jenkins-job", {
+        job    : job, #Jenkins job name
+     }
