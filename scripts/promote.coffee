@@ -82,23 +82,31 @@ module.exports = (robot) ->
                 envKey = null # reset envKey
                 switch env
                   when "dev"
-                    buildObj = pipe.test.build
-                    deployObj = pipe.test.deploy
-                    eventStage = obj.event.stage.test
-                    envKey = "test"
+                    if pipe.test
+                      buildObj = pipe.test.build
+                      deployObj = pipe.test.deploy
+                      eventStage = obj.event.stage.test
+                      envKey = "test"
+                     else
+                      exhausted = true
 
                   when "test"
-                    buildObj = pipe.stage.build
-                    deployObj = pipe.stage.deploy
-                    eventStage = obj.event.stage.stage
-                    envKey = "stage"
+                    if pipe.stage
+                      buildObj = pipe.stage.build
+                      deployObj = pipe.stage.deploy
+                      eventStage = obj.event.stage.stage
+                      envKey = "stage"
+                     else
+                      exhausted = true
 
                   when "stage"
-                    buildObj = pipe.prod.build
-                    deployObj = pipe.prod.deploy
-                    eventStage = obj.event.stage.prod
-                    envKey = "prod"
-
+                    if pipe.prd
+                      buildObj = pipe.prod.build
+                      deployObj = pipe.prod.deploy
+                      eventStage = obj.event.stage.prod
+                      envKey = "prod"
+                    else
+                      exhausted = true
                   else
                     mesg = "Pipeline has been exhasted"
                     console.log mesg
