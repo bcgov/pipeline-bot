@@ -42,6 +42,7 @@ module.exports = (robot) ->
     console.log envKey
 
     try
+
       data = if req.body.payload? then JSON.parse req.body.payload else req.body
       console.log data
 
@@ -80,11 +81,10 @@ module.exports = (robot) ->
 
         console.log "Checking pull request #{id} on #{branch} for #{repoFullName} "
 
+        #TODO try catch me here Clean up check logic
+        event = robot.brain.get(repo)
 
-        #TODO check if pipeline exist if not create one.  currently set to create new
-        check = null # set to null for testing
-        if check == null
-
+        if not event
           # create entry in Brain
           robot.brain.set("#{repoFullName}": {
             commit: id,
@@ -105,7 +105,7 @@ module.exports = (robot) ->
               prod: {deploy_uid: null, deploy_status: null, postdeploy_status: null, jenkins_job: null, test_status: null, promote: false}
               }
             })
-
+        else
           event = robot.brain.get(repoFullName)
           console.log "Hubot Brain Has: #{JSON.stringify(event)}"
 
@@ -157,6 +157,15 @@ module.exports = (robot) ->
                   envObj = pipe.test # may use this later
                   # get Stage object from brain
                   eventStage = event.stage.test
+
+                when "stage"
+                  console.log "define vars for stage"
+                  console.log "#{JSON.stringify(pipe.stage)}"
+                  buildObj = pipe.stage.build
+                  deployObj = pipe.stage.deploy
+                  envObj = pipe.stage # may use this later
+                  # get Stage object from brain
+                  eventStage = event.stage.stage
 
                 else
                   mesg = "Pipeline has been exhasted"
@@ -219,23 +228,6 @@ module.exports = (robot) ->
                event.entry.push mesg
                console.log "#{JSON.stringify(event)}"
                event.status = 'completed'
-
-        else
-          #TODO: update and enable logic
-          if event.status == "pending"
-            # Stop pipeline
-            mesg = "Pipeline for #{repoFullName} is in Progress, Hubot will Not Start new Pipeline"
-            console.log mesg
-
-            # send mesg to chat room
-            robot.messageRoom matRoom, "#{mesg}"
-
-            #update brain
-            event.status.push "failed"
-
-            # send status back to source with results
-            status = mesg
-            res.send status
 
       else
         # source failed to pass required param and payload
