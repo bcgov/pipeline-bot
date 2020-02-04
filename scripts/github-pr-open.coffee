@@ -74,9 +74,9 @@ module.exports = (robot) ->
         console.log mesg
 
         # update brain
-        obj.event.event.entry.push mesg
-        obj.event.event.pullSha = pr.head.sha
-        obj.event.event.pullNumber = pr.number
+        obj.event.entry.push mesg
+        obj.event.pullSha = pr.head.sha
+        obj.event.pullNumber = pr.number
 
         # send message to chat
         robot.messageRoom matroom, "#{mesg}"
