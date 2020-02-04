@@ -3,6 +3,7 @@
     {
       "name": "test",
       "repo": "craigrigdon/test",
+      "prToMasterAfter": "test",
       "dev": {
         "build": {
           "buildconfig": "datapusher",
@@ -21,6 +22,16 @@
         "deploy": {
           "deployconfig": "datapusher",
           "namespace": "databcdc"
+        }
+      },
+      "stage": {
+        "build": {
+          "jenkinsjob":"job/DEMO/job/bot-jenk-stage-test/"
+        }
+      },
+      "prod": {
+        "build": {
+          "jenkinsjob": "job/DEMO/job/bot-jenk-prod-test/"
         }
       }
     },
