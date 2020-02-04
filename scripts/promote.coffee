@@ -113,6 +113,7 @@ module.exports = (robot) ->
 
                     # sent to github to open PR
                     robot.emit "github-pr-open", {
+                        event    : obj.event #event to pass
                         build    : buildObj, #build object from config file
                         deploy   : deployObj, #deploy object from config file
                         repoFullName    : obj.event.repoFullName, # repo name from github payload

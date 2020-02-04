@@ -41,10 +41,10 @@ module.exports = (robot) ->
       console.log "called github-pr"
       console.log "object passed is  : #{JSON.stringify(obj)}"
 
-      user = obj.event.event.user
-      repo = obj.event.event.repo
-      branch = obj.event.event.branch
-      base = obj.event.event.base
+      user = obj.event.user
+      repo = obj.event.repo
+      branch = obj.event.branch
+      base = obj.event.base
 
       data = {
           title: "PR to merge #{branch} into #{base}",
