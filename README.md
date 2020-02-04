@@ -14,7 +14,7 @@ This document will break down the build config and deployment steps required to 
 ## Work in Progress
 * Currently expanding OCP api calls to include build from template and watch
 * add responders to include git checkout and deploy to teardown environments in OCP
-* output formatting to Mattermost
+* update output formatting to Mattermost
 
 ## Automated Workflow Steps 
 1. Github Action - On closed PR (github action "Push")to DEV branch - send Hubot payload with env param
@@ -23,17 +23,17 @@ This document will break down the build config and deployment steps required to 
 4. Hubot - start post deploy - post deployment tasks as OCP template job
 5. Hubot - start test - start tests as OCP template job
 6. Hubot - receive test payload - associate test results with pipeline
-7. Hubot - promote - if conditions pass then promote to next environment 
+7. Hubot - promote - if conditions pass then promote to next environment / or open PR to Master
 
 # Post Deployment Stage
 Currently defined in [post deploy script](scripts/post-deploy-stage.coffee)
 This script will define any ocp jobs that are required to run post deployment.
-OCP jobs are defined as Env Var from config map. 
+OCP jobs are defined as Env Var from config map. This is a temporary solution for now.
 
 # Test Stage
 Currently defined in [test script](scripts/test-stage.coffee)
 This script will define any ocp jobs that are required to run test.
-OCP jobs are defined as Env Var from config map. 
+OCP jobs are defined as Env Var from config map. This is a temporary solution for now.
    
 # Build and Deploy Guide from Scratch
 Step by step how to build Hubot instance from start
@@ -82,6 +82,8 @@ Step by step how to build Hubot instance from start
     HUBOT_ACL= <conifg for access control list> # see Access Control
     HUBOT_DEV_APITEST_TEMPLATE= <url-to-test-template.json>
     HUBOT_TEST_APITEST_TEMPLATE= <url-to-test-template.json>
+    HUBOT_TEST_POSTDEPLOY_TEMPLATE= <url-to-post-template.json>
+    HUBOT_STAGE_POSTDEPLOY_TEMPLATE= <url-to-post-template.json>
     HUBOT_TEST_NAMESPACE= <ocp-namespace-to-run-test-in>
     HUBOT_CONFIG_PATH= <url-to-config-map> # see Pipeline Config
     HUBOT_GITHUB_TOKEN= <github token for repo access>
