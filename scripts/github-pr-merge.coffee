@@ -83,14 +83,6 @@ module.exports = (robot) ->
       # send message to chat
       robot.messageRoom matroom, "#{mesg}"
 
-      # sent to build deploy test script
-      robot.emit "build-deploy-stage", {
-          build    : obj.buildObj, #build object from config file
-          deploy   : obj.deployObj, #deploy object from config file
-          repoFullName    : obj.event.event.repoFullName, # repo name from github payload
-          eventStage : obj.eventStage, # stage object from memory to update
-          envKey : obj.envKey, # environment key
-      }
 
 
 

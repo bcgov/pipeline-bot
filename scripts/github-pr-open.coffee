@@ -68,7 +68,7 @@ module.exports = (robot) ->
 
       # call github pr merge api
       github.post "repos/#{user}/#{repo}/pulls", data, (pr) ->
-        mesg = "Success! Pull request created for #{branch}. #{pr.html_url}"
+        mesg = "Please Review #{pr.number} at #{pr.html_url} to continue pipeline."
 
         console.log "Pull Request from github  : #{JSON.stringify(pr)}"
         console.log mesg
@@ -80,7 +80,6 @@ module.exports = (robot) ->
 
         # send message to chat
         robot.messageRoom matroom, "#{mesg}"
-        robot.messageRoom matroom, "Please Review #{pr.number} at #{pr.html_url} to continue pipeline."
     catch err
       console.log err
        # send message to chat
