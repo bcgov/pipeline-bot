@@ -47,8 +47,6 @@ module.exports = (robot) ->
       # logic to promote or not to promote
       if stage.deploy_status == "success" && stage.postdeploy_status == "success" && stage.test_status == "success" && stage.promote == false
 
-        console.log mesg
-
         # check if prod, if so stop and complete else continue on as planned
         if env != "prod"
           robot.http(configPath)
