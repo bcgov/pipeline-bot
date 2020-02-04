@@ -81,8 +81,8 @@ module.exports = (robot) ->
 
         console.log "Checking pull request #{id} on #{branch} for #{repoFullName} "
 
-        #TODO try catch me here Clean up check logic
-        event = robot.brain.get(repo)
+        # check if pipeline exist in brtain
+        event = robot.brain.get(repoFullName)
 
         if not event
           # create entry in Brain
@@ -105,145 +105,148 @@ module.exports = (robot) ->
               prod: {deploy_uid: null, deploy_status: null, postdeploy_status: null, jenkins_job: null, test_status: null, promote: false}
               }
             })
+
+          event = robot.brain.get(repoFullName)
+          console.log "Created new event in Brain: #{JSON.stringify(event)}"
         else
+           console.log "Event Exist in Brain: #{JSON.stringify(event)}"
 
-          if event.status != "pending"
-            event = robot.brain.get(repoFullName)
-            console.log "Hubot Brain Has: #{JSON.stringify(event)}"
+        # TODO: Update logic this is for testing only: DEMO
+        # check if event is pending and does not have a pull request open
+        if event.status != "pending" && event.pullSha == null
+          event = robot.brain.get(repoFullName)
+          console.log "Hubot Brain Has: #{JSON.stringify(event)}"
 
-            # get config file from repo for pipeline mappings
-            robot.http(configPath)
-             .header('Accept', 'application/json')
-             .get() (err, httpres, body2) ->
+          # get config file from repo for pipeline mappings
+          robot.http(configPath)
+           .header('Accept', 'application/json')
+           .get() (err, httpres, body2) ->
 
-             # check for errs
-               if err
-                console.log "Encountered an error fetching config file :( #{err}"
-                body2 =  process.env.HUBOT_PIPELINE_MAP ? null  # hardcode for local testing only to be removed
-
-
-               pipes = JSON.parse(body2)
-               console.log pipes
-
-               buildObj = null
-               deployObj = null
-               exhasted = false
-
-               # check if repo is in config file
-               results = pipes.pipelines.where repo: "#{repoFullName}"
-               console.log results
-               # process first result only
-               pipe = results[0]
-
-               if pipe?
-                console.log "Repo found in conifg map: #{JSON.stringify(pipe.repo)}"
-
-                #get event from brain
-                event = robot.brain.get(repoFullName)
-
-                switch envKey
-                  when "dev"
-                    console.log "define vars for dev"
-                    console.log "#{JSON.stringify(pipe.dev)}"
-                    buildObj = pipe.dev.build
-                    deployObj = pipe.dev.deploy
-                    envObj = pipe.dev # may use this later
-                    # get Stage object from brain
-                    eventStage = event.stage.dev
-
-                  when "test"
-                    console.log "define vars for test"
-                    console.log "#{JSON.stringify(pipe.test)}"
-                    buildObj = pipe.test.build
-                    deployObj = pipe.test.deploy
-                    envObj = pipe.test # may use this later
-                    # get Stage object from brain
-                    eventStage = event.stage.test
-
-                  when "stage"
-                    console.log "define vars for stage"
-                    console.log "#{JSON.stringify(pipe.stage)}"
-                    buildObj = pipe.stage.build
-                    deployObj = pipe.stage.deploy
-                    envObj = pipe.stage # may use this later
-                    # get Stage object from brain
-                    eventStage = event.stage.stage
-
-                  else
-                    mesg = "Pipeline has been exhasted"
-                    console.log mesg
-                    exhasted = true
+           # check for errs
+             if err
+              console.log "Encountered an error fetching config file :( #{err}"
+              body2 =  process.env.HUBOT_PIPELINE_MAP ? null  # hardcode for local testing only to be removed
 
 
-               console.log "#{JSON.stringify(buildObj)}"
-               console.log "#{JSON.stringify(deployObj)}"
-               console.log "#{JSON.stringify(eventStage)}"
+             pipes = JSON.parse(body2)
+             console.log pipes
 
-               if exhasted == false
+             buildObj = null
+             deployObj = null
+             exhasted = false
 
-                 # message
-                 mesg = "Recieved Github Event [#{id}] on [#{repoFullName}](#{repoURL})"
-                 console.log mesg
+             # check if repo is in config file
+             results = pipes.pipelines.where repo: "#{repoFullName}"
+             console.log results
+             # process first result only
+             pipe = results[0]
 
-                 # update brain
-                 event = robot.brain.get(repoFullName)
-                 event.entry.push mesg
-                 console.log "#{JSON.stringify(event)}"
-                 event.status = 'pending'
+             if pipe?
+              console.log "Repo found in conifg map: #{JSON.stringify(pipe.repo)}"
 
-                 # send message to chat
-                 robot.messageRoom matRoom, "#{mesg}"
+              #get event from brain
+              event = robot.brain.get(repoFullName)
 
-                 #Checking if Jenkins Job else send to OCP to build and deploy
-                 if buildObj.jenkinsjob
-                   # sent to jenkins script
-                   robot.emit "jenkins-job", {
-                       job      : buildObj.jenkinsjob, # jenkins job name
-                       build    : buildObj, #build object from config file
-                       deploy   : deployObj, #deploy object from config file
-                       repoFullName    : event.repoFullName #repo name from github payload
-                       eventStage : eventStage #stage object from memory to update
-                       envKey : envKey #environment key
-                   }
-                 else
-                   # sent to build deploy script for OCP
-                   robot.emit "build-deploy-stage", {
-                       build    : buildObj, #build object from config file
-                       deploy   : deployObj, #deploy object from config file
-                       repoFullName    : event.repoFullName, #repo name from github payload
-                       eventStage : eventStage, #stage object from memory to update
-                       envKey : envKey, #environment key
-                   }
+              switch envKey
+                when "dev"
+                  console.log "define vars for dev"
+                  console.log "#{JSON.stringify(pipe.dev)}"
+                  buildObj = pipe.dev.build
+                  deployObj = pipe.dev.deploy
+                  envObj = pipe.dev # may use this later
+                  # get Stage object from brain
+                  eventStage = event.stage.dev
 
-                 # send source status
-                 res.send status
+                when "test"
+                  console.log "define vars for test"
+                  console.log "#{JSON.stringify(pipe.test)}"
+                  buildObj = pipe.test.build
+                  deployObj = pipe.test.deploy
+                  envObj = pipe.test # may use this later
+                  # get Stage object from brain
+                  eventStage = event.stage.test
 
+                when "stage"
+                  console.log "define vars for stage"
+                  console.log "#{JSON.stringify(pipe.stage)}"
+                  buildObj = pipe.stage.build
+                  deployObj = pipe.stage.deploy
+                  envObj = pipe.stage # may use this later
+                  # get Stage object from brain
+                  eventStage = event.stage.stage
+
+                else
+                  mesg = "Pipeline has been exhasted"
+                  console.log mesg
+                  exhasted = true
+
+
+             console.log "#{JSON.stringify(buildObj)}"
+             console.log "#{JSON.stringify(deployObj)}"
+             console.log "#{JSON.stringify(eventStage)}"
+
+             if exhasted == false
+
+               # message
+               mesg = "Recieved Github Event [#{id}] on [#{repoFullName}](#{repoURL})"
+               console.log mesg
+
+               # update brain
+               event = robot.brain.get(repoFullName)
+               event.entry.push mesg
+               console.log "#{JSON.stringify(event)}"
+               event.status = 'pending'
+
+               # send message to chat
+               robot.messageRoom matRoom, "#{mesg}"
+
+               #Checking if Jenkins Job else send to OCP to build and deploy
+               if buildObj.jenkinsjob
+                 # sent to jenkins script
+                 robot.emit "jenkins-job", {
+                     job      : buildObj.jenkinsjob, # jenkins job name
+                     build    : buildObj, #build object from config file
+                     deploy   : deployObj, #deploy object from config file
+                     repoFullName    : event.repoFullName #repo name from github payload
+                     eventStage : eventStage #stage object from memory to update
+                     envKey : envKey #environment key
+                 }
                else
-                 mesg = "Pipeline has been exhasted for #{repoFullName}"
-                 console.log mesg
+                 # sent to build deploy script for OCP
+                 robot.emit "build-deploy-stage", {
+                     build    : buildObj, #build object from config file
+                     deploy   : deployObj, #deploy object from config file
+                     repoFullName    : event.repoFullName, #repo name from github payload
+                     eventStage : eventStage, #stage object from memory to update
+                     envKey : envKey, #environment key
+                 }
 
-                 # message room
-                 robot.messageRoom matRoom, "#{mesg}"
+               # send source status
+               res.send status
 
-                 # update brain
-                 event = robot.brain.get(repoFullName)
-                 event.entry.push mesg
-                 console.log "#{JSON.stringify(event)}"
-                 event.status = 'completed'
-          else
-            # Stop pipeline
-            mesg = "Pipeline for #{repoFullName} is in Progress, Hubot will Not Start new Pipeline.  Clear Pipe before restarting."
-            console.log mesg
+             else
+               mesg = "Pipeline has been exhasted for #{repoFullName}"
+               console.log mesg
 
-            # send mesg to chat room
-            robot.messageRoom matRoom, "#{mesg}"
+               # message room
+               robot.messageRoom matRoom, "#{mesg}"
 
-            #update brain
-            event.status.push "failed"
+               # update brain
+               event = robot.brain.get(repoFullName)
+               event.entry.push mesg
+               console.log "#{JSON.stringify(event)}"
+               event.status = 'completed'
+        else
+          # Stop pipeline
+          mesg = "Pipeline for #{repoFullName} is in Progress, Hubot will Not Start new Pipeline.  Clear Pipe before restarting."
+          console.log mesg
 
-            # send status back to source with results
-            status = mesg
-            res.send status
+          # send mesg to chat room
+          robot.messageRoom matRoom, "#{mesg}"
+
+          # send status back to source with results
+          status = mesg
+          res.send status
 
       else
         # source failed to pass required param and payload
