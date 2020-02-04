@@ -98,7 +98,7 @@ module.exports = (robot) ->
                       exhausted = true
 
                   when "stage"
-                    if pipe.prd
+                    if pipe.prod
                       buildObj = pipe.prod.build
                       deployObj = pipe.prod.deploy
                       eventStage = obj.event.stage.prod
