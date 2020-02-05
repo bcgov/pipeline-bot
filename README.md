@@ -87,6 +87,8 @@ Step by step how to build Hubot instance from start
     HUBOT_TEST_NAMESPACE= <ocp-namespace-to-run-test-in>
     HUBOT_CONFIG_PATH= <url-to-config-map> # see Pipeline Config
     HUBOT_GITHUB_TOKEN= <github token for repo access>
+    HUBOT_JENKINS_URL= <url to jenkins instance>
+    HUBOT_JENKINS_AUTH= <user:token>
     ```
 11. first time deploy in OCP
 
